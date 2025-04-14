@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "tailwindCSS.experimental.classRegex": ["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"],
+    "nuxtr.intellisense.nuxtrc": true,
+    "nuxtr.intellisense.vueFiles": true,
+    "nuxtr.intellisense.nuxtignore": true,
+    "editor.formatOnSave": false,
+    "prettier.singleQuote": true,
+    "prettier.printWidth": 120
+}
