@@ -46,19 +46,6 @@ input[type='number']::-webkit-outer-spin-button {
     --transparent: rgba(255, 255, 255, 0);
 
     /* Brand Colors */
-    /* --brand-25: #fcfcfd;
-    --brand-50: #f9f9fb;
-    --brand-100: #eff1f5;
-    --brand-200: #dcdfea;
-    --brand-300: #b9c0d4;
-    --brand-400: #7d89b0;
-    --brand-500: #5d6b98;
-    --brand-600: #4a5578;
-    --brand-700: #404968;
-    --brand-800: #30374f;
-    --brand-900: #111322;
-    --brand-950: #0e101b; */
-
     --brand-25: #fefaf5;
     --brand-50: #fef6ee;
     --brand-100: #fdead7;
@@ -71,19 +58,6 @@ input[type='number']::-webkit-outer-spin-button {
     --brand-800: #932f19;
     --brand-900: #772917;
     --brand-950: #511c10;
-
-    /* --brand-25: #FCFAFF;
-    --brand-50: #F9F5FF;
-    --brand-100: #F4EBFF;
-    --brand-200: #E9D7FE;
-    --brand-300: #D6BBFB;
-    --brand-400: #B692F6;
-    --brand-500: #9E77ED;
-    --brand-600: #7F56D9;
-    --brand-700: #6941C6;
-    --brand-800: #53389E;
-    --brand-900: #42307D;
-    --brand-950: #2C1C5F; */
 
     /* Error Colors */
     --error-25: #fffbfa;
