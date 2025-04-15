@@ -19,10 +19,7 @@ RUN apk add --update --no-cache \
     rsync \
     patch
 
-ARG WITH_MYSQL=0
-
-RUN if [[ "${WITH_MYSQL}" -eq 1 ]]; then \
-    apk add mysql_client &&  \
+RUN apk add mysql_client &&  \
     install-php-extensions pdo_mysql \
         intl \
         curl \
@@ -41,27 +38,6 @@ RUN if [[ "${WITH_MYSQL}" -eq 1 ]]; then \
         ftp; \
 fi
 
-RUN if [[ "${WITH_MYSQL}" -eq 0 ]]; then \
-    install-php-extensions pgsql  \
-        pdo_pgsql  \
-        pdo \
-        intl \
-        curl \
-        dom \
-        fileinfo \
-        mbstring \
-        zip \
-        opcache \
-        exif \
-        apcu \
-        ctype \
-        gd \
-        tokenizer \
-        xml \
-        session \
-        ftp; \
-fi
-
-WORKDIR /srv
+WORKDIR /app
 
 CMD ["php-fpm", "-R", "-F"]
