@@ -11,5 +11,6 @@
     "nuxtr.intellisense.nuxtignore": true,
     "editor.formatOnSave": false,
     "prettier.singleQuote": true,
-    "prettier.printWidth": 120
+    "prettier.printWidth": 120,
+    "editor.tabSize": 4
 }
