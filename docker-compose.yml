@@ -1,17 +1,14 @@
 services:
     db:
-        image: mysql:8.0
-        container_name: mysql_db
+        image: mysql:latest
         restart: always
         environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
             MYSQL_DATABASE: ${DB}
             MYSQL_USER: ${DB_USER}
             MYSQL_PASSWORD: ${DB_PASSWORD}
         ports:
             - '3306:3306'
-        volumes:
-            - mysql_data:/var/lib/mysql
 
     backend:
         build:
@@ -40,6 +37,3 @@ services:
             - '80:80' # Expose Nginx on port 80
         depends_on:
             - backend
-
-volumes:
-    mysql_data:
