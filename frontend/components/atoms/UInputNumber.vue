@@ -52,7 +52,6 @@ const sizeClasses = {
     md: 'px-4 py-2.5',
 };
 
-// Remove the buttonClasses and declare new positioning classes
 const buttonPositionClasses = {
     left: 'absolute left-0 top-0 h-full flex items-center justify-center pl-2',
     right: 'absolute right-0 top-0 h-full flex items-center justify-center pr-2'
