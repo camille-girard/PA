@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Console\Question\Question;
 
 #[AsCommand(
     name: 'app:create-user',
@@ -41,11 +42,45 @@ class CreateUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $email = 'nassim@mail.com';
-        $password = 'password';
+        $firstName = $io->ask('First Name', null, function ($input) {
+            if (empty($input)) {
+                throw new \RuntimeException('First name cannot be empty');
+            }
+            return $input;
+        });
+
+        $lastName = $io->ask('Last Name', null, function ($input) {
+            if (empty($input)) {
+                throw new \RuntimeException('First name cannot be empty');
+            }
+            return $input;
+        });
+
+        $email = $io->ask('Email', null, function ($input) {
+            if (empty($input)) {
+                throw new \RuntimeException('First name cannot be empty');
+            }
+            return $input;
+        });
+
+        $passwordQuestion = new Question('Password');
+        $passwordQuestion->setHidden(true);
+        $passwordQuestion->setValidator(function ($input) {
+            if (empty($input)) {
+                throw new \RuntimeException('Password cannot be empty.');
+            }
+            if (strlen($input) < 6) {
+                throw new \RuntimeException('Password must be at least 6 characters long.');
+            }
+            return $input;
+        });
+        
+        $password = $io->askQuestion($passwordQuestion);
 
         $user = new User();
         $user->setEmail($email);
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
 
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
@@ -53,7 +88,7 @@ class CreateUserCommand extends Command
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success(sprintf('User %s %s (%s) created successfully!', $firstName, $lastName, $email));
 
         return Command::SUCCESS;
     }
