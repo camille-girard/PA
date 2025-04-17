@@ -1,0 +1,38 @@
+name: Code style
+
+on: [ push ]
+
+jobs:
+  backend-lint:
+    name: Backend Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Lint backend code
+        run: |
+          docker compose build backend
+          docker compose run --rm backend sh -c "composer install --no-progress && \
+            PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run --diff && \
+            vendor/bin/phpstan analyse src --memory-limit=2G --no-progress"
+
+  frontend-lint:
+    name: Frontend Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Lint frontend code
+        run: |
+          docker compose build frontend
+          docker compose run --rm frontend sh -c "npm ci && npm run lint"

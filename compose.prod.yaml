@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '3306:3306'
+
+  backend:
+    build:
+      context: backend
+      dockerfile: docker/Dockerfile
+      args:
+        PHP_VERSION: 8.4.1
+    ports:
+      - '80:8080'
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      target: prod
+    ports:
+      - '3000:3000'
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    ports:
+      - '80:80' # Expose Nginx on port 80
+    depends_on:
+      - backend
