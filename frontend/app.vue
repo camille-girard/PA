@@ -1,6 +1,6 @@
 <script setup>
 useSeoMeta({
-    title: 'Nassim LOUNADI'
+    title: 'PopnBed'
 })
 </script>
 

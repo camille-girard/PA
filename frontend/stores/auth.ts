@@ -2,10 +2,10 @@ import { defineStore } from "pinia";
 
 type User = {
     id: number,
-    fullName: string,
+    firstName: string,
+    lastName: string,
     email: string,
-    createdAt: string,
-    updatedAt: string
+    roles: string[]
 }
 
 export const useAuthStore = defineStore("auth", {
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp();
 
-                const { data, error } = await useFetch<User>($api("/me"), {
+                const { data, error } = await useFetch<User>($api("/api/me"), {
                     method: "GET",
                     credentials: "include",
                 });
@@ -49,13 +49,13 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp();
 
-                const { data, error } = await useFetch($api("/login"), {
+                const { error } = await useFetch($api("/api/login_check"), {
                     method: "POST",
-                    body: { email, password },
+                    body: { username: email, password },
                     credentials: "include",
                 });
 
-                if (data.value && !error.value) {
+                if (!error.value) {
                     await this.fetchUser();
                     return { success: true };
                 }
@@ -75,7 +75,7 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp()
 
-                await useFetch($api('/logout'), {
+                await useFetch($api('/api/logout'), {
                     method: 'POST',
                     credentials: 'include'
                 })
