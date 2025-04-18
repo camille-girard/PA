@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     },
     vite: {
         server: {
-            allowedHosts: ['dev.nassimlounadi.fr']
+            allowedHosts: ['popnbed.com']
         }
     },
     components: {

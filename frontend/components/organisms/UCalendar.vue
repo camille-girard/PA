@@ -245,8 +245,8 @@ function handleDateInput() {
             v-for="day in daysInMonth"
             :key="day"
             :class="[
-              'flex items-center justify-center size-10 rounded-full text-sm',
-              isToday(day) ? 'bg-active text-secondary font-medium' : '',
+              'flex items-center justify-center size-10 rounded-full text-sm text-secondary',
+              isToday(day) ? 'bg-active font-medium' : '',
               isSelected(day) ? 'bg-brand-solid text-white' : 'hover:bg-primary-hover',
               isDisabled(day) ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
             ]"
