@@ -1,9 +1,11 @@
 <script setup>
 useSeoMeta({
-    title: 'PopnBed'
-})
+    title: 'PopnBed',
+});
 </script>
 
 <template>
-    <NuxtPage />
+    <NuxtLayout>
+        <NuxtPage />
+    </NuxtLayout>
 </template>
