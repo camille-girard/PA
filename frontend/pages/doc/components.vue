@@ -14,7 +14,7 @@ const checkbox = ref<CheckboxIndeterminateProp>('indeterminate');
 const switchValue = ref<boolean>(false);
 const isModalOpen = ref(false);
 const isSecondModalOpen = ref(false);
-const numberValue = ref(0)
+const numberValue = ref(0);
 const selectedDate = ref(new Date());
 
 const columns: Column[] = [
@@ -466,6 +466,17 @@ function handleRowClick(row: Record<string, unknown>) {
             <h2 class="text-xl font-semibold mb-4 text-primary">Calendar</h2>
             <div class="p-4 bg-gray-100/10 rounded-lg space-y-3">
                 <UCalendar v-model="selectedDate" />
+            </div>
+        </section>
+
+        <section class="w-full max-w-3xl pb-96">
+            <h2 class="text-xl font-semibold mb-4 text-primary">Date picker</h2>
+            <div class="p-4 bg-gray-100/10 rounded-lg space-y-3">
+                <UDatePicker
+                    v-model="selectedDate"
+                    label="Date de réservation"
+                    placeholder="Sélectionner une date"
+                />
             </div>
         </section>
     </main>
