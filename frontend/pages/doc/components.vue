@@ -3,6 +3,7 @@ import AlertCircleIcon from '~/components/atoms/icons/AlertCircleIcon.vue';
 import SaveIcon from '~/components/atoms/icons/SaveIcon.vue';
 import SettingsIcon from '~/components/atoms/icons/SettingsIcon.vue';
 import UserIcon from '~/components/atoms/icons/UserIcon.vue';
+import UCalendar from '~/components/organisms/UCalendar.vue';
 import type { Column } from '~/components/organisms/UTable.vue';
 
 const authStore = useAuthStore();
@@ -14,6 +15,7 @@ const switchValue = ref<boolean>(false);
 const isModalOpen = ref(false);
 const isSecondModalOpen = ref(false);
 const numberValue = ref(0)
+const selectedDate = ref(new Date());
 
 const columns: Column[] = [
     { key: 'name', label: 'Name', sortable: true },
@@ -457,6 +459,13 @@ function handleRowClick(row: Record<string, unknown>) {
             <h2 class="text-xl font-semibold mb-4 text-primary">Logo</h2>
             <div class="p-4 bg-gray-100/10 rounded-lg space-y-3">
                 <ULogo class="size-12" />
+            </div>
+        </section>
+
+        <section class="w-full max-w-3xl">
+            <h2 class="text-xl font-semibold mb-4 text-primary">Calendar</h2>
+            <div class="p-4 bg-gray-100/10 rounded-lg space-y-3">
+                <UCalendar v-model="selectedDate" />
             </div>
         </section>
     </main>
