@@ -38,7 +38,7 @@ const login = async () => {
                         required
                     />
                 </div>
-                <UButton class="mt-6 w-full" type="submit">Submit</UButton>
+                <UButton class="mt-6 w-full justify-center" type="submit">Submit</UButton>
             </form>
         </section>
     </main>
