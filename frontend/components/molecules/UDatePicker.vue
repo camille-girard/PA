@@ -166,37 +166,14 @@ onUnmounted(() => {
             <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
                 {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
             </label>
-            <div class="relative">
-                <!-- <UInput
-          v-model="inputValue"
-          :name="name"
-          type="text"
-          :placeholder="placeholder"
-          :disabled="disabled"
-          :destructive="destructive"
-          :icon="CalendarIcon"
-          icon-position="trailing"
-          @blur="handleInputBlur"
-          @keydown="handleKeyDown"
-        /> -->
-                <UButton
-                    variant="secondary"
-                    :icon="CalendarIcon"
-                    icon-position="leading"
-                    :disabled="disabled"
-                    @click="toggleCalendar"
-                    >{{ inputValue }}</UButton
-                >
-                <!-- <div 
-          class="absolute inset-y-0 right-0 pr-8 flex items-center cursor-pointer"
-          @click="toggleCalendar"
-        >
-          <ChevronDownIcon 
-            class="size-4 text-fg-quaternary"
-            :class="{ 'rotate-180 transition-transform': isOpen }"
-          />
-        </div> -->
-            </div>
+            <UButton
+                variant="secondary"
+                :icon="CalendarIcon"
+                icon-position="leading"
+                :disabled="disabled"
+                @click="toggleCalendar"
+                >{{ inputValue || placeholder }}</UButton
+            >
             <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
                 {{ hintText }}
             </p>
