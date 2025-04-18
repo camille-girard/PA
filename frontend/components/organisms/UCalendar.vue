@@ -196,7 +196,7 @@ function handleDateInput() {
 </script>
 
 <template>
-  <div class="w-fit bg-primary rounded-2xl border border-secondary-alt shadow-xl px-6 py-5">
+  <div class="min-w-82 w-fit bg-primary rounded-2xl border border-secondary-alt shadow-xl px-6 py-5 relative z-50">
     <div class="flex items-center justify-between mb-3">
       <UButton variant="tertiary" size="sm" @click="prevMonth">
         <ChevronLeftIcon class="text-fg-quaternary" />
