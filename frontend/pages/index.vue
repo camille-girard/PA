@@ -2,6 +2,8 @@
 import SearchIcon from '~/components/atoms/icons/SearchIcon.vue';
 
 const amountTravelers = ref<number | undefined>(undefined);
+const arrivalDate = ref()
+const departureDate = ref()
 
 </script>
 
@@ -28,8 +30,10 @@ const amountTravelers = ref<number | undefined>(undefined);
         </header>
         <section class="max-w-7xl w-full mx-auto">
             <section class="w-full pt-32">
-                <div class="py-20 rounded-2xl flex items-center justify-center bg-red-200 relative overflow-hidden">
-                    <img src="https://toploc.com/blog/wp-content/uploads/2016/06/Maison-de-hobbit-achevee-%C2%A9simondale.net_.jpg" class="w-full h-full absolute top-0 left-0 object-cover blur-sm">
+                <div class="py-20 rounded-2xl flex items-center justify-center bg-red-200 relative">
+                    <div class="w-full h-full rounded-2xl overflow-hidden absolute top-0 left-0">
+                        <img src="https://toploc.com/blog/wp-content/uploads/2016/06/Maison-de-hobbit-achevee-%C2%A9simondale.net_.jpg" class="w-full h-full object-cover blur-sm">
+                    </div>
                     <div class="text-center z-10">
                         <h1 class="text-4xl font-semibold text-primary-on-brand">
                             Séjourner dans un lieu inspiré de films
@@ -41,8 +45,8 @@ const amountTravelers = ref<number | undefined>(undefined);
                         <div class="mt-14 max-w-screen-sm space-y-3">
                             <UInput placeholder="Destination, thématique" type="text" :icon="SearchIcon" />
                             <div class="flex w-full justify-between gap-2">
-                                <UInput placeholder="Arrivée" type="date" class="w-full" />
-                                <UInput placeholder="Départ" type="date" class="w-full" />
+                                <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />
+                                <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
                                 <UInputNumber v-model="amountTravelers" placeholder="Voyageurs" type="number" :min="1" class="w-full" />
                             </div>
                         </div>
