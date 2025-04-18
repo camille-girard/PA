@@ -22,7 +22,7 @@ const _emit = defineEmits<{
 }>();
 
 const baseClasses =
-    'flex items-center justify-center font-semibold gap-1 rounded-lg transition focus:ring-1 focus:ring-primary ring-offset-2 focus:outline-none ring-offset-transparent [&_svg]:size-5';
+    'flex items-center font-semibold gap-1 rounded-lg transition focus:ring-1 focus:ring-primary ring-offset-2 focus:outline-none ring-offset-transparent [&_svg]:size-5';
 
 const sizeClasses = {
     sm: 'px-3 py-2 text-sm',
