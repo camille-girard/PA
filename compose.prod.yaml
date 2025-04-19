@@ -11,29 +11,14 @@ services:
       - '3306:3306'
 
   backend:
-    build:
-      context: backend
-      dockerfile: docker/Dockerfile
-      args:
-        PHP_VERSION: 8.4.1
-    ports:
-      - '80:8080'
+    image: ghcr.io/camille-girard/backend
     depends_on:
       - db
 
   frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      target: prod
-    ports:
-      - '3000:3000'
+    image: ghcr.io/camille-girard/frontend
 
   nginx:
-    build:
-      context: nginx
-      dockerfile: Dockerfile
-    ports:
-      - '80:80' # Expose Nginx on port 80
+    image: ghcr.io/camille-girard/nginx
     depends_on:
       - backend
