@@ -30,9 +30,11 @@ WORKDIR /app
 
 COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/.nuxt/ /app/.nuxt/
+COPY --from=builder /app/package* /app/
+COPY --from=builder /app/.output/ /app/.output/
 
 RUN npm ci --omit=dev
 
 EXPOSE 3000
 
-CMD ["node", ".nuxt/dist/server/server.mjs"]
+CMD ["node", ".output/server/index.mjs"]

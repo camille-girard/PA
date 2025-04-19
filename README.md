@@ -10,5 +10,5 @@ docker-compose up --build -d
 
 production:
 ```bash
-docker compose -f compose.yaml -f compose.prod.yaml build --no-cache
+docker compose -f compose.prod.yaml up -d
 ```
