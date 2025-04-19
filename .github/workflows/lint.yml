@@ -1,0 +1,54 @@
+name: Code style
+
+on: [ push ]
+
+jobs:
+  backend-lint:
+    name: Backend Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Lint backend code
+        run: |
+          docker compose build backend
+          docker compose run --rm -v $(pwd)/backend/vendor:/var/www/html/vendor \
+            backend sh -c "composer install --no-progress && \
+            PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run --diff && \
+            vendor/bin/phpstan analyse src --memory-limit=2G --no-progress"
+
+  frontend-lint:
+    name: Frontend Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Lint frontend code
+        run: |
+          docker compose build frontend
+          docker compose run --rm -v $(pwd)/frontend/node_modules:/app/node_modules \
+            frontend sh -c "npm ci && npm run lint"
