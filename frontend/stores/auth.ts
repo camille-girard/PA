@@ -49,7 +49,7 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp();
 
-                const { error } = await useFetch($api("/api/login_check"), {
+                const { error } = await useFetch($api("/api/login"), {
                     method: "POST",
                     body: { username: email, password },
                     credentials: "include",
