@@ -154,75 +154,77 @@ function getSortIcon(column: Column) {
 </script>
 
 <template>
-    <div class="relative overflow-x-auto rounded-lg border border-secondary">
-        <table :class="tableClasses">
-            <thead :class="headerClasses">
-                <tr>
-                    <th v-if="selectable" class="px-4 py-3 w-8">
-                        <UCheckbox
-                            name="select-all"
-                            :model-value="allSelected"
-                            class="mx-auto block"
-                            @change="toggleAllRows"
-                        />
-                    </th>
-                    <th
-                        v-for="column in columns"
-                        :key="column.key"
-                        :class="[
-                            headerCellClasses,
-                            { 'cursor-pointer': column.sortable },
-                            column.width ? column.width : 'auto',
-                        ]"
-                        @click="toggleSort(column)"
+    <ClientOnly>
+        <div class="relative overflow-x-auto rounded-lg border border-secondary">
+            <table :class="tableClasses">
+                <thead :class="headerClasses">
+                    <tr>
+                        <th v-if="selectable" class="px-4 py-3 w-8">
+                            <UCheckbox
+                                name="select-all"
+                                :model-value="allSelected"
+                                class="mx-auto block"
+                                @change="toggleAllRows"
+                            />
+                        </th>
+                        <th
+                            v-for="column in columns"
+                            :key="column.key"
+                            :class="[
+                                headerCellClasses,
+                                { 'cursor-pointer': column.sortable },
+                                column.width ? column.width : 'auto',
+                            ]"
+                            @click="toggleSort(column)"
+                        >
+                            <div class="flex items-center gap-1">
+                                {{ column.label }}
+                                <component :is="getSortIcon(column)" v-if="column.sortable" class="w-4 h-4" />
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody v-if="!loading && data.length > 0" :class="bodyClasses">
+                    <tr
+                        v-for="(row, rowIndex) in sortedData"
+                        :key="rowIndex"
+                        class="cursor-pointer"
+                        :class="[rowClasses]"
+                        @click="emit('row-click', row)"
                     >
-                        <div class="flex items-center gap-1">
-                            {{ column.label }}
-                            <component :is="getSortIcon(column)" v-if="column.sortable" class="w-4 h-4" />
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody v-if="!loading && data.length > 0" :class="bodyClasses">
-                <tr
-                    v-for="(row, rowIndex) in sortedData"
-                    :key="rowIndex"
-                    class="cursor-pointer"
-                    :class="[rowClasses]"
-                    @click="emit('row-click', row)"
-                >
-                    <td v-if="selectable" class="px-4 py-4 w-8" @click.stop>
-                        <UCheckbox
-                            :name="`select-row-${rowIndex}`"
-                            :model-value="isRowSelected(row)"
-                            class="mx-auto block"
-                            @change="toggleRowSelection(row, $event)"
-                        />
-                    </td>
-                    <td v-for="column in columns" :key="column.key" :class="[cellClasses]">
-                        <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]">
-                            {{ row[column.key] }}
-                        </slot>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody v-else-if="loading">
-                <tr>
-                    <td :colspan="selectable ? columns.length + 1 : columns.length" class="px-4 py-8 text-center">
-                        <ULoading />
-                    </td>
-                </tr>
-            </tbody>
-            <tbody v-else>
-                <tr>
-                    <td
-                        :colspan="selectable ? columns.length + 1 : columns.length"
-                        class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
-                    >
-                        No data available
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                        <td v-if="selectable" class="px-4 py-4 w-8" @click.stop>
+                            <UCheckbox
+                                :name="`select-row-${rowIndex}`"
+                                :model-value="isRowSelected(row)"
+                                class="mx-auto block"
+                                @change="toggleRowSelection(row, $event)"
+                            />
+                        </td>
+                        <td v-for="column in columns" :key="column.key" :class="[cellClasses]">
+                            <slot :name="`cell-${column.key}`" :row="row" :value="row[column.key]">
+                                {{ row[column.key] }}
+                            </slot>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else-if="loading">
+                    <tr>
+                        <td :colspan="selectable ? columns.length + 1 : columns.length" class="px-4 py-8 text-center">
+                            <ULoading />
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td
+                            :colspan="selectable ? columns.length + 1 : columns.length"
+                            class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+                        >
+                            No data available
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ClientOnly>
 </template>
