@@ -46,11 +46,23 @@ const current = ref(
     )
 );
 
-const { d } = useI18n();
+const { d, locale } = useI18n();
 
 const dateInputValue = ref('');
 
 const direction = ref<'next' | 'prev'>('next');
+
+const startsWithMonday = computed(() => {
+    return !locale.value.startsWith('en');
+});
+
+const orderedDayNames = computed(() => {
+    if (startsWithMonday.value) {
+        const days = [...props.dayNames];
+        return [...days.slice(1), days[0]];
+    }
+    return props.dayNames;
+});
 
 function formatDate(date: Date | null): string {
     if (!date) return '';
@@ -103,7 +115,13 @@ const daysInMonth = computed(() => {
 });
 
 const blanks = computed(() => {
-    return Array(current.value.getDay()).fill(0);
+    let firstDayOfMonth = current.value.getDay();
+    
+    if (startsWithMonday.value) {
+        firstDayOfMonth = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+    }
+    
+    return Array(firstDayOfMonth).fill(0);
 });
 
 watch(
@@ -235,7 +253,7 @@ function handleDateInput() {
         </div>
         <div class="grid grid-cols-7">
             <p
-                v-for="day in dayNames"
+                v-for="day in orderedDayNames"
                 :key="day"
                 class="text-secondary text-sm flex items-center justify-center size-10"
             >
