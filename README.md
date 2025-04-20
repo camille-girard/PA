@@ -1,7 +1,7 @@
 # PA
 Projet Annuel S2 
 
-# Commande
+# Commandes
 
 developpement:
 ```bash
