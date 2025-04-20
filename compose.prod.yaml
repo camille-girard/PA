@@ -7,8 +7,6 @@ services:
       MYSQL_DATABASE: ${DB}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - '3306:3306'
 
   backend:
     image: ghcr.io/camille-girard/backend
@@ -20,5 +18,8 @@ services:
 
   nginx:
     image: ghcr.io/camille-girard/nginx
+    ports:
+      - '80:80'
     depends_on:
       - backend
+      - frontend
