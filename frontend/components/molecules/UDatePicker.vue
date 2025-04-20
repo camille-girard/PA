@@ -171,6 +171,7 @@ onUnmounted(() => {
                 :icon="CalendarIcon"
                 icon-position="leading"
                 :disabled="disabled"
+                class="!justify-start"
                 @click="toggleCalendar"
                 >{{ inputValue || placeholder }}</UButton
             >
