@@ -9,8 +9,20 @@ export default defineNuxtConfig({
       "@pinia/nuxt",
       "pinia-plugin-persistedstate/nuxt",
       "@nuxtjs/color-mode",
-      "@nuxtjs/google-fonts"
+      "@nuxtjs/google-fonts",
+      "@nuxtjs/i18n",
     ],
+    i18n: {
+        locales: [
+            { code: 'fr', language: 'fr-FR' },
+            { code: 'en', language: 'en-US' },
+            { code: 'es', language: 'es-ES'}
+        ],
+        defaultLocale: 'fr',
+        bundle: {
+            optimizeTranslationDirective: false
+        }
+    },
     tailwindcss: {
         exposeConfig: true,
         viewer: true,
