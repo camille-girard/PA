@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import type { Toast } from '~/types/toast';
-import AlertCircleIcon from './icons/AlertCircleIcon.vue';
-import CheckCircleIcon from './icons/CheckCircleIcon.vue';
-import InfoCircleIcon from './icons/InfoCircleIcon.vue';
+    import type { Toast } from '~/types/toast';
+    import AlertCircleIcon from './icons/AlertCircleIcon.vue';
+    import CheckCircleIcon from './icons/CheckCircleIcon.vue';
+    import InfoCircleIcon from './icons/InfoCircleIcon.vue';
 
-interface ToastItemProps {
-    toast: Toast;
-}
+    interface ToastItemProps {
+        toast: Toast;
+    }
 
-const _props = defineProps<ToastItemProps>();
-const toastStore = useToastStore();
-const showing = ref(false);
+    const _props = defineProps<ToastItemProps>();
+    const toastStore = useToastStore();
+    const showing = ref(false);
 
-onMounted(() => {
-    setTimeout(() => {
-        showing.value = true;
-    }, 10); // Je met un petit delay pour que l'animation d'entrée s'effectuée correctement
-});
+    onMounted(() => {
+        setTimeout(() => {
+            showing.value = true;
+        }, 10); // Je met un petit delay pour que l'animation d'entrée s'effectuée correctement
+    });
 
-const iconByType = {
-    success: CheckCircleIcon,
-    error: AlertCircleIcon,
-    warning: AlertCircleIcon,
-    info: InfoCircleIcon,
-};
+    const iconByType = {
+        success: CheckCircleIcon,
+        error: AlertCircleIcon,
+        warning: AlertCircleIcon,
+        info: InfoCircleIcon,
+    };
 
-const baseClasses = 'flex p-4 gap-4 shadow-lg rounded-lg border border-secondary-alt relative max-w-[400px]';
+    const baseClasses = 'flex p-4 gap-4 shadow-lg rounded-lg border border-secondary-alt relative max-w-[400px]';
 
-const iconColor = computed(() => {
-    if (_props.toast.type === 'info') return 'brand';
+    const iconColor = computed(() => {
+        if (_props.toast.type === 'info') return 'brand';
 
-    return _props.toast.type;
-});
+        return _props.toast.type;
+    });
 
-function dismiss() {
-    showing.value = false;
+    function dismiss() {
+        showing.value = false;
 
-    setTimeout(() => {
-        toastStore.removeToast(_props.toast.id);
-    }, 300);
-}
+        setTimeout(() => {
+            toastStore.removeToast(_props.toast.id);
+        }, 300);
+    }
 </script>
 
 <template>

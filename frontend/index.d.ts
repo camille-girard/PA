@@ -1,7 +1,7 @@
 declare module 'nuxt/schema' {
     interface PublicRuntimeConfig {
-        apiUrl: string
+        apiUrl: string;
     }
 }
 
-export {}
+export {};

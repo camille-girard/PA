@@ -423,7 +423,7 @@ export default {
             },
             spacing: {
                 4.5: '1.125rem',
-                82: '20.5rem'
+                82: '20.5rem',
             },
         },
     },
