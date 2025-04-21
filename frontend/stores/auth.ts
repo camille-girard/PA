@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
             try {
                 const { $api } = useNuxtApp();
 
-                const { data, error } = await useFetch<User>($api('/api/me'), {
+                const { data, error } = await useAuthFetch<User>($api('/api/me'), {
                     method: 'GET',
                     credentials: 'include',
                 });
