@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import SearchIcon from '~/components/atoms/icons/SearchIcon.vue';
 
+    const authStore = useAuthStore();
+
     const amountTravelers = ref<number | undefined>(undefined);
     const arrivalDate = ref();
     const departureDate = ref();
@@ -24,7 +26,8 @@
                         </li>
                     </ul>
                 </nav>
-                <UButton size="lg">S'identifier</UButton>
+                <UButton v-if="!authStore.isAuthenticated" size="lg" @click="navigateTo('/login')">S'identifier</UButton>
+                <LogoutButton v-else />
             </div>
         </header>
         <section class="max-w-7xl w-full mx-auto">
@@ -66,3 +69,4 @@
         </section>
     </main>
 </template>
+
