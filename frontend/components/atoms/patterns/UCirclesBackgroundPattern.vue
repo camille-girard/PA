@@ -12,14 +12,14 @@
             <rect width="768" height="768" fill="url(#paint0_radial_4933_392997)" />
         </mask>
         <g mask="url(#mask0_4933_392997)">
-            <circle cx="384" cy="384" r="47.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="95.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="143.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="191.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="239.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="287.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="335.5" style="stroke: var(--border-secondary);" />
-            <circle cx="384" cy="384" r="383.5" style="stroke: var(--border-secondary);" />
+            <circle cx="384" cy="384" r="47.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="95.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="143.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="191.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="239.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="287.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="335.5" style="stroke: var(--border-secondary)" />
+            <circle cx="384" cy="384" r="383.5" style="stroke: var(--border-secondary)" />
         </g>
         <defs>
             <radialGradient

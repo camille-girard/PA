@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import SearchIcon from '~/components/atoms/icons/SearchIcon.vue';
+    import SearchIcon from '~/components/atoms/icons/SearchIcon.vue';
 
-const amountTravelers = ref<number | undefined>(undefined);
-const arrivalDate = ref()
-const departureDate = ref()
-
+    const amountTravelers = ref<number | undefined>(undefined);
+    const arrivalDate = ref();
+    const departureDate = ref();
 </script>
 
 <template>
@@ -32,7 +31,10 @@ const departureDate = ref()
             <section class="w-full pt-32">
                 <div class="py-20 rounded-2xl flex items-center justify-center bg-red-200 relative">
                     <div class="w-full h-full rounded-2xl overflow-hidden absolute top-0 left-0">
-                        <img src="https://toploc.com/blog/wp-content/uploads/2016/06/Maison-de-hobbit-achevee-%C2%A9simondale.net_.jpg" class="w-full h-full object-cover blur-sm">
+                        <img
+                            src="https://toploc.com/blog/wp-content/uploads/2016/06/Maison-de-hobbit-achevee-%C2%A9simondale.net_.jpg"
+                            class="w-full h-full object-cover blur-sm"
+                        />
                     </div>
                     <div class="text-center z-10">
                         <h1 class="text-4xl font-semibold text-primary-on-brand">
@@ -47,7 +49,13 @@ const departureDate = ref()
                             <div class="flex w-full justify-between gap-2">
                                 <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />
                                 <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
-                                <UInputNumber v-model="amountTravelers" placeholder="Voyageurs" type="number" :min="1" class="w-full" />
+                                <UInputNumber
+                                    v-model="amountTravelers"
+                                    placeholder="Voyageurs"
+                                    type="number"
+                                    :min="1"
+                                    class="w-full"
+                                />
                             </div>
                         </div>
 
