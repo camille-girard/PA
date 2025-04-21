@@ -91,7 +91,22 @@ export const useAuthStore = defineStore('auth', {
                 this.isLoading = false;
             }
         },
+        
+        async refreshToken(): Promise<boolean> {
+            try {
+                const { $api } = useNuxtApp();
+                const { error } = await useFetch($api('/api/token/refresh'), {
+                    method: 'POST',
+                    credentials: 'include',
+                });
+
+                return !error.value;
+            } catch {
+                return false;
+            }
+        },
     },
 
     persist: true,
 });
+
