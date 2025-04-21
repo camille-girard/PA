@@ -1,7 +1,6 @@
 import type { UseFetchOptions } from 'nuxt/app';
 
 export async function useAuthFetch<T>(url: string, options: UseFetchOptions<T> = {}) {
-    const { $api } = useNuxtApp();
     const authStore = useAuthStore();
     const headers = useRequestHeaders(['cookie']);
 
@@ -15,13 +14,13 @@ export async function useAuthFetch<T>(url: string, options: UseFetchOptions<T> =
         watch: false,
     };
 
-    let response = await useFetch($api(url), finalOptions);
+    let response = await useFetch(url, finalOptions);
 
     if (response.error.value?.statusCode === 401) {
         const refreshed = await authStore.refreshToken();
 
         if (refreshed) {
-            response = await useFetch($api(url), finalOptions);
+            response = await useFetch(url, finalOptions);
         } else {
             await authStore.logout();
             navigateTo('/login');
