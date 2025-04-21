@@ -1,21 +1,21 @@
 <script setup>
-definePageMeta({
-    middleware: 'auth',
-});
+    definePageMeta({
+        middleware: 'auth',
+    });
 
-const authStore = useAuthStore();
-const router = useRouter();
+    const authStore = useAuthStore();
+    const router = useRouter();
 
-const email = ref('');
-const password = ref('');
+    const email = ref('');
+    const password = ref('');
 
-const login = async () => {
-    const result = await authStore.login(email.value, password.value);
+    const login = async () => {
+        const result = await authStore.login(email.value, password.value);
 
-    if (result.success) {
-        router.push('/');
-    }
-};
+        if (result.success) {
+            router.push('/');
+        }
+    };
 </script>
 
 <template>
