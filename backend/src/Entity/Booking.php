@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BookingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\BookingStatus;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking
@@ -14,14 +15,14 @@ class Booking
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeInterface $startDate = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'string', enumType: BookingStatus::class)]
+    private BookingStatus $status;
 
     #[ORM\Column]
     private ?float $totalPrice = null;
@@ -65,12 +66,12 @@ class Booking
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): BookingStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(BookingStatus $status): self
     {
         $this->status = $status;
 
