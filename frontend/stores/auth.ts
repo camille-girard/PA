@@ -1,14 +1,14 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
 type User = {
-    id: number,
-    firstName: string,
-    lastName: string,
-    email: string,
-    roles: string[]
-}
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    roles: string[];
+};
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null as User | null,
         isAuthenticated: false,
@@ -22,9 +22,9 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp();
 
-                const { data, error } = await useFetch<User>($api("/api/me"), {
-                    method: "GET",
-                    credentials: "include",
+                const { data, error } = await useAuthFetch<User>($api('/api/me'), {
+                    method: 'GET',
+                    credentials: 'include',
                 });
 
                 if (data.value && !error.value) {
@@ -37,9 +37,9 @@ export const useAuthStore = defineStore("auth", {
             } catch (error) {
                 this.user = null;
                 this.isAuthenticated = false;
-                console.error("Error fetching user:", error);
+                console.error('Error fetching user:', error);
             } finally {
-                this.isLoading = false
+                this.isLoading = false;
             }
         },
 
@@ -49,10 +49,10 @@ export const useAuthStore = defineStore("auth", {
             try {
                 const { $api } = useNuxtApp();
 
-                const { error } = await useFetch($api("/api/login"), {
-                    method: "POST",
+                const { error } = await useFetch($api('/api/login'), {
+                    method: 'POST',
                     body: { username: email, password },
-                    credentials: "include",
+                    credentials: 'include',
                 });
 
                 if (!error.value) {
@@ -60,35 +60,53 @@ export const useAuthStore = defineStore("auth", {
                     return { success: true };
                 }
 
-                return { success: false, error: error.value?.message || "Login failed" };
+                return {
+                    success: false,
+                    error: error.value?.message || 'Login failed',
+                };
             } catch (error) {
-                console.error("Login error:", error);
-                return { success: false, error: "Authentication failed" };
+                console.error('Login error:', error);
+                return { success: false, error: 'Authentication failed' };
             } finally {
                 this.isLoading = false;
             }
         },
 
         async logout() {
-            this.isLoading = true
+            this.isLoading = true;
 
             try {
-                const { $api } = useNuxtApp()
+                const { $api } = useNuxtApp();
 
                 await useFetch($api('/api/logout'), {
                     method: 'POST',
-                    credentials: 'include'
-                })
+                    credentials: 'include',
+                });
 
-                this.user = null
-                this.isAuthenticated = false
-            } catch(error) {
-                console.error(error)
+                this.user = null;
+                this.isAuthenticated = false;
+            } catch (error) {
+                console.error(error);
             } finally {
-                this.isLoading = false
+                this.isLoading = false;
             }
-        }
+        },
+        
+        async refreshToken(): Promise<boolean> {
+            try {
+                const { $api } = useNuxtApp();
+                const { error } = await useFetch($api('/api/token/refresh'), {
+                    method: 'POST',
+                    credentials: 'include',
+                });
+
+                return !error.value;
+            } catch {
+                return false;
+            }
+        },
     },
 
     persist: true,
 });
+

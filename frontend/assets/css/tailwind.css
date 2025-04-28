@@ -18,12 +18,16 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .shadow-xs-skeuomorphic {
-    box-shadow: 0px 0px 0px 1px rgba(10, 13, 18, 0.18) inset, 0px -2px 0px 0px rgba(10, 13, 18, 0.05) inset,
+    box-shadow:
+        0px 0px 0px 1px rgba(10, 13, 18, 0.18) inset,
+        0px -2px 0px 0px rgba(10, 13, 18, 0.05) inset,
         0px 1px 2px 0px rgba(10, 13, 18, 0.05);
 }
 
 .shadow-xs-custom {
-    box-shadow: inset 0 1px #ffffff1f, 0 1px 2px #0a0d120d;
+    box-shadow:
+        inset 0 1px #ffffff1f,
+        0 1px 2px #0a0d120d;
 }
 
 .bg-linear-grad {

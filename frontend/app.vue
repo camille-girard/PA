@@ -1,7 +1,7 @@
 <script setup>
-useSeoMeta({
-    title: 'PopnBed',
-});
+    useSeoMeta({
+        title: 'PopnBed',
+    });
 </script>
 
 <template>
