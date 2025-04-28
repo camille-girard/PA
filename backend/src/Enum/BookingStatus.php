@@ -1,20 +1,20 @@
 <?php
-
 namespace App\Enum;
 
 enum BookingStatus: string
 {
-    case PENDING = 'en attente';
-    case ACCEPTED = 'accepté';
-    case REFUSED = 'refusé';
-    case CANCELLED = 'Annulé';
+    case PENDING = 'pending';     // En attente
+    case ACCEPTED = 'accepted';   // Acceptée
+    case REFUSED = 'refused';     // Refusée
+    case BLOCKED = 'blocked';     // Bloqué
 
-    public function toString(): string {
-        return match($this) {
+    public function label(): string
+    {
+        return match ($this) {
             self::PENDING => 'En attente',
-            self::ACCEPTED => 'Accepté',
-            self::REFUSED => 'Refusé',
-            self::CANCELLED => 'Annulé',
+            self::ACCEPTED => 'Acceptée',
+            self::REFUSED => 'Refusée',
+            self::BLOCKED => 'Bloquée',
         };
     }
 }

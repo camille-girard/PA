@@ -1,0 +1,32 @@
+App\Entity\AccommodationImages:
+  image_1:
+    accommodation: '@accommodation_1'
+    url: 'https://picsum.photos/300/200'
+    is_main: true
+
+  image_2:
+    accommodation: '@accommodation_1'
+    url: 'https://picsum.photos/300/200'
+    is_main: false
+
+  image_3:
+    accommodation: '@accommodation_2'
+    url: 'https://picsum.photos/300/200'
+    is_main: true
+
+  image_4:
+    accommodation: '@accommodation_2'
+    url: 'https://picsum.photos/300/200'
+    is_main: false
+
+  image_5:
+    accommodation: '@accommodation_3'
+    url: 'https://picsum.photos/300/200'
+    is_main: true
+
+  image_6:
+    accommodation: '@accommodation_3'
+    url: 'https://picsum.photos/300/200'
+    is_main: false
+
+

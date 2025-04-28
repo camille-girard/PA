@@ -1,0 +1,24 @@
+App\Entity\Client:
+  client_1:
+    email: 'client@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Cyril'
+    last_name: 'MAMAN'
+    preferences: [
+      'pets_allowed',
+      'wifi',
+      'pool'
+    ]
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+
+  client_2:
+    email: 'client2@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'PATE'
+    last_name: 'En croute'
+    preferences: [ 'pets', 'smoking', 'wheelchair', 'pool', 'wifi' ]
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
