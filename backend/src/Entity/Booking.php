@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enum\BookingStatus;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking

@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client extends User
 {
-
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private ?array $preferences = null;
 
@@ -40,7 +39,6 @@ class Client extends User
         $this->comments = new ArrayCollection();
         $this->messages = new ArrayCollection();
     }
-
 
     public function getPreferences(): ?array
     {
