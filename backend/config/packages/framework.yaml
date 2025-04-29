@@ -5,6 +5,10 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    serializer:
+        default_context:
+            circular_reference_handler: 'App\Serializer\CircularReferenceHandler::handle'
+
     #esi: true
     #fragments: true
 
