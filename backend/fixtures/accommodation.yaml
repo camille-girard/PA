@@ -1,0 +1,37 @@
+App\Entity\Accommodation:
+  accommodation_1:
+    owner: '@owner_1'
+    theme: '@theme_1'
+    name: 'Logement dans la série Friends à New York'
+    description: 'Séjournez dans l‘appartement de Monica et Rachel à New York, avec une vue imprenable sur Central Park.'
+    address: '32 Jasper Street, New York, NY 10001'
+    capacity: 2
+    price: 120.50
+    adventage: ['gouter', 'Petit-déjeuner offert']
+    practical_informations: 'Wi-Fi gratuit, cuisine équipée à la Monica, salle de bain privée.'
+    created_at: '<(new DateTimeImmutable())>'
+
+  accommodation_2:
+    owner: '@owner_1'
+    theme: '@theme_2'
+    name: 'Château dans le film Harry Potter'
+    description: 'Séjournez dans le château de Poudlard, avec accès à la salle commune de Gryffondor.'
+    address: 'Hogwarts Castle, Scotland'
+    capacity: 4
+    price: 250.00
+    adventage: ['Accès à la salle commune', 'Visite du château']
+    practical_informations: 'Visite guidée du château, accès à la bibliothèque magique, repas à la Grande Salle.'
+    created_at: '<(new DateTimeImmutable())>'
+
+  accommodation_3:
+    owner: '@owner_1'
+    theme: '@theme_3'
+    name: 'Maison dans le dessin animé Toy Story'
+    description: 'Séjournez dans la maison de Woody et Buzz, avec un jardin rempli de jouets.'
+    address: '456 Rue des Jouets, Toyland, USA'
+    capacity: 6
+    price: 180.00
+    adventage: ['Jardin', 'Salle de jeux']
+    practical_informations: 'Wi-Fi gratuit, salle de jeux pour enfants, jardin avec balançoire.'
+    created_at: '<(new DateTimeImmutable())>'
+

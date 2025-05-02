@@ -1,0 +1,9 @@
+App\Entity\Admin:
+  admin_1:
+    email: 'admin@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'password123'
+    first_name: 'Joe'
+    last_name: 'Doe'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
