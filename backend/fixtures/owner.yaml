@@ -1,0 +1,9 @@
+App\Entity\Owner:
+  owner_1:
+    email: 'owner@example.com'
+    roles: ['ROLE_OWNER']
+    password: 'password123'
+    first_name: 'RICHARD'
+    last_name: 'PASTIS'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'

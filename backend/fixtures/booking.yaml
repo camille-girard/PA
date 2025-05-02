@@ -1,0 +1,18 @@
+App\Entity\Booking:
+  booking_1:
+    client: '@client_1'
+    accommodation: '@accommodation_1'
+    start_date: '<(new DateTimeImmutable("+1 day"))>'
+    end_date: '<(new DateTimeImmutable("+3 days"))>'
+    status: 'pending'
+    total_price: 241.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_2:
+    client: '@client_2'
+    accommodation: '@accommodation_2'
+    start_date: '<(new DateTimeImmutable("+4 days"))>'
+    end_date: '<(new DateTimeImmutable("+6 days"))>'
+    status: 'accepted'
+    total_price: 241.00
+    created_at: '<(new DateTimeImmutable())>'
