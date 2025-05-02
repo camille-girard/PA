@@ -92,9 +92,9 @@ final class SecurityController extends AbstractController
         $user->setEmail($data['email']);
         $user->setFirstName($data['firstName']);
         $user->setLastName($data['lastName']);
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(['ROLE_CLIENT']);
         $user->setCreatedAt(new \DateTimeImmutable());
-
+        $user->setIsVerified(false);
         $hashedPassword = $passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
