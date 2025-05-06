@@ -43,6 +43,59 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async register(userData: { firstName: string; lastName: string; email: string; password: string }) {
+            this.isLoading = true;
+
+            try {
+                const { $api } = useNuxtApp();
+
+                const requestData = {
+                    ...userData,
+                    username: userData.email,
+                };
+
+                const { error } = await useFetch($api('/api/register'), {
+                    method: 'POST',
+                    body: requestData,
+                    credentials: 'include',
+                });
+
+                if (!error.value) {
+                    return { success: true };
+                }
+
+                let errorMessage = 'Inscription échouée';
+
+                if (error.value?.data) {
+                    const errorData = error.value.data;
+
+                    if (errorData.error) {
+                        errorMessage = errorData.error;
+                    } else if (errorData.message) {
+                        errorMessage = errorData.message;
+                    } else if (errorData.errors) {
+                        const firstError = Object.values(errorData.errors)[0];
+                        errorMessage = Array.isArray(firstError) ? firstError[0] : String(firstError);
+                    }
+                }
+
+                return {
+                    success: false,
+                    message: errorMessage,
+                    errors: error.value?.data?.errors || {},
+                    statusCode: error.value?.statusCode,
+                };
+            } catch (error: never) {
+                console.error('Register error:', error);
+                return {
+                    success: false,
+                    message: "Une erreur est survenue lors de l'inscription",
+                };
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         async login(email: string, password: string) {
             this.isLoading = true;
 
@@ -60,10 +113,7 @@ export const useAuthStore = defineStore('auth', {
                     return { success: true };
                 }
 
-                return {
-                    success: false,
-                    error: error.value?.message || 'Login failed',
-                };
+                return { success: false, error: error.value?.message || 'Login failed' };
             } catch (error) {
                 console.error('Login error:', error);
                 return { success: false, error: 'Authentication failed' };
@@ -91,7 +141,7 @@ export const useAuthStore = defineStore('auth', {
                 this.isLoading = false;
             }
         },
-        
+
         async refreshToken(): Promise<boolean> {
             try {
                 const { $api } = useNuxtApp();
@@ -109,4 +159,3 @@ export const useAuthStore = defineStore('auth', {
 
     persist: true,
 });
-
