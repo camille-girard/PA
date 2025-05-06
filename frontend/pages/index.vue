@@ -1,6 +1,16 @@
 <script setup lang="ts">
     import SearchIcon from '~/components/atoms/icons/SearchIcon.vue';
 
+    useSeoMeta({
+        title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+        meta: [
+            {
+                name: 'description',
+                content: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+            },
+        ],
+    });
+
     const authStore = useAuthStore();
 
     const amountTravelers = ref<number | undefined>(undefined);
@@ -26,7 +36,9 @@
                         </li>
                     </ul>
                 </nav>
-                <UButton v-if="!authStore.isAuthenticated" size="lg" @click="navigateTo('/login')">S'identifier</UButton>
+                <UButton v-if="!authStore.isAuthenticated" size="lg" @click="navigateTo('/login')"
+                    >S'identifier</UButton
+                >
                 <LogoutButton v-else />
             </div>
         </header>
@@ -69,4 +81,3 @@
         </section>
     </main>
 </template>
-

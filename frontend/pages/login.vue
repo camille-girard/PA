@@ -1,4 +1,13 @@
 <script setup>
+    useSeoMeta({
+        title: 'Login - PopnBed',
+        meta: [
+            {
+                name: 'description',
+                content: 'Accédez à votre compte PopnBed pour réserver des hébergements inspirés de films.',
+            },
+        ],
+    });
     definePageMeta({
         middleware: 'auth',
     });
@@ -40,6 +49,12 @@
                 </div>
                 <UButton class="mt-6 w-full justify-center" type="submit">Submit</UButton>
             </form>
+            <div class="text-center">
+                <p class="text-tertiary flex items-center justify-center gap-1">
+                    Vous n'avez pas de compte ?
+                    <ULink to="/register">S'enregistrer</ULink>
+                </p>
+            </div>
         </section>
     </main>
 </template>
