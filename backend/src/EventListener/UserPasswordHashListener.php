@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -15,6 +16,9 @@ class UserPasswordHashListener
         $this->passwordHasher = $passwordHasher;
     }
 
+    /**
+     * @param LifecycleEventArgs<EntityManagerInterface> $args
+     */
     public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getObject();

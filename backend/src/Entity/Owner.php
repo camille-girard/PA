@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 class Owner extends User
 {
+    /**
+     * @var Collection<int, Accommodation>
+     */
     #[ORM\OneToMany(targetEntity: Accommodation::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $accommodations;
 
