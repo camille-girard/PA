@@ -1,10 +1,12 @@
 <script setup>
     useSeoMeta({
         title: 'PopnBed',
+        description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+        ogDescription: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         meta: [
             {
-                name: 'description',
-                content: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+                name: 'robots',
+                content: 'index, follow',
             },
         ],
     });
