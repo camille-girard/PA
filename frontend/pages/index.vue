@@ -10,9 +10,6 @@
             },
         ],
     });
-
-    const authStore = useAuthStore();
-
     const amountTravelers = ref<number | undefined>(undefined);
     const arrivalDate = ref();
     const departureDate = ref();
@@ -20,28 +17,6 @@
 
 <template>
     <main class="w-full h-full">
-        <header class="h-20 w-full fixed top-0 flex items-center">
-            <div class="max-w-7xl w-full mx-auto flex items-center justify-between h-fit">
-                <div class="flex items-center gap-2">
-                    <ULogo />
-                    <span class="text-xl font-semibold text-primary">PopnBed</span>
-                </div>
-                <nav class="h-full">
-                    <ul class="h-full flex items-center gap-4">
-                        <li>
-                            <ULink to="#">Thématiques</ULink>
-                        </li>
-                        <li>
-                            <ULink to="#">Explorer</ULink>
-                        </li>
-                    </ul>
-                </nav>
-                <UButton v-if="!authStore.isAuthenticated" size="lg" @click="navigateTo('/login')"
-                    >S'identifier</UButton
-                >
-                <LogoutButton v-else />
-            </div>
-        </header>
         <section class="max-w-7xl w-full mx-auto">
             <section class="w-full pt-32">
                 <div class="py-20 rounded-2xl flex items-center justify-center bg-red-200 relative">
