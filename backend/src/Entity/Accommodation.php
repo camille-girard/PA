@@ -14,6 +14,9 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /**
+     * @phpstan-ignore-next-line
+     */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -31,6 +34,9 @@ class Accommodation
     #[ORM\Column]
     private ?float $price = null;
 
+    /**
+     * @var array<string>
+     */
     #[ORM\Column(type: Types::ARRAY)]
     private array $adventage = [];
 
@@ -137,11 +143,17 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getAdventage(): array
     {
         return $this->adventage;
     }
 
+    /**
+     * @param array<string> $adventage
+     */
     public function setAdventage(array $adventage): static
     {
         $this->adventage = $adventage;
