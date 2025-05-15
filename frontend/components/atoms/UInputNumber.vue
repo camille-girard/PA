@@ -39,7 +39,7 @@
     });
 
     const baseClasses =
-        'flex w-full border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs text-center';
+        'flex w-full rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs text-center';
 
     const variantClasses = {
         default: 'border-primary focus:ring-primary',

@@ -33,10 +33,10 @@
     }>();
 
     const baseClasses =
-        'flex gap-2 border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full';
+        'flex gap-2 border rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full';
 
     const variantClasses = {
-        default: 'border-primary focus:ring-primary',
+        default: 'focus:ring-primary',
         destructive: 'border-error-subtle focus:ring-error',
     };
 
