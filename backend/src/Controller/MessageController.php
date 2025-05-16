@@ -7,6 +7,7 @@ use App\Repository\ClientRepository;
 use App\Repository\MessageRepository;
 use App\Repository\OwnerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/messages', name: 'api_message_')]
+#[OA\Tag(name: 'Messages')]
 class MessageController extends AbstractController
 {
     public function __construct(

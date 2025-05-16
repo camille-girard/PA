@@ -6,6 +6,7 @@ use App\Entity\Owner;
 use App\Repository\OwnerRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/owners', name: 'api_owners_')]
+#[OA\Tag(name: 'Owners')]
 final class OwnerController extends AbstractController
 {
     public function __construct(
