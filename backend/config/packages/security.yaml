@@ -35,6 +35,14 @@ security:
     access_control:
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/themes, roles: PUBLIC_ACCESS }
+        - { path: ^/api/bookings, roles: PUBLIC_ACCESS }
+        - { path: ^/api/owners, roles: PUBLIC_ACCESS }
+        - { path: ^/api/accommodations, roles: PUBLIC_ACCESS }
+        - { path: ^/api/messages, roles: PUBLIC_ACCESS }
+        - { path: ^/api/comments, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/clients, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
