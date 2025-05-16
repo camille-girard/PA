@@ -43,7 +43,7 @@ const comment = [
   }
 ]
 
-const trending = [
+const rental = [
   { title: 'Friends', image: '/friends.png' },
   { title: 'Star Wars', image: '/StarWars.png' },
   { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
@@ -74,7 +74,7 @@ const trending = [
       </div>
       <section id="consult-trending" class="w-full pt-32">
         <h2 class="text-3xl font-bold mb-10">Consultés récemment</h2>
-        <RentalCards :items="trending" />
+        <RentalCards :items="rental" />
       </section>
     </div>
     <Footer />
