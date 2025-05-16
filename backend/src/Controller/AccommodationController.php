@@ -8,6 +8,7 @@ use App\Repository\OwnerRepository;
 use App\Repository\ThemeRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/accommodations', name: 'api_accommodations_')]
+#[OA\Tag(name: 'Accommodations')]
 final class AccommodationController extends AbstractController
 {
     public function __construct(

@@ -7,6 +7,7 @@ use App\Repository\AccommodationRepository;
 use App\Repository\ClientRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/comments')]
+#[OA\Tag(name: 'Comments')]
 class CommentController extends AbstractController
 {
     private EntityManagerInterface $entityManager;

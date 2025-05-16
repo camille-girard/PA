@@ -41,6 +41,7 @@ security:
         - { path: ^/api/accommodations, roles: PUBLIC_ACCESS }
         - { path: ^/api/messages, roles: PUBLIC_ACCESS }
         - { path: ^/api/comments, roles: PUBLIC_ACCESS }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
         - { path: ^/api/clients, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

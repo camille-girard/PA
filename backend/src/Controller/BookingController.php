@@ -8,6 +8,7 @@ use App\Repository\BookingRepository;
 use App\Repository\ClientRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/bookings', name: 'api_bookings_')]
+#[OA\Tag(name: 'Bookings')]
 final class BookingController extends AbstractController
 {
     public function __construct(
