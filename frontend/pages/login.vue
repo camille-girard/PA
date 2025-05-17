@@ -24,7 +24,7 @@ import Header from '~/components/Header.vue';
   <main>
     <Header />
     <div class="my-20 py-20 rounded-2xl flex items-center justify-center relative">
-        <UGridBackgroundPattern class="absolute top-0" />
+        <UGridBackgroundPattern class="absolute top-0 opacity-20" />
         <section class="flex flex-col items-center space-y-8 relative">
             <div class="text-center space-y-3">
                 <h1 class=" font-semibold text-3xl">Welcome back</h1>

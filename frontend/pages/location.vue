@@ -73,7 +73,7 @@ const rental = [
         </div>
       </div>
       <section id="consult-trending" class="w-full pt-32">
-        <h2 class="text-3xl font-bold mb-10">Consultés récemment</h2>
+        <h2 class="text-center text-3xl font-bold mb-10">Consultés récemment</h2>
         <RentalCards :items="rental" />
       </section>
     </div>

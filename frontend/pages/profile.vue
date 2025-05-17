@@ -14,22 +14,20 @@ const rental = [
 <template>
   <main>
     <Header />
-    <div class="max-w-7xl mx-auto w-full pt-4 px-4">
-      <section id="information-profile" class="w-full pt-32">
-        <h2 class="text-3xl font-bold mb-10">Mes informations personelles</h2>
+    <div class="max-w-7xl w-full mx-auto pt-32 px-4">
+      <section id="information-profile" class="mb-20">
+        <h1 class="text-4xl font-semibold text-center mb-12">Mes informations personnelles</h1>
         <PersonalInfoCard />
-
       </section>
-      <section id="client-rentals" class="w-full pt-32">
-        <h2 class="text-3xl font-bold mb-10">Consultés récemment</h2>
+      <section id="client-rentals" class="mb-20">
+        <h2 class="text-center text-3xl font-bold mb-10">Consultés récemment</h2>
         <RentalCards :items="rental" />
       </section>
-      <section id="owner-rentals" class="space-y-6">
-        <h2 class="text-3xl font-bold mb-10">Mes biens publiés</h2>
+      <section id="owner-rentals" class="mb-20">
+        <h2 class="text-center text-3xl font-bold mb-10">Mes biens publiés</h2>
         <RentalCards :items="rental" />
       </section>
     </div>
     <Footer />
   </main>
 </template>
-
