@@ -33,12 +33,14 @@
     }>();
 
     const baseClasses =
-        'flex gap-2 border rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full';
+        'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none placeholder:text-gray-400 text-gray-700 shadow-xs w-full';
+
 
     const variantClasses = {
-        default: 'focus:ring-primary',
-        destructive: 'border-error-subtle focus:ring-error',
+      default: 'focus:border-brand-solid focus:ring-brand-solid',
+      destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
     };
+
 
     const sizeClasses = {
         sm: 'px-3 py-2',

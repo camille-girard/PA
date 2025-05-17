@@ -1,18 +1,22 @@
-<script setup lang="ts">
+<script setup>
+import UButton from '~/components/atoms/UButton.vue'
 </script>
 <template>
   <div class="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10 items-start">
+    <!-- Avatar -->
     <div class="bg-orange-100 rounded-3xl p-6 flex flex-col items-center w-full md:w-1/4">
       <img
-          src="https://via.placeholder.com/100"
+          src="#"
           alt="Avatar"
-          class="w-24 h-24 rounded-full mb-4 object-cover"
+          class="w-24 h-24 rounded-full object-cover mb-4"
       />
       <p class="text-lg font-bold">Patrick</p>
     </div>
 
+    <!-- Infos personnelles -->
     <div class="w-full md:w-3/4 space-y-6">
       <div class="space-y-4">
+        <!-- Ligne d'infos -->
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Nom officiel</p>
@@ -20,7 +24,6 @@
           </div>
           <a href="#" class="text-sm underline text-gray-700">modifier</a>
         </div>
-
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Prénom d'usage</p>
@@ -28,7 +31,6 @@
           </div>
           <a href="#" class="text-sm underline text-gray-700">modifier</a>
         </div>
-
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Adresse e-mail</p>
@@ -36,7 +38,6 @@
           </div>
           <a href="#" class="text-sm underline text-gray-700">modifier</a>
         </div>
-
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Numéro de téléphone</p>
@@ -44,7 +45,6 @@
           </div>
           <a href="#" class="text-sm underline text-gray-700">ajouter</a>
         </div>
-
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Vérification d'identité</p>
@@ -52,7 +52,6 @@
           </div>
           <a href="#" class="text-sm underline text-gray-700">vérifier</a>
         </div>
-
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Adresse</p>
@@ -61,14 +60,17 @@
           <a href="#" class="text-sm underline text-gray-700">ajouter</a>
         </div>
       </div>
-
-      <div class="pt-8">
-        <button
-            class="bg-orange-600 text-white font-semibold px-6 py-3 rounded-xl w-full hover:bg-orange-700 transition"
-        >
-          Ajouter un nouveau bien
-        </button>
-      </div>
     </div>
   </div>
+
+  <div class="flex justify-center mt-10">
+    <UButton
+        size="lg"
+        variant="primary"
+        class="w-full max-w-2xl"
+    >
+      Ajouter un nouveau bien
+    </UButton>
+  </div>
+
 </template>
