@@ -12,7 +12,7 @@ const host = {
   name: 'Jean-François',
   details: 'Hôte depuis 3 ans',
   rating: 4.6,
-  image: '/JF_le_goat.png'
+  image: '/Patrick.jpg',
 }
 </script>
 
