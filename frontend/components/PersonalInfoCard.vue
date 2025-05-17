@@ -3,20 +3,17 @@ import UButton from '~/components/atoms/UButton.vue'
 </script>
 <template>
   <div class="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10 items-start">
-    <!-- Avatar -->
     <div class="bg-orange-100 rounded-3xl p-6 flex flex-col items-center w-full md:w-1/4">
       <img
-          src="#"
+          src="/Patrick.jpg"
           alt="Avatar"
           class="w-24 h-24 rounded-full object-cover mb-4"
       />
       <p class="text-lg font-bold">Patrick</p>
     </div>
 
-    <!-- Infos personnelles -->
     <div class="w-full md:w-3/4 space-y-6">
       <div class="space-y-4">
-        <!-- Ligne d'infos -->
         <div class="flex justify-between items-start">
           <div>
             <p class="font-bold">Nom officiel</p>

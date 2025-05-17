@@ -2,7 +2,7 @@
 const host = {
   name: 'Patrick',
   verified: true,
-  image: '/patoch.jpg',
+  image: '/Patrick.jpg',
   note: 4.5,
   evaluations: 239,
   experienceYears: 8,
