@@ -1,0 +1,30 @@
+<script setup lang="ts">
+import Footer from "~/components/Footer.vue";
+import Header from "~/components/Header.vue";
+</script>
+
+<template>
+  <main>
+    <Header />
+    <div class="max-w-7xl w-full mx-auto">
+      <section class="w-full pt-32">
+        <div class="py-20 rounded-2xl flex items-center justify-center relative">
+          <div class="text-center z-10">
+            <h1 class="text-4xl font-semibold">Explorez votre prochaine destination</h1>
+            <p class="mt-4">Découvrez le lieu de vos prochaines vacances</p>
+          </div>
+        </div>
+      </section>
+      <section class="w-full pt-12">
+        <div class="flex justify-center">
+          <img
+              src="/Map.png"
+              alt="Carte des lieux à Paris"
+              class="rounded-2xl max-w-full"
+          />
+        </div>
+      </section>
+    </div>
+    <Footer />
+  </main>
+</template>

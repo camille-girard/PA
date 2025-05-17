@@ -14,10 +14,10 @@ const authStore = useAuthStore();
       <nav class="h-full">
         <ul class="h-full flex items-center gap-4">
           <li>
-            <ULink to="#">Thématiques</ULink>
+            <ULink to="/thematiques">Thématiques</ULink>
           </li>
           <li>
-            <ULink to="#">Explorer</ULink>
+            <ULink to="/explorer">Explorer</ULink>
           </li>
         </ul>
       </nav>

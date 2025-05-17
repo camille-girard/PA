@@ -24,9 +24,8 @@ const trending = [
       <section class="w-full pt-32">
         <div class="py-20 rounded-2xl flex items-center justify-center relative">
           <div class="text-center z-10">
-            <h1 class="text-4xl font-semibold">
-              Séjourner dans un lieu inspiré de films
-            </h1>
+            <h1 class="text-4xl font-semibold">Séjourner dans un lieu inspiré de films</h1>
+            <p class="mt-4">Trouver et réservez des hébergements uniques à thème cinématographique</p>
             <SearchBar />
           </div>
         </div>
@@ -37,7 +36,9 @@ const trending = [
         </div>
         <RentalCards :items="trending" />
         <div class="mt-10 text-center">
-          <UButton class="mx-auto">Voir plus</UButton>
+          <NuxtLink to="/tendances">
+            <UButton class="mx-auto">Voir plus</UButton>
+          </NuxtLink>
         </div>
       </section>
       <section class="w-full pt-12">
@@ -54,7 +55,9 @@ const trending = [
           />
         </div>
         <div class="mt-10 text-center">
-          <UButton class="mx-auto">Explorez</UButton>
+          <NuxtLink to="/explorer">
+            <UButton class="mx-auto">Explorez</UButton>
+          </NuxtLink>
         </div>
       </section>
     </div>
