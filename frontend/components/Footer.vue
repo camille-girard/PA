@@ -26,8 +26,8 @@ const currentYear = new Date().getFullYear();
       </div>
 
       <div class="grid grid-cols-1 gap-2 text-sm text-gray-700">
-        <ULink to="#">Thématiques</ULink>
-        <ULink to="#">Explorer</ULink>
+        <ULink to="/thematiques">Thématiques</ULink>
+        <ULink to="/explorer">Explorer</ULink>
         <ULink to="#">Conditions Générales de vente</ULink>
         <ULink to="#">Plan du site</ULink>
         <p class="text-xs text-gray-500 mt-4">© {{ currentYear }} PopnBed, Inc</p>

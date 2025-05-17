@@ -8,10 +8,6 @@ const departureDate = ref();
 
 <template>
   <div>
-    <p class="text-lg">
-      Trouver et réservez des hébergements uniques à thème cinématographique
-    </p>
-
     <div class="mt-14 max-w-screen-sm space-y-3">
       <UInput placeholder="Destination, thématique" type="text" :icon="SearchIcon" />
       <div class="flex w-full justify-between gap-2">
