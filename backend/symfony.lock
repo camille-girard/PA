@@ -13,79 +13,81 @@
             "src/Repository/.gitignore"
         ]
     },
-    "doctrine/doctrine-migrations-bundle": {
-        "version": "3.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.1",
-            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
-        },
-        "files": [
-            "config/packages/doctrine_migrations.yaml",
-            "migrations/.gitignore"
-        ]
+    "files": [
+      "config/packages/doctrine.yaml",
+      "src/Entity/.gitignore",
+      "src/Repository/.gitignore"
+    ]
+  },
+  "doctrine/doctrine-migrations-bundle": {
+    "version": "3.4",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "3.1",
+      "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
     },
-    "friendsofphp/php-cs-fixer": {
-        "version": "3.75",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.0",
-            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
-        },
-        "files": [
-            ".php-cs-fixer.dist.php"
-        ]
+    "files": [
+      "config/packages/doctrine_migrations.yaml",
+      "migrations/.gitignore"
+    ]
+  },
+  "friendsofphp/php-cs-fixer": {
+    "version": "3.75",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "3.0",
+      "ref": "be2103eb4a20942e28a6dd87736669b757132435"
     },
-    "hautelook/alice-bundle": {
-        "version": "2.15",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.2",
-            "ref": "c84e4f2b9d7f436d7d52e8369230b393367607ec"
-        },
-        "files": [
-            "config/packages/hautelook_alice.yaml",
-            "fixtures/.gitignore"
-        ]
+    "files": [
+      ".php-cs-fixer.dist.php"
+    ]
+  },
+  "hautelook/alice-bundle": {
+    "version": "2.15",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "2.2",
+      "ref": "c84e4f2b9d7f436d7d52e8369230b393367607ec"
     },
-    "lexik/jwt-authentication-bundle": {
-        "version": "3.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.5",
-            "ref": "e9481b233a11ef7e15fe055a2b21fd3ac1aa2bb7"
-        },
-        "files": [
-            "config/packages/lexik_jwt_authentication.yaml"
-        ]
+    "files": [
+      "config/packages/hautelook_alice.yaml",
+      "fixtures/.gitignore"
+    ]
+  },
+  "lexik/jwt-authentication-bundle": {
+    "version": "3.1",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "2.5",
+      "ref": "e9481b233a11ef7e15fe055a2b21fd3ac1aa2bb7"
     },
-    "nelmio/alice": {
-        "version": "3.14",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "3.3",
-            "ref": "42b52d2065dc3fde27912d502c18ca1926e35ae2"
-        },
-        "files": [
-            "config/packages/nelmio_alice.yaml"
-        ]
+    "files": [
+      "config/packages/lexik_jwt_authentication.yaml"
+    ]
+  },
+  "nelmio/alice": {
+    "version": "3.14",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "3.3",
+      "ref": "42b52d2065dc3fde27912d502c18ca1926e35ae2"
     },
-    "nelmio/cors-bundle": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.5",
-            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
-        },
-        "files": [
-            "config/packages/nelmio_cors.yaml"
-        ]
+    "files": [
+      "config/packages/nelmio_alice.yaml"
+    ]
+  },
+  "nelmio/cors-bundle": {
+    "version": "2.5",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "1.5",
+      "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
     },
     "phpstan/phpstan": {
         "version": "2.1",
@@ -96,49 +98,42 @@
             "ref": "5e490cc197fb6bb1ae22e5abbc531ddc633b6767"
         }
     },
-    "symfony/console": {
-        "version": "7.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "5.3",
-            "ref": "1781ff40d8a17d87cf53f8d4cf0c8346ed2bb461"
-        },
-        "files": [
-            "bin/console"
-        ]
+    "files": [
+      "phpstan.dist.neon"
+    ]
+  },
+  "symfony/console": {
+    "version": "7.2",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "5.3",
+      "ref": "1781ff40d8a17d87cf53f8d4cf0c8346ed2bb461"
     },
-    "symfony/flex": {
-        "version": "2.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.4",
-            "ref": "52e9754527a15e2b79d9a610f98185a1fe46622a"
-        },
-        "files": [
-            ".env",
-            ".env.dev"
-        ]
+    "files": [
+      "bin/console"
+    ]
+  },
+  "symfony/flex": {
+    "version": "2.5",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "2.4",
+      "ref": "52e9754527a15e2b79d9a610f98185a1fe46622a"
     },
-    "symfony/framework-bundle": {
-        "version": "7.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "7.2",
-            "ref": "87bcf6f7c55201f345d8895deda46d2adbdbaa89"
-        },
-        "files": [
-            "config/packages/cache.yaml",
-            "config/packages/framework.yaml",
-            "config/preload.php",
-            "config/routes/framework.yaml",
-            "config/services.yaml",
-            "public/index.php",
-            "src/Controller/.gitignore",
-            "src/Kernel.php"
-        ]
+    "files": [
+      ".env",
+      ".env.dev"
+    ]
+  },
+  "symfony/framework-bundle": {
+    "version": "7.2",
+    "recipe": {
+      "repo": "github.com/symfony/recipes",
+      "branch": "main",
+      "version": "7.2",
+      "ref": "87bcf6f7c55201f345d8895deda46d2adbdbaa89"
     },
     "symfony/maker-bundle": {
         "version": "1.63",
@@ -205,4 +200,5 @@
             "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
         }
     }
+  }
 }

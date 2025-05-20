@@ -27,7 +27,7 @@
 
     const variantClasses = {
         primary:
-            'text-brand-secondary hover:text-brand-secondary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+            'hover:text-brand-secondary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
         secondary:
             'text-tertiary hover:text-tertiary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
     };

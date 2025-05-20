@@ -7,7 +7,7 @@ body,
 #__nuxt {
     height: 100%;
     width: 100%;
-    @apply bg-primary;
+    background-color: white;
     font-family: 'Poppins';
 }
 

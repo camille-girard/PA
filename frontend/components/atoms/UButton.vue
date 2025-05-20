@@ -35,7 +35,7 @@
         primary:
             'bg-brand-solid hover:bg-brand-solid-hover text-white enabled:shadow-xs-custom border border-brand enabled:bg-linear-grad disabled:border-disabled-subtle disabled:bg-disabled disabled:text-fg-disabled [&_svg]:text-button-primary-icon [&_svg]:hover:text-button-primary-icon-hover',
         secondary:
-            'bg-primary enabled:hover:bg-primary-hover text-secondary hover:text-secondary-hover shadow-xs-skeuomorphic dark:border border-primary disabled:text-fg-disabled disabled:border-disabled-subtle [&_svg]:text-fg-quaternary [&_svg]:hover:text-fg-quaternary-hover',
+            'text-secondary hover:text-secondary-hover shadow-xs-skeuomorphic disabled:text-fg-disabled disabled:border-disabled-subtle [&_svg]:text-fg-quaternary [&_svg]:hover:text-fg-quaternary-hover',
         tertiary: 'text-tertiary enabled:hover:bg-primary-hover hover:text-tertiary-hover disabled:text-fg-disabled',
     };
 </script>
