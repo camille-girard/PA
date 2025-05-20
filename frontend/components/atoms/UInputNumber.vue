@@ -112,7 +112,7 @@
 
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
+        <label v-if="label" class="text-body-sm" :for="name">
             {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
         </label>
         <div class="relative">
@@ -163,7 +163,7 @@
                 <PlusIcon />
             </button>
         </div>
-        <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
+        <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-sm']">
             {{ hintText }}
         </p>
     </div>

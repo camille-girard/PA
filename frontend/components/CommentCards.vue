@@ -23,8 +23,8 @@ defineProps({
             alt="avatar"
         />
         <div>
-          <p class="font-semibold text-gray-900">{{ item.name }}</p>
-          <p class="text-sm text-gray-500">{{ item.userDetail }}</p>
+          <p class="text-body-md font-semibold text-gray-900">{{ item.name }}</p>
+          <p class="text-body-sm text-gray-500">{{ item.userDetail }}</p>
         </div>
       </div>
 
@@ -40,7 +40,7 @@ defineProps({
         </template>
       </div>
 
-      <p class="text-gray-700 text-base">
+      <p class="text-body-md text-gray-700 text-base">
         {{ item.comment }}
       </p>
     </div>
