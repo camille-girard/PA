@@ -39,13 +39,14 @@
     });
 
     const baseClasses =
-        'flex w-full border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs text-center';
+        'flex w-full rounded-lg border border-gray-300 focus:ring-2 focus:outline-none placeholder:text-gray-400 text-gray-500 shadow-xs text-center';
 
     const variantClasses = {
-        default: 'border-primary focus:ring-primary',
-        destructive: 'border-error-subtle focus:ring-error',
-        disabled: 'bg-disabled border-disabled-subtle text-fg-disabled cursor-not-allowed',
+      default: 'focus:border-brand-solid focus:ring-brand-solid',
+      destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
+      disabled: 'bg-disabled border-disabled-subtle text-fg-disabled cursor-not-allowed',
     };
+
 
     const sizeClasses = {
         sm: 'px-3 py-2',
@@ -139,7 +140,7 @@
                 :class="[
                     buttonPositionClasses.left,
                     buttonSizeClasses[size],
-                    disabled ? 'text-fg-disabled cursor-not-allowed' : 'text-secondary hover:text-secondary-hover',
+                    disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-700'
                 ]"
                 :disabled="disabled || (min !== undefined && modelValue <= min)"
                 aria-label="Decrease value"
@@ -153,7 +154,7 @@
                 :class="[
                     buttonPositionClasses.right,
                     buttonSizeClasses[size],
-                    disabled ? 'text-fg-disabled cursor-not-allowed' : 'text-secondary hover:text-secondary-hover',
+                    disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-gray-700'
                 ]"
                 :disabled="disabled || (max !== undefined && modelValue >= max)"
                 aria-label="Increase value"
