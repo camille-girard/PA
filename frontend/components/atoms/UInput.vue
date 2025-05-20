@@ -52,7 +52,7 @@
 
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
+        <label v-if="label" class="text-body-sm" :for="name">
             {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
         </label>
         <div :class="wrapperClasses">
