@@ -51,7 +51,7 @@
     const selectedOptions = computed(() => {
         if (props.multiple) {
             return props.options.filter(
-                (option) => Array.isArray(props.modelValue) && props.modelValue.some(val => val === option.value)
+                (option) => Array.isArray(props.modelValue) && props.modelValue.some((val) => val === option.value)
             );
         } else {
             return props.options.find((option) => option.value === props.modelValue);
@@ -92,7 +92,7 @@
     function selectOption(option: SelectOption) {
         if (props.multiple) {
             const currentValue = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
-            const index = currentValue.findIndex(val => val === option.value);
+            const index = currentValue.findIndex((val) => val === option.value);
 
             if (index === -1) {
                 if (typeof option.value === 'string') {
@@ -111,7 +111,7 @@
 
     function isSelected(option: SelectOption): boolean {
         if (props.multiple) {
-            return Array.isArray(props.modelValue) && props.modelValue.some(val => val === option.value);
+            return Array.isArray(props.modelValue) && props.modelValue.some((val) => val === option.value);
         }
         return props.modelValue === option.value;
     }

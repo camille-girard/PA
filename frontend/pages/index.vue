@@ -5,6 +5,18 @@ import SearchBar from '~/components/SearchBar.vue';
 import RentalCards from '~/components/RentalCards.vue';
 
 
+    useSeoMeta({
+        title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+        meta: [
+            {
+                name: 'description',
+                content: "PopnBed - Un site de réservation d'hébergements inspirés de films",
+            },
+        ],
+    });
+
+    const authStore = useAuthStore();
+
 const trending = [
   { title: 'Friends', image: '/friends.png' },
   { title: 'Star Wars', image: '/StarWars.png' },
@@ -13,7 +25,6 @@ const trending = [
   { title: 'Shrek', image: '/shrek.png' },
   { title: 'Harry Potter', image: '/Harry_Potter.png' },
 ];
-
 
 </script>
 
@@ -64,4 +75,3 @@ const trending = [
     <Footer />
   </main>
 </template>
-
