@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         '@nuxtjs/color-mode',
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
+        '@nuxtjs/sitemap',
     ],
     i18n: {
         locales: [
