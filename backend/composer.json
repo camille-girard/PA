@@ -7,23 +7,24 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "doctrine/dbal": "^3",
+        "doctrine/dbal": "^3.9.4",
         "doctrine/doctrine-bundle": "^2.14",
-        "doctrine/doctrine-migrations-bundle": "^3.4",
-        "doctrine/orm": "^3.3",
-        "hautelook/alice-bundle": "^2.15",
-        "lexik/jwt-authentication-bundle": "^3.1",
+        "doctrine/doctrine-migrations-bundle": "^3.4.1",
+        "doctrine/orm": "^3.3.2",
+        "hautelook/alice-bundle": "^2.15.1",
+        "lexik/jwt-authentication-bundle": "^3.1.1",
         "nelmio/cors-bundle": "^2.5",
-        "phpdocumentor/reflection-docblock": "^5.6",
+        "phpdocumentor/reflection-docblock": "^5.6.2",
         "phpstan/phpdoc-parser": "^2.1",
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
-        "symfony/flex": "^2",
+        "symfony/flex": "^2.5",
         "symfony/framework-bundle": "7.2.*",
         "symfony/property-access": "7.2.*",
         "symfony/property-info": "7.2.*",
         "symfony/runtime": "7.2.*",
         "symfony/serializer": "7.2.*",
+        "symfony/validator": "7.2.*",
         "symfony/uid": "7.2.*",
         "symfony/yaml": "7.2.*"
     },
@@ -66,7 +67,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "phpstan": "phpstan --memory-limit=1G --no-progress --no-interaction",
+        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -79,7 +82,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.75",
-        "phpstan/phpstan": "^2.1",
-        "symfony/maker-bundle": "^1.62"
+        "phpstan/phpstan": "^2.1.13",
+        "symfony/maker-bundle": "^1.63"
     }
 }
