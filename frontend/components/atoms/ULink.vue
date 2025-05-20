@@ -23,7 +23,7 @@
     });
 
     const baseClasses =
-        'flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
+        'text-body-md flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
 
     const variantClasses = {
         primary:
@@ -33,8 +33,8 @@
     };
 
     const sizeClasses = {
-        sm: 'text-sm',
-        md: 'text-base',
+        sm: 'text-body-sm',
+        md: 'text-body-md',
     };
 </script>
 

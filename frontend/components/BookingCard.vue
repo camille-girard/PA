@@ -19,17 +19,17 @@ const total = ref('')
           v-model="arrival"
           type="text"
           placeholder="Arrivée"
-          class="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
       />
       <input
           v-model="departure"
           type="text"
           placeholder="Départ"
-          class="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
       />
       <select
           v-model="guests"
-          class="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
       >
         <option disabled value="">Nombre de voyageurs</option>
         <option>1 voyageur</option>
@@ -42,7 +42,7 @@ const total = ref('')
           v-model="total"
           type="text"
           placeholder="Total"
-          class="w-full px-4 py-2 border border-orange-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
       />
     </div>
 

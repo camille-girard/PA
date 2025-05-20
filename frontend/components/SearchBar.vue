@@ -7,8 +7,8 @@ const departureDate = ref();
 </script>
 
 <template>
-  <div>
-    <div class="mt-14 max-w-screen-sm space-y-3">
+  <div class="flex flex-col items-center">
+    <div class="mt-14 max-w-screen-sm space-y-3 w-full">
       <UInput placeholder="Destination, thématique" type="text" :icon="SearchIcon" />
       <div class="flex w-full justify-between gap-2">
         <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />

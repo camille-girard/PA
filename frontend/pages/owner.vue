@@ -33,33 +33,33 @@ const rental = [
 <template>
   <main>
     <Header />
-    <div class="max-w-7xl mx-auto w-full pt-32 px-4">
+    <div class="max-w-7xl mx-auto w-full pt-8 px-4">
       <div class="flex flex-col md:flex-row gap-10">
         <aside class="md:w-1/3 space-y-8">
           <OwnerInformationCard />
         </aside>
         <section class="md:w-2/3 space-y-16">
           <section id="owner-information" class="space-y-6 pb-10 border-b border-gray-300">
-            <h2 class="text-3xl font-bold mb-6">Informations sur Patrick</h2>
+            <h2 class="text-h2 mb-6">Informations sur Patrick</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
               <div class="flex items-center gap-3">
                 <img src="/work.svg" alt="Profession" class="w-8 h-8" />
-                <span class="font-medium">Profession : Gérant de Maple Hill Retreats</span>
+                <span class="text-body-md">Profession : Gérant de Maple Hill Retreats</span>
               </div>
               <div class="flex items-center gap-3">
                 <img src="/world.svg" alt="Langues parlées" class="w-8 h-8" />
-                <span class="font-medium">Langues parlées : Anglais</span>
+                <span class="text-body-md">Langues parlées : Anglais</span>
               </div>
               <div class="flex items-center gap-3">
                 <img src="/location.svg" alt="Localisation" class="w-8 h-8" />
-                <span class="font-medium">Je vis ici : Elsworth, Royaume-Uni</span>
+                <span class="text-body-md">Je vis ici : Elsworth, Royaume-Uni</span>
               </div>
               <div class="flex items-center gap-3">
                 <img src="" alt="Hébergement" class="w-8 h-8" />
-                <span class="font-medium">Hébergement professionnel</span>
+                <span class="text-body-md">Hébergement professionnel</span>
               </div>
             </div>
-            <div class="text-gray-800 text-base leading-relaxed mt-6">
+            <div class="text-gray-800 text-body-md leading-relaxed mt-6">
               Je vis avec ma femme, Caroline, et nos deux enfants, Jasper (16 ans) et Emilia (13 ans).
               Nous sommes tombés amoureux de cette région paisible entourée de forêts et de collines douces.
               Le Cambridgeshire regorge de petits trésors : chemins de randonnée, marchés fermiers et jolis pubs campagnards.
@@ -67,12 +67,12 @@ const rental = [
             </div>
           </section>
           <section id="owner-comment" class="space-y-6 pb-10 border-b border-gray-300">
-            <h2 class="text-3xl font-bold mb-6">Commentaires pour Patrick</h2>
+            <h2 class="text-h2 mb-6">Commentaires pour Patrick</h2>
             <CommentCards :items="comment" />
             <a href="#" class="underline font-semibold mt-6 inline-block">Afficher les commentaires</a>
           </section>
           <section id="owner-rentals" class="space-y-6">
-            <h2 class="text-3xl font-bold mb-10">Annonces publiées par Patrick</h2>
+            <h2 class="text-h2 mb-10">Annonces publiées par Patrick</h2>
             <RentalCards :items="rental" />
           </section>
         </section>

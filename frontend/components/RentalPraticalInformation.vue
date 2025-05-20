@@ -20,15 +20,13 @@ const practicalInfos = [
 
 <template>
   <section id="informations" class="space-y-6">
-    <h2 class="text-3xl font-bold mb-6">Informations pratiques</h2>
-
+    <h2 class="text-h2 mb-6">Informations pratiques</h2>
     <ul class="space-y-6">
       <li v-for="(info, index) in practicalInfos" :key="index" class="flex items-start gap-4">
         <img :src="info.icon" alt="Icon" class="w-8 h-8 mt-1" />
-
         <div>
-          <h3 class="text-lg font-semibold text-gray-800">{{ info.title }}</h3>
-          <p class="text-sm text-gray-500">{{ info.description }}</p>
+          <h3 class="text-h6 text-gray-800">{{ info.title }}</h3>
+          <p class="text-body-sm text-gray-500">{{ info.description }}</p>
         </div>
       </li>
     </ul>

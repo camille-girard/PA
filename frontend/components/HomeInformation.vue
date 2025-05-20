@@ -14,7 +14,7 @@ const maxStay = ref(7)
 <template>
   <form class="space-y-16 max-w-4xl mx-auto">
     <section>
-      <h2 class="text-2xl font-bold mb-6">Informations du logement</h2>
+      <h2 class="text-h2 font-bold mb-6">Informations du logement</h2>
       <UInput type="text" label="Titre de l'annonce *" placeholder="Titre de l'annonce" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <UInput type="text" label="Thème *" placeholder="Thème" />
@@ -26,7 +26,7 @@ const maxStay = ref(7)
         <UInputNumber v-model="capacity" label="Capacité *" placeholder="Nombre de personnes" :min="1" class="w-full" />
       </div>
       <div class="mt-4">
-        <label for="description" class="text-secondary text-sm font-medium block mb-2">Description *</label>
+        <label for="description" class="text-body-sm font-medium block mb-2">Description *</label>
         <textarea
             id="description"
             name="description"
@@ -35,11 +35,11 @@ const maxStay = ref(7)
             placeholder="Décrivez votre logement"
             class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-brand-solid placeholder:text-gray-400 text-gray-700 px-4 py-3 shadow-xs resize-none"
         ></textarea>
-        <p class="text-sm text-tertiary mt-1">Maximum 20 000 caractères.</p>
+        <p class="text-body-sm mt-1">Maximum 20 000 caractères.</p>
       </div>
     </section>
     <section>
-      <h2 class="text-2xl font-bold mb-6">Adresse</h2>
+      <h2 class="text-h2 mb-6">Adresse</h2>
       <UInput type="text" label="Adresse complète *" placeholder="Adresse complète" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <UInput type="text" label="Ville *" placeholder="Ville" />
@@ -50,13 +50,13 @@ const maxStay = ref(7)
       </div>
     </section>
     <section>
-      <h2 class="text-2xl font-bold mb-6">Ajouter vos photos</h2>
+      <h2 class="text-h2 mb-6">Ajouter vos photos</h2>
       <div class="w-full h-52 rounded-2xl bg-gray-100 flex items-center justify-center">
         <img src="/icon.svg" alt="Placeholder" class="w-10 h-10 opacity-40" />
       </div>
     </section>
     <section>
-      <h2 class="text-2xl font-bold mb-6">Prix et disponibilité</h2>
+      <h2 class="text-h2 mb-6">Prix et disponibilité</h2>
       <UInputNumber v-model="pricePerNight" label="Prix par nuit *" placeholder="Prix par nuit" :min="1" class="w-full" />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <UInputNumber v-model="minStay" label="Séjour minimum" placeholder="Nombre de jours" :min="1" class="w-full" />

@@ -13,7 +13,7 @@ const images = [
 
 <template>
   <section class="max-w-7xl mx-auto px-4 py-10">
-    <h1 class="text-4xl font-bold mb-12 text-center">Maison dans l’univers de Shrek 500m2</h1>
+    <h1 class="text-h1 mb-12 text-center">Maison dans l’univers de Shrek 500m2</h1>
 
     <div class="flex flex-col md:flex-row gap-8 w-full mx-auto">
       <div class="flex-1">
