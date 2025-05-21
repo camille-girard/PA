@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api')]
+#[OA\Tag(name: 'Users')]
 final class UserController extends AbstractController
 {
     #[Route('/me', name: 'app_user')]
