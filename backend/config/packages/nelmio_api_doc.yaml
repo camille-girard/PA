@@ -1,0 +1,9 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: API Locations
+            description: API pour la gestion des locations et hébergements
+            version: 1.0.0
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)
