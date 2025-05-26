@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         '@nuxtjs/color-mode',
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
+        '@nuxtjs/sitemap',
     ],
     i18n: {
         locales: [
@@ -37,10 +38,16 @@ export default defineNuxtConfig({
         fallback: 'light',
         classSuffix: '',
     },
+    build: {
+        transpile: ['swagger-ui-dist']
+    },
     vite: {
         server: {
             allowedHosts: ['popnbed.com'],
         },
+        optimizeDeps: {
+          include: ['swagger-ui-dist/swagger-ui-bundle.js']
+        }
     },
     components: {
         dirs: [
