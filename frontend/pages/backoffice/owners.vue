@@ -1,14 +1,12 @@
 <script setup>
-import UTable from "~/components/organisms/UTable.vue";
-definePageMeta({
-  layout: 'backoffice',
-})
+    import UTable from '~/components/organisms/UTable.vue';
+    definePageMeta({
+        layout: 'backoffice',
+    });
 </script>
 
 <template>
-  <p class="text-2xl font-semibold">Hôtes</p>
+    <p class="text-2xl font-semibold">Hôtes</p>
 
-  <UTable />
+    <UTable />
 </template>
-
-

@@ -1,11 +1,9 @@
 <script setup>
-
-definePageMeta({
-  layout: 'backoffice',
-})
+    definePageMeta({
+        layout: 'backoffice',
+    });
 </script>
 
 <template>
-  <p class="text-2xl font-semibold">Tickets</p>
-
+    <p class="text-2xl font-semibold">Tickets</p>
 </template>
