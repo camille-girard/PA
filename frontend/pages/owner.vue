@@ -34,6 +34,13 @@ const rental = [
   <main>
     <Header />
     <div class="max-w-7xl mx-auto w-full pt-8 px-4">
+      <section class="w-full pt-8">
+        <div class="py-20 rounded-2xl flex items-center justify-center relative">
+          <div class="text-center z-10">
+            <h1 class="text-h1">Les informations du propriétaire</h1>
+          </div>
+        </div>
+      </section>
       <div class="flex flex-col md:flex-row gap-10">
         <aside class="md:w-1/3 space-y-8">
           <OwnerInformationCard />

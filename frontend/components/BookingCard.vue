@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
+import UDatePicker from '~/components/molecules/UDatePicker.vue'
+import UInputNumber from '~/components/atoms/UInputNumber.vue'
 
-const arrival = ref('')
-const departure = ref('')
-const guests = ref('')
+const arrivalDate = ref();
+const departureDate = ref();
 const total = ref('')
 </script>
 
@@ -15,29 +16,13 @@ const total = ref('')
     <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />
     <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
     <div class="space-y-3">
-      <input
-          v-model="arrival"
-          type="text"
-          placeholder="Arrivée"
-          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
+      <UInputNumber
+          v-model="amountTravelers"
+          placeholder="Voyageurs"
+          type="number"
+          :min="1"
+          class="w-full"
       />
-      <input
-          v-model="departure"
-          type="text"
-          placeholder="Départ"
-          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
-      />
-      <select
-          v-model="guests"
-          class="w-full px-4 py-2 border border-brand-600 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
-      >
-        <option disabled value="">Nombre de voyageurs</option>
-        <option>1 voyageur</option>
-        <option>2 voyageurs</option>
-        <option>3 voyageurs</option>
-        <option>4 voyageurs</option>
-        <option>5 voyageurs</option>
-      </select>
       <input
           v-model="total"
           type="text"
