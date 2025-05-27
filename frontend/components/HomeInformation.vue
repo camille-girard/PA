@@ -33,7 +33,7 @@ const maxStay = ref(7)
             rows="6"
             maxlength="20000"
             placeholder="Décrivez votre logement"
-            class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-solid focus:border-brand-solid placeholder:text-gray-400 text-gray-700 px-4 py-3 shadow-xs resize-none"
+            class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 placeholder:text-gray-400 text-gray-700 px-4 py-3 shadow-xs resize-none"
         ></textarea>
         <p class="text-body-sm mt-1">Maximum 20 000 caractères.</p>
       </div>

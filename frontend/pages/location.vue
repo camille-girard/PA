@@ -54,7 +54,7 @@ const rental = [
   <main>
     <Header />
     <div class="max-w-7xl mx-auto w-full pt-8 px-4">
-      <section id="rental-image" class="mb-20">
+      <section id="rental-image" class="mb-20 pt-20">
         <CarouselRental />
       </section>
       <div class="flex flex-col md:flex-row gap-8">
