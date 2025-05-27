@@ -1,9 +1,15 @@
 <script setup>
+    import RentalCards from '~/components/RentalCards.vue';
+    import PersonalInfoCard from '~/components/PersonalInfoCard.vue';
+
     const rental = [
         { title: 'Friends', image: '/friends.png' },
         { title: 'Star Wars', image: '/StarWars.png' },
         { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
     ];
+
+    const authStore = useAuthStore();
+    const user = authStore.user;
 </script>
 
 <template>
@@ -30,4 +36,3 @@
         <UFooter />
     </main>
 </template>
-

@@ -36,6 +36,33 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+    #[Route('/accommodations', name: 'accommodations', methods: ['GET'])]
+    public function getThemesWithAccommodations(): JsonResponse
+    {
+        $themes = $this->themeRepository->findAllWithAccommodations();
+
+        if (empty($themes)) {
+            return $this->json(['message' => 'No themes found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json([
+            'themes' => $themes,
+        ], Response::HTTP_OK);
+    }
+
+    #[Route('/accommodations/{slug}', name: 'accommodations_by_slug', methods: ['GET'])]
+    public function getThemesWithAccommodationsBySlug(string $slug): JsonResponse
+    {
+        $theme = $this->themeRepository->findOneBy(['slug' => $slug]);
+        if (!$theme) {
+            return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json([
+            'themes' => $theme,
+        ], Response::HTTP_OK);
+    }
+
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
@@ -80,6 +107,12 @@ final class ThemeController extends AbstractController
         $theme->setDescription($data['description']);
         $theme->setImage($data['image']);
 
+        if (isset($data['slug'])) {
+            $theme->setSlug($data['slug']);
+        } else {
+            $theme->setSlug(strtolower(str_replace(' ', '-', $data['name'])));
+        }
+
         $errors = $this->validator->validate($theme);
         if (count($errors) > 0) {
             return $this->errorFormatter->createValidationErrorResponse($errors);
@@ -94,7 +127,7 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update', methods: ['PUT'])]
+    #[Route('/{id<\d+>}', name: 'update', methods: ['PUT'])]
     public function update(int $id, Request $request): JsonResponse
     {
         $theme = $this->themeRepository->find($id);
@@ -134,7 +167,7 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/{id<\d+>}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $theme = $this->themeRepository->find($id);

@@ -3,15 +3,20 @@
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
     });
+    import '~/types/theme';
 
-    const trending = [
-        { title: 'Friends', image: '/friends.png' },
-        { title: 'Star Wars', image: '/StarWars.png' },
-        { title: 'Le Seigneurs des anneaux', image: '/Seingeur_des_anneaux.png' },
-        { title: 'Les Simpsons', image: '/simspons.png' },
-        { title: 'Shrek', image: '/shrek.png' },
-        { title: 'Harry Potter', image: '/Harry_Potter.png' },
-    ];
+    const trending = ref<Theme[]>([]);
+
+    onMounted(async () => {
+        const { $api } = useNuxtApp();
+        const response = await useAuthFetch<Theme>($api('/api/themes/'));
+        trending.value = response.data.value.themes.map((theme) => ({
+            title: theme.name,
+            image: theme.image,
+            description: theme.description,
+            slug: theme.slug,
+        }));
+    });
 </script>
 
 <template>
@@ -55,4 +60,3 @@
         <UFooter />
     </main>
 </template>
-
