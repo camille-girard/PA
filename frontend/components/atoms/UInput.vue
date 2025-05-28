@@ -57,7 +57,7 @@ const wrapperClasses = 'flex items-center relative w-full';
       <component
           :is="icon"
           v-if="icon && iconPosition === 'leading'"
-          class="absolute left-3 size-5 text-tertiary pointer-events-none"
+          class="absolute left-3 size-5 text-body-md pointer-events-none"
       />
       <input
           :id="name"
@@ -77,10 +77,10 @@ const wrapperClasses = 'flex items-center relative w-full';
       <component
           :is="icon"
           v-if="icon && iconPosition === 'trailing'"
-          class="absolute right-3 size-5 text-tertiary pointer-events-none"
+          class="absolute right-3 size-5 text-body-md pointer-events-none"
       />
     </div>
-    <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
+    <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-md']">
       {{ hintText }}
     </p>
   </div>
