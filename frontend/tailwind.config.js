@@ -441,26 +441,26 @@ export default {
                 '.text-h2': {
                     fontWeight: '700',
                     lineHeight: '1.3',
-                    fontSize: '1.75rem', // 28px
-                    '@screen sm': { fontSize: '2rem' }, // 32px
-                    '@screen md': { fontSize: '2.25rem' }, // 36px
-                    '@screen lg': { fontSize: '2.5rem' }, // 40px
-                },
-                '.text-h3': {
-                    fontWeight: '700',
-                    lineHeight: '1.3',
                     fontSize: '1.5rem', // 24px
                     '@screen sm': { fontSize: '1.75rem' }, // 28px
                     '@screen md': { fontSize: '2rem' }, // 32px
                     '@screen lg': { fontSize: '2.25rem' }, // 36px
                 },
+                '.text-h3': {
+                    fontWeight: '700',
+                    lineHeight: '1.3',
+                    fontSize: '1.25rem',
+                    '@screen sm': { fontSize: '1.5rem' },
+                    '@screen md': { fontSize: '1.75rem' },
+                    '@screen lg': { fontSize: '2rem' }, // 32px
+                },
                 '.text-h4': {
                     fontWeight: '600',
                     lineHeight: '1.4',
-                    fontSize: '1.25rem', // 20px
-                    '@screen sm': { fontSize: '1.375rem' }, // 22px
-                    '@screen md': { fontSize: '1.5rem' }, // 24px
-                    '@screen lg': { fontSize: '1.75rem' }, // 28px
+                    fontSize: '1rem',
+                    '@screen sm': { fontSize: '1.25rem' },
+                    '@screen md': { fontSize: '1.5rem' },
+                    '@screen lg': { fontSize: '1.75rem' },
                 },
                 '.text-h5': {
                     fontWeight: '600',
