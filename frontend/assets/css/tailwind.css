@@ -7,7 +7,7 @@ body,
 #__nuxt {
     height: 100%;
     width: 100%;
-    background-color: white;
+
     font-family: 'Poppins';
 }
 
@@ -368,8 +368,8 @@ input[type='number']::-webkit-outer-spin-button {
     --bg-brand-primary: var(--brand-600);
     --bg-brand-primary-alt: var(--bg-secondary);
     --bg-brand-secondary: var(--brand-700);
-    --bg-brand-solid: var(--brand-700);
-    --bg-brand-solid-hover: var(--brand-600);
+    --bg-brand-solid: var(--brand-600);
+    --bg-brand-solid-hover: var(--brand-500);
     --bg-brand-section: var(--bg-secondary);
     --bg-brand-section-subtle: var(--bg-primary);
 
@@ -505,18 +505,18 @@ input[type='number']::-webkit-outer-spin-button {
 
 @media (min-width: 640px) {
     :root {
-        --container-padding-x: 2rem;
+        --container-padding-x: 2rem; /* 32px */
     }
 }
 
 @media (min-width: 768px) {
     :root {
-        --container-padding-x: 3rem;
+        --container-padding-x: 3rem; /* 48px */
     }
 }
 
 @media (min-width: 1280px) {
     :root {
-        --container-padding-x: 6.5rem;
+        --container-padding-x: 6.5rem; /* 104px */
     }
 }
