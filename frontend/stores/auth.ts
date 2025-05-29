@@ -85,7 +85,7 @@ export const useAuthStore = defineStore('auth', {
                     errors: error.value?.data?.errors || {},
                     statusCode: error.value?.statusCode,
                 };
-            } catch (error: never) {
+            } catch (error) {
                 console.error('Register error:', error);
                 return {
                     success: false,
