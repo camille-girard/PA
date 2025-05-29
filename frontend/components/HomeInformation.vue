@@ -8,11 +8,12 @@ const bedrooms = ref(0)
 const bathrooms = ref(0)
 const capacity = ref(1)
 const pricePerNight = ref(0)
-const minStay = ref(1)
-const maxStay = ref(7)
+const minStay = ref(0)
+const maxStay = ref(0)
 
 const images = ref<{ id: string; url: string }[]>([])
 const fileInputRef = ref<HTMLInputElement | null>(null)
+const dropZoneRef = ref<HTMLDivElement | null>(null)
 
 function handleImageUpload(event: Event) {
   const files = (event.target as HTMLInputElement).files
@@ -37,6 +38,25 @@ function handleImageUpload(event: Event) {
   }
 }
 
+function handleDrop(event: DragEvent) {
+  event.preventDefault()
+  if (!event.dataTransfer?.files) return
+
+  const remainingSlots = 10 - images.value.length
+  const selectedFiles = Array.from(event.dataTransfer.files).slice(0, remainingSlots)
+
+  selectedFiles.forEach(file => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      images.value.push({
+        id: nanoid(),
+        url: reader.result as string,
+      })
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
 function removeImage(id: string) {
   images.value = images.value.filter(img => img.id !== id)
 }
@@ -52,7 +72,7 @@ function removeImage(id: string) {
         <UInput type="text" label="Type de location *" placeholder="Type de location" />
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <UInputNumber v-model="bedrooms" label="Chambres *" :min="0" class="w-full" />
+        <UInputNumber v-model="bedrooms" label="Chambres" :min="0" class="w-full" />
         <UInputNumber v-model="bathrooms" label="Salles de bain" :min="0" class="w-full" />
         <UInputNumber v-model="capacity" label="Capacité *" :min="1" class="w-full" />
       </div>
@@ -64,8 +84,8 @@ function removeImage(id: string) {
             rows="6"
             maxlength="20000"
             placeholder="Décrivez votre logement"
-            class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 placeholder:text-gray-400 text-gray-700 px-4 py-3 shadow-xs resize-none"
-        ></textarea>
+            class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 placeholder:text-gray-400 text-gray-700 px-4 py-3 shadow-xs resize-none">
+        </textarea>
         <p class="text-body-sm mt-1">Maximum 20 000 caractères.</p>
       </div>
     </section>
@@ -91,10 +111,13 @@ function removeImage(id: string) {
           @change="handleImageUpload"
       />
       <div
+          ref="dropZoneRef"
           @click="fileInputRef?.click()"
-          class="w-full h-52 rounded-2xl bg-gray-100 flex items-center justify-center relative cursor-pointer hover:bg-gray-200 transition">
+          @dragover.prevent
+          @drop="handleDrop"
+          class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-200 transition border-dashed border-2">
         <img src="/icon.svg" alt="Ajouter" class="w-10 h-10 opacity-40" />
-        <p class="ml-2 text-sm text-gray-400">Cliquez pour importer jusqu'à 10 images</p>
+        <p class="mt-2 text-sm text-gray-400 text-center">Cliquez ou glissez jusqu'à 10 images ici</p>
       </div>
       <div v-if="images.length" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
         <div v-for="img in images" :key="img.id" class="relative group">
