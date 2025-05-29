@@ -45,7 +45,8 @@ RUN apk add --update --no-cache \
     vim \
     nano \
     htop \
-    sudo
+    sudo \
+    fcgi
 
 RUN install-php-extensions xdebug
 
