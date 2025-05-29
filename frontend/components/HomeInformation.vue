@@ -103,8 +103,8 @@ function removeImage(id: string) {
     <section>
       <h2 class="text-h2 mb-6">Ajouter vos photos</h2>
       <input
-          type="file"
           ref="fileInputRef"
+          type="file"
           class="hidden"
           accept="image/*"
           multiple
@@ -112,10 +112,10 @@ function removeImage(id: string) {
       />
       <div
           ref="dropZoneRef"
+          class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-200 transition border-dashed border-2"
           @click="fileInputRef?.click()"
           @dragover.prevent
-          @drop="handleDrop"
-          class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-200 transition border-dashed border-2">
+          @drop="handleDrop">
         <img src="/icon.svg" alt="Ajouter" class="w-10 h-10 opacity-40" />
         <p class="mt-2 text-sm text-gray-400 text-center">Cliquez ou glissez jusqu'à 10 images ici</p>
       </div>
@@ -124,8 +124,8 @@ function removeImage(id: string) {
           <img :src="img.url" class="w-full h-40 object-cover rounded-xl" />
           <button
               type="button"
-              @click="removeImage(img.id)"
-              class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm opacity-0 group-hover:opacity-100 transition">
+              class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm opacity-0 group-hover:opacity-100 transition"
+              @click="removeImage(img.id)">
             ×
           </button>
         </div>

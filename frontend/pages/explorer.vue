@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import Footer from "~/components/Footer.vue";
-import Header from "~/components/Header.vue";
 </script>
 
 <template>
   <main>
-    <Header />
+    <UHeader />
     <div class="max-w-7xl w-full mx-auto pt-8 px-4">
       <section class="w-full pt-8">
         <div class="py-20 rounded-2xl flex items-center justify-center relative">
@@ -25,6 +23,6 @@ import Header from "~/components/Header.vue";
         </div>
       </section>
     </div>
-    <Footer />
+    <UFooter />
   </main>
 </template>
