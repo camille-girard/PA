@@ -42,7 +42,7 @@
         'flex w-full rounded-lg border border-gray-300 focus:ring-2 focus:outline-none placeholder:text-gray-400 text-gray-500 shadow-xs text-center';
 
     const variantClasses = {
-      default: 'focus:border-brand-solid focus:ring-brand-solid',
+      default: 'focus:border-orange-500 focus:ring-orange-500',
       destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
       disabled: 'bg-disabled border-disabled-subtle text-fg-disabled cursor-not-allowed',
     };
@@ -112,7 +112,7 @@
 
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
+        <label v-if="label" class="text-body-sm" :for="name">
             {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
         </label>
         <div class="relative">
@@ -163,7 +163,7 @@
                 <PlusIcon />
             </button>
         </div>
-        <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
+        <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-sm']">
             {{ hintText }}
         </p>
     </div>

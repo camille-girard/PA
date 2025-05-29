@@ -36,8 +36,8 @@ import Header from '~/components/Header.vue';
         <UGridBackgroundPattern class="absolute top-0 opacity-20" />
         <section class="flex flex-col items-center space-y-8 relative">
             <div class="text-center space-y-3">
-                <h1 class=" font-semibold text-3xl">Welcome back</h1>
-                <p class="text-tertiary font-normal">Welcome back! Please enter your details</p>
+                <h1 class="text-h1">Welcome back</h1>
+                <p class="text-body-md">Welcome back! Please enter your details</p>
             </div>
             <form class="w-96" @submit.prevent="login">
                 <div class="space-y-5">
@@ -54,7 +54,7 @@ import Header from '~/components/Header.vue';
                 <UButton class="mt-6 w-full justify-center" type="submit">Submit</UButton>
             </form>
             <div class="text-center">
-                <p class="text-tertiary flex items-center justify-center gap-1">
+                <p class="text-body-md flex items-center justify-center gap-1">
                     Vous n'avez pas de compte ?
                     <ULink to="/register">S'enregistrer</ULink>
                 </p>
