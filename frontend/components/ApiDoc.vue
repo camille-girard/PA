@@ -3,7 +3,7 @@
     <div class="swagger-header">
       <h1>API Documentation</h1>
       <div class="theme-toggle">
-        <button @click="toggleTheme" class="theme-button">
+        <button class="theme-button" @click="toggleTheme">
           {{ isDarkMode ? '☀️' : '🌙' }}
         </button>
       </div>
