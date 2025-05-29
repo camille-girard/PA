@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AllIcons from "~/components/AllIcons.vue";
+
 
 const authStore = useAuthStore()
 </script>
@@ -20,15 +20,15 @@ const authStore = useAuthStore()
 
           <ul class="space-y-3">
             <ULink to="/backoffice"
-                class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline"
+                class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                 exact-active-class="bg-brand-600 text-white">
               <HomeIcon class="w-7 h-7 mr-3" />
               Tableau de bord
             </ULink>
 
             <li>
-              <ULink to="/backoffice/users"
-                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline"
+              <ULink to="/backoffice/owners"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <BuildingIcon class="w-7 h-7 mr-3" />
                 Hôtes
@@ -36,8 +36,8 @@ const authStore = useAuthStore()
             </li>
 
             <li>
-              <ULink to="/backoffice/rooms"
-                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline"
+              <ULink to="/backoffice/clients"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <UserIcon class="w-7 h-7 mr-3"/>
                 Clients
@@ -46,7 +46,7 @@ const authStore = useAuthStore()
 
             <li>
               <ULink to="/backoffice/bookings"
-                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <CoinsHandIcon class="w-7 h-7 mr-3" />
                 Réservations
@@ -54,8 +54,8 @@ const authStore = useAuthStore()
             </li>
 
             <li>
-              <ULink to="/backoffice/bookings"
-                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline"
+              <ULink to="/backoffice/tickets"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <MessageIcon class="w-7 h-7 mr-3" />
                 Tickets
@@ -77,10 +77,9 @@ const authStore = useAuthStore()
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 ml-64">
+    <div class="flex-1 ml-80">
       <!-- Main slot -->
-      <main class="p-6">
-        <AllIcons />
+      <main class="py-12 px-16 flex flex-col gap-10">
         <slot />
       </main>
     </div>
