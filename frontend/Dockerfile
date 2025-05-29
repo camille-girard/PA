@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22.14.0
+ARG NODE_VERSION=22
 
 FROM node:${NODE_VERSION}-alpine AS dev
 
@@ -22,18 +22,14 @@ COPY package.json package-lock.json ./
 COPY . .
 
 RUN npm ci
+
 RUN npm run build
 
 FROM node:${NODE_VERSION}-alpine AS prod
 
 WORKDIR /app
 
-COPY --from=builder /app/package.json /app/package-lock.json ./
-COPY --from=builder /app/.nuxt/ /app/.nuxt/
-COPY --from=builder /app/package* /app/
-COPY --from=builder /app/.output/ /app/.output/
-
-RUN npm ci --omit=dev
+COPY --from=builder /app/.output .output
 
 EXPOSE 3000
 
