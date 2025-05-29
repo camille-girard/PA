@@ -9,7 +9,7 @@ const currentYear = new Date().getFullYear();
         <div>
           <a href="/" class="flex items-center gap-2">
             <ULogo />
-            <span class="text-xl font-semibold">PopnBed</span>
+            <span class="text-body-md">PopnBed</span>
           </a>
         </div>
         <div class="flex gap-4">
@@ -30,7 +30,7 @@ const currentYear = new Date().getFullYear();
         <ULink to="/explorer">Explorer</ULink>
         <ULink to="#">Conditions Générales de vente</ULink>
         <ULink to="#">Plan du site</ULink>
-        <p class="text-xs text-gray-500 mt-4">© {{ currentYear }} PopnBed, Inc</p>
+        <p class="text-body-sm text-gray-500 mt-4">© {{ currentYear }} PopnBed, Inc</p>
       </div>
     </div>
   </footer>

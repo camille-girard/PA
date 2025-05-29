@@ -18,7 +18,7 @@ const props = defineProps<{
     >
       <img :src="item.image" :alt="item.title" class="w-full h-56 object-cover" />
       <div class="px-4 py-3">
-        <p class="text-sm font-medium">{{ item.title }}</p>
+        <p class="text-h6">{{ item.title }}</p>
       </div>
     </div>
   </div>

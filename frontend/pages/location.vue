@@ -53,8 +53,8 @@ const rental = [
 <template>
   <main>
     <Header />
-    <div class="max-w-7xl mx-auto w-full pt-32 px-4">
-      <section id="rental-image" class="mb-20">
+    <div class="max-w-7xl mx-auto w-full pt-8 px-4">
+      <section id="rental-image" class="mb-20 pt-20">
         <CarouselRental />
       </section>
       <div class="flex flex-col md:flex-row gap-8">
@@ -62,7 +62,7 @@ const rental = [
             <RentalInformation />
           <RentalPraticalInformation />
           <section id="comments">
-            <h2 class="text-3xl font-bold mb-6">Les commentaires</h2>
+            <h2 class="text-h2 mb-6">Les commentaires</h2>
             <CommentCards :items="comment" />
           </section>
         </div>
@@ -73,7 +73,7 @@ const rental = [
         </div>
       </div>
       <section id="consult-trending" class="w-full pt-32">
-        <h2 class="text-center text-3xl font-bold mb-10">Consultés récemment</h2>
+        <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
         <RentalCards :items="rental" />
       </section>
     </div>
