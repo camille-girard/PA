@@ -26,6 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['client:read', 'owner:read'])]
     /**
      * @phpstan-ignore-next-line
      */

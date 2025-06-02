@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import UTable from '~/components/organisms/UTable.vue'
 import UBadge from '~/components/atoms/UBadge.vue'
-import InfoCircleIcon from '~/components/atoms/icons/InfoCircleIcon.vue'
-import PinIcon from '~/components/atoms/icons/PinIcon.vue'
+import EditIcon from '~/components/atoms/icons/EditIcon.vue'
+import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
 
 const { data: bookingData, pending, error } = await useFetch('/api/bookings', {
   baseURL: 'http://localhost',
@@ -68,12 +68,12 @@ function getStatusProps(status: string) {
           </template>
 
           <template #cell-actions>
-            <div class="flex items-center gap-2">
-              <button class="text-error hover:text-error-dark">
-                <InfoCircleIcon class="w-4 h-4" />
+            <div class="flex items-center gap-4">
+              <button class="text-blue-500 hover:text-bblue-800">
+                <EditIcon class="w-6 h-6" />
               </button>
-              <button class="text-gray-400 hover:text-gray-700">
-                <PinIcon class="w-4 h-4" />
+              <button class="text-red-500 hover:text-red-700">
+                <TrashIcon class="w-6 h-6" />
               </button>
             </div>
           </template>
