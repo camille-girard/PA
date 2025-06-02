@@ -1,11 +1,9 @@
 <script setup lang="ts">
 
-import CoinsHandIcon from "~/components/atoms/icons/CoinsHandIcon.vue";
-import StatsCard from "~/components/StatsCard.vue";
 import UTable from '~/components/organisms/UTable.vue';
 import UBadge from '~/components/atoms/UBadge.vue';
-import PinIcon from "~/components/atoms/icons/PinIcon.vue";
-import InfoCircleIcon from "~/components/atoms/icons/InfoCircleIcon.vue";
+import TrashIcon from "~/components/atoms/icons/TrashIcon.vue";
+import EditIcon from "~/components/atoms/icons/EditIcon.vue";
 
 const { data: clientData, pending, error } = await useFetch('/api/clients', {
   baseURL: 'http://localhost',
@@ -21,16 +19,20 @@ const columns = [
   { key: 'client', label: 'Client', sortable: true },
   { key: 'phone', label: 'Téléphone' },
   { key: 'email', label: 'Email' },
+  { key: 'bookingCount', label: 'Réservations' },
   { key: 'status', label: 'Status' },
   { key: 'actions', label: '' }
 ]
 
 const clientsData = computed(() =>
     clients.value.map(client => ({
+      id: client.id,
       client: `${client.firstName} ${client.lastName}`,
       phone: client.phone || 'Non renseigné',
       email: client.email,
+      bookingCount: client.bookingCount ?? 0,
       status: client.isVerified ? 'active' : 'inactive',
+      _original: client,
     }))
 )
 
@@ -64,16 +66,18 @@ function getStatusProps(status: string) {
     </template>
 
     <!-- actions -->
-    <template #cell-actions>
-      <div class="flex items-center gap-2">
-        <button class="text-error hover:text-error-dark">
-          <InfoCircleIcon class="w-4 h-4" />
-        </button>
-        <button class="text-gray-400 hover:text-gray-700">
-          <PinIcon class="w-4 h-4" />
+    <template #cell-actions="{ row }">
+      <div class="flex items-center gap-4">
+        {{ console.log('row:', row) }}
+        <NuxtLink :to="`/backoffice/clients/${row.id}/edit`" class="text-blue-500 hover:text-blue-800">
+          <EditIcon class="w-6 h-6" />
+        </NuxtLink>
+        <button class="text-red-500 hover:text-red-700">
+          <TrashIcon class="w-6 h-6" />
         </button>
       </div>
     </template>
+
   </UTable>
 
 

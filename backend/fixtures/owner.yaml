@@ -7,3 +7,4 @@ App\Entity\Owner:
     last_name: 'PASTIS'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
+    notation: '5'

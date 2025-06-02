@@ -2,8 +2,10 @@
 
 import UTable from '~/components/organisms/UTable.vue';
 import UBadge from '~/components/atoms/UBadge.vue';
-import PinIcon from "~/components/atoms/icons/PinIcon.vue";
-import InfoCircleIcon from "~/components/atoms/icons/InfoCircleIcon.vue";
+import FullStarIcon from "~/components/atoms/icons/FullStarIcon.vue";
+import HalfStarIcon from "~/components/atoms/icons/HalfStarIcon.vue";
+import TrashIcon from "~/components/atoms/icons/TrashIcon.vue";
+import EditIcon from "~/components/atoms/icons/EditIcon.vue";
 
 const { data: ownerData, pending, error } = await useFetch('/api/owners', {
   baseURL: 'http://localhost',
@@ -19,6 +21,8 @@ const columns = [
   { key: 'owner', label: 'Hôte', sortable: true },
   { key: 'phone', label: 'Téléphone' },
   { key: 'email', label: 'Email' },
+  { key: 'accommodationCount', label: 'Logements' },
+  { key: 'notation', label: 'Note' },
   { key: 'status', label: 'Status' },
   { key: 'actions', label: '' }
 ]
@@ -28,6 +32,8 @@ const ownersData = computed(() =>
       owner: `${owner.firstName} ${owner.lastName}`,
       phone: owner.phone || 'Non renseigné',
       email: owner.email,
+      accommodationCount: owner.accommodationCount ?? 0,
+      notation: owner.notation ?? 0,
       status: owner.isVerified ? 'active' : 'inactive',
     }))
 )
@@ -61,14 +67,26 @@ function getStatusProps(status: string) {
       </UBadge>
     </template>
 
+    <template #cell-notation="{ value }">
+      <div class="flex items-center gap-0.5">
+        <template v-for="i in 5" :key="i">
+          <component
+              :is="value >= i ? FullStarIcon : value >= i - 0.5 ? HalfStarIcon : EmptyStarIcon"
+          />
+        </template>
+      </div>
+    </template>
+
+
+
     <!-- actions -->
     <template #cell-actions>
-      <div class="flex items-center gap-2">
-        <button class="text-error hover:text-error-dark">
-          <InfoCircleIcon class="w-4 h-4" />
+      <div class="flex items-center gap-4">
+        <button class="text-blue-500 hover:text-blue-800">
+          <EditIcon class="w-6 h-6" />
         </button>
-        <button class="text-gray-400 hover:text-gray-700">
-          <PinIcon class="w-4 h-4" />
+        <button class="text-red-500 hover:text-red-700">
+          <TrashIcon class="w-6 h-6" />
         </button>
       </div>
     </template>

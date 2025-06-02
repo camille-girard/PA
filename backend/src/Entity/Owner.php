@@ -24,6 +24,10 @@ class Owner extends User
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'owner')]
     private Collection $messages;
 
+    #[ORM\Column(type: 'float', options: ['default' => 0])]
+    #[Groups(['owner:read'])]
+    private float $notation = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -88,6 +92,23 @@ class Owner extends User
             }
         }
 
+        return $this;
+    }
+
+    #[Groups(['owner:read'])]
+    public function getAccommodationCount(): int
+    {
+        return $this->accommodations->count();
+    }
+
+    public function getNotation(): float
+    {
+        return $this->notation;
+    }
+
+    public function setNotation(float $notation): static
+    {
+        $this->notation = $notation;
         return $this;
     }
 }
