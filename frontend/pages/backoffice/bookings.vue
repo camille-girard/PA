@@ -1,92 +1,86 @@
 <script setup lang="ts">
+import UTable from '~/components/organisms/UTable.vue'
+import UBadge from '~/components/atoms/UBadge.vue'
+import InfoCircleIcon from '~/components/atoms/icons/InfoCircleIcon.vue'
+import PinIcon from '~/components/atoms/icons/PinIcon.vue'
 
-import CoinsHandIcon from "~/components/atoms/icons/CoinsHandIcon.vue";
-import StatsCard from "~/components/StatsCard.vue";
-import UTable from '~/components/organisms/UTable.vue';
-import UBadge from '~/components/atoms/UBadge.vue';
-import PinIcon from "~/components/atoms/icons/PinIcon.vue";
-import InfoCircleIcon from "~/components/atoms/icons/InfoCircleIcon.vue";
+const { data: bookingData, pending, error } = await useFetch('/api/bookings', {
+  baseURL: 'http://localhost',
+})
 
+const bookings = computed(() => bookingData.value || [])
 
 definePageMeta({
   layout: 'backoffice',
 })
 
-const stats = [
-  { label: 'Réservations', value: '2,345', icon: CoinsHandIcon },
-]
-
 const columns = [
   { key: 'client', label: 'Client', sortable: true },
-  { key: 'host', label: 'Hôte', sortable: true },
-  { key: 'reference', label: 'Référence' },
-  { key: 'country', label: 'Pays' },
-  { key: 'email', label: 'Email address' },
-  { key: 'status', label: 'Status' },
-  { key: 'actions', label: '', width: 'w-16' }
+  { key: 'owner', label: 'Hôte' },
+  { key: 'accommodation', label: 'Hébergement' },
+  { key: 'address', label: 'Adresse' },
+  { key: 'startDate', label: 'Début' },
+  { key: 'endDate', label: 'Fin' },
+  { key: 'totalPrice', label: 'Prix' },
+  { key: 'status', label: 'Statut' },
+  { key: 'actions', label: '' },
 ]
 
-const reservations = [
-  { client: 'Olivia Rhye', host: 'Andi Lane', reference: 'RS29372', country: 'France', email: 'olivia@untitledui.com', status: 'active' },
-  { client: 'Phoenix Baker', host: 'Demi Wilkinson', reference: 'RS29372', country: 'USA', email: 'phoenix@untitledui.com', status: 'inactive' },
-  { client: 'Lana Steiner', host: 'Phoenix Baker', reference: 'RS29372', country: 'Moldavie', email: 'lana@untitledui.com', status: 'active' },
-  { client: 'Demi Wilkinson', host: 'Candice Wu', reference: 'RS29372', country: 'China', email: 'demi@untitledui.com', status: 'active' },
-  { client: 'Candice Wu', host: 'Candice Wu', reference: 'RS29372', country: 'France', email: 'candice@untitledui.com', status: 'active' },
-  { client: 'Natali Craig', host: 'Demi Wilkinson', reference: 'RS29372', country: 'Italie', email: 'natali@untitledui.com', status: 'inactive' },
-  { client: 'Candice Wu', host: 'Demi Wilkinson', reference: 'RS29372', country: 'Italie', email: 'drew@untitledui.com', status: 'active' },
-  { client: 'Orlando Diggs', host: 'Candice Wu', reference: 'RS29372', country: 'France', email: 'orlando@untitledui.com', status: 'active' },
-  { client: 'Andi Lane', host: 'Demi Wilkinson', reference: 'RS29372', country: 'China', email: 'andi@untitledui.com', status: 'pending' },
-  { client: 'Kate Morrison', host: 'Demi Wilkinson', reference: 'RS29372', country: 'Moldavie', email: 'kate@untitledui.com', status: 'active' }
-]
+const bookingsData = computed(() =>
+    bookings.value.map(b => ({
+      client: `${b.client?.firstName || ''} ${b.client?.lastName || ''}`,
+      owner: `${b.accommodation?.owner?.firstName || ''} ${b.accommodation?.owner?.lastName || ''}`,
+      accommodation: b.accommodation?.name,
+      address: b.accommodation?.address,
+      startDate: new Date(b.startDate).toLocaleDateString(),
+      endDate: new Date(b.endDate).toLocaleDateString(),
+      totalPrice: `${b.totalPrice.toFixed(2)} €`,
+      status: b.status.toLowerCase(),
+    }))
+)
 
 function getStatusProps(status: string) {
-  switch (status.toLowerCase()) {
-    case 'active':
-      return { label: 'Active', color: 'success' }
-    case 'inactive':
-      return { label: 'Inactive', color: 'error' }
+  switch (status) {
+    case 'accepted':
+      return { label: 'Acceptée', color: 'success' }
     case 'pending':
-    case 'en attente':
       return { label: 'En attente', color: 'warning' }
+    case 'refused':
+      return { label: 'Refusée', color: 'error' }
     default:
-      return { label: status, color: 'brand' }
+      return { label: status, color: 'gray' }
   }
 }
-
 </script>
 
 <template>
+  <div>
+    <p class="text-2xl font-semibold mb-4">Réservations</p>
 
-    <p class="text-2xl font-semibold">Bookings</p>
+    <!-- Wrapping the table in a horizontal scroll container -->
+    <div class="w-full overflow-x-auto">
+      <div class="min-w-[800px]">
+        <UTable :columns="columns" :data="bookingsData">
+          <template #cell-status="{ value }">
+            <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-max">
+              {{ getStatusProps(value).label }}
+            </UBadge>
+          </template>
 
-    <StatsCard :stats="stats" />
-
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-xl font-semibold">Toutes les réservations</h1>
-      <UBadge size="sm" color="brand">100</UBadge>
+          <template #cell-actions>
+            <div class="flex items-center gap-2">
+              <button class="text-error hover:text-error-dark">
+                <InfoCircleIcon class="w-4 h-4" />
+              </button>
+              <button class="text-gray-400 hover:text-gray-700">
+                <PinIcon class="w-4 h-4" />
+              </button>
+            </div>
+          </template>
+        </UTable>
+      </div>
     </div>
-
-    <UTable :columns="columns" :data="reservations">
-      <!-- Slot status -->
-      <template #cell-status="{ value }">
-        <UBadge size="sm" variant="pill" :color="getStatusProps(value).color">
-          {{ getStatusProps(value).label }}
-        </UBadge>
-      </template>
-
-      <!-- Slot actions -->
-      <template #cell-actions>
-        <div class="flex items-center gap-2">
-          <button class="text-error hover:text-error-dark">
-            <InfoCircleIcon class="w-4 h-4" />
-          </button>
-          <button class="text-gray-400 hover:text-gray-700">
-            <PinIcon class="w-4 h-4" />
-          </button>
-        </div>
-      </template>
-    </UTable>
-
+  </div>
 </template>
 
 

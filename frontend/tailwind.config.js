@@ -508,5 +508,6 @@ export default {
                 },
             });
         },
+
     ],
 };

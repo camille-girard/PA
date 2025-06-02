@@ -6,6 +6,7 @@ use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking
@@ -19,25 +20,31 @@ class Booking
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(['booking:read'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['booking:read'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'string', enumType: BookingStatus::class)]
+    #[Groups(['booking:read'])]
     private BookingStatus $status;
 
     #[ORM\Column]
+    #[Groups(['booking:read'])]
     private ?float $totalPrice = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[Groups(['booking:read'])]
     private ?Client $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['booking:read'])]
     private ?Accommodation $accommodation = null;
 
     public function getId(): ?int

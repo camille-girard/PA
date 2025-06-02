@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/owners', name: 'api_owners_')]
 #[OA\Tag(name: 'Owners')]
@@ -27,13 +28,13 @@ final class OwnerController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
         $owners = $this->ownerRepository->findAll();
 
-        return $this->json([
-            'owners' => $owners,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read']);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]

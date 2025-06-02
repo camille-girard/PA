@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'owner:read'])]
     private ?string $email = null;
 
     /**
@@ -48,22 +48,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'owner:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'owner:read'])]
     private ?bool $isVerified = null;
 
     #[ORM\Column]

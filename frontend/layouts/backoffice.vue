@@ -79,7 +79,7 @@ const authStore = useAuthStore()
     <!-- Main Content Area -->
     <div class="flex-1 ml-80">
       <!-- Main slot -->
-      <main class="py-12 px-16 flex flex-col gap-10">
+      <main class="py-12 px-16 flex flex-col gap-10 overflow-x-hidden">
         <slot />
       </main>
     </div>
