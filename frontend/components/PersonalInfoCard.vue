@@ -3,6 +3,7 @@ import UButton from '~/components/atoms/UButton.vue'
 import EditableField from '@/components/EditableField.vue'
 import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const auth = useAuthStore()
 
@@ -27,6 +28,12 @@ function handleDelete() {
       alert(res.error)
     }
   })
+}
+
+const router = useRouter()
+
+function goToNewAccommodation() {
+  router.push('/newaccommodation')
 }
 </script>
 
@@ -87,16 +94,15 @@ function handleDelete() {
         size="lg"
         variant="primary"
         class="w-full max-w-2xl"
+        @click="goToNewAccommodation"
     >
       Ajouter un nouveau bien
     </UButton>
-
     <UButton
         size="sm"
         variant="outline"
         class="text-red-600 border-orange-300 hover:bg-orange-50 hover:text-red-700"
-        @click="handleDelete"
-    >
+        @click="handleDelete">
       Supprimer mon compte
     </UButton>
   </div>
