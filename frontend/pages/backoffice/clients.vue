@@ -55,12 +55,6 @@ function getStatusProps(status: string) {
 
   <p class="text-2xl font-semibold">Clients</p>
 
-
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-xl font-semibold">Tous les clients</h1>
-    <UBadge size="sm" color="brand">100</UBadge>
-  </div>
-
   <UTable :columns="columns" :data="clientsData">
     <!-- status -->
     <template #cell-status="{ value }">
@@ -84,5 +78,3 @@ function getStatusProps(status: string) {
 
 
 </template>
-
-

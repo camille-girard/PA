@@ -6,6 +6,7 @@ use App\Repository\OwnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 class Owner extends User
@@ -14,6 +15,7 @@ class Owner extends User
      * @var Collection<int, Accommodation>
      */
     #[ORM\OneToMany(targetEntity: Accommodation::class, mappedBy: 'owner', orphanRemoval: true)]
+    #[Groups(['owner:read'])]
     private Collection $accommodations;
 
     /**
