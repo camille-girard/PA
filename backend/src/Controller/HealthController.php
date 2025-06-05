@@ -12,7 +12,7 @@ final class HealthController extends AbstractController
     public function index(): JsonResponse
     {
         return $this->json([
-            'running' => true
+            'running' => true,
         ]);
     }
 }

@@ -106,5 +106,7 @@ function goToNewAccommodation() {
       Supprimer mon compte
     </UButton>
   </div>
-
+    <div class="flex justify-center mt-10">
+        <UButton size="lg" variant="primary" class="w-full max-w-2xl"> Ajouter un nouveau bien </UButton>
+    </div>
 </template>
