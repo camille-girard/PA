@@ -26,10 +26,8 @@
         'text-body-md flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
 
     const variantClasses = {
-        primary:
-            'hover:underline underline-offset-4 transition disabled:text-fg-disabled',
-        secondary:
-            'text-tertiary hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        primary: 'hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        secondary: 'text-tertiary hover:underline underline-offset-4 transition disabled:text-fg-disabled',
     };
 
     const sizeClasses = {

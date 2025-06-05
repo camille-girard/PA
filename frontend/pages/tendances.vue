@@ -1,8 +1,5 @@
 <script setup lang="ts">
-    interface Logement {
-        title: string;
-        image: string;
-    }
+    import '~/types/logement';
 
     const trending: Logement[] = [
         { title: 'Maison Harry Potter', image: '/Home_HP.jpeg' },
@@ -30,12 +27,9 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">Les coups de coeur du moment</h2>
                 </div>
-                <thematicGrid :items="trending" />
+                <RentalCards :items="trending" />
                 <div class="flex justify-end hover:underline mt-5">
-                    <NuxtLink
-                        to="/recherche?tendance=true"
-                        class="inline-flex items-center text-orange-600 text-sm font-medium"
-                    >
+                    <NuxtLink to="#" class="inline-flex items-center text-orange-600 text-sm font-medium">
                         Voir plus
                         <svg
                             class="w-4 h-4 ml-1"
@@ -54,4 +48,3 @@
         <UFooter />
     </main>
 </template>
-

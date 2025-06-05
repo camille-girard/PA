@@ -17,4 +17,3 @@
         <NuxtPage />
     </NuxtLayout>
 </template>
-
