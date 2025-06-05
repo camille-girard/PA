@@ -50,4 +50,3 @@
         </transition>
     </header>
 </template>
-

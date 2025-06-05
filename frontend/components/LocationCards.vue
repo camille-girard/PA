@@ -19,7 +19,7 @@
         <NuxtLink
             v-for="item in items"
             :key="item.title"
-            :to="`/thematiques/${item.slug}`"
+            :to="`/thematiques/${item.slug}/${item.id}`"
             class="rounded-xl overflow-hidden shadow hover:shadow-lg transition"
         >
             <img :src="item.image" :alt="item.title" class="w-full h-56 object-cover" />

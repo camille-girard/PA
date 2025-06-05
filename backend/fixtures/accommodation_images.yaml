@@ -4,7 +4,17 @@ App\Entity\AccommodationImages:
     url: 'https://picsum.photos/300/200'
     is_main: true
 
-  image_2:
+  image_1b:
+    accommodation: '@accommodation_1'
+    url: 'https://picsum.photos/300/200'
+    is_main: false
+
+  image_1c:
+    accommodation: '@accommodation_1'
+    url: 'https://picsum.photos/300/200'
+    is_main: false
+
+  image_1d:
     accommodation: '@accommodation_1'
     url: 'https://picsum.photos/300/200'
     is_main: false
@@ -28,5 +38,3 @@ App\Entity\AccommodationImages:
     accommodation: '@accommodation_3'
     url: 'https://picsum.photos/300/200'
     is_main: false
-
-

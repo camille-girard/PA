@@ -5,7 +5,7 @@ export async function useAuthFetch<T>(url: string, options: UseFetchOptions<T> =
 
     const authStore = useAuthStore();
     const headers = useRequestHeaders(['cookie']);
-    
+
     const finalOptions = (): UseFetchOptions<T> => {
         return {
             ...options,

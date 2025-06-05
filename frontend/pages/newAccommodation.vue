@@ -20,4 +20,3 @@
         <UFooter />
     </main>
 </template>
-
