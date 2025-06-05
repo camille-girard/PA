@@ -18,4 +18,3 @@
         <UFooter />
     </main>
 </template>
-

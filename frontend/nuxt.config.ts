@@ -39,15 +39,15 @@ export default defineNuxtConfig({
         classSuffix: '',
     },
     build: {
-        transpile: ['swagger-ui-dist']
+        transpile: ['swagger-ui-dist'],
     },
     vite: {
         server: {
             allowedHosts: ['popnbed.com'],
         },
         optimizeDeps: {
-          include: ['swagger-ui-dist/swagger-ui-bundle.js']
-        }
+            include: ['swagger-ui-dist/swagger-ui-bundle.js'],
+        },
     },
     components: {
         dirs: [
@@ -68,6 +68,6 @@ export default defineNuxtConfig({
         },
     },
     nitro: {
-        compressPublicAssets: true
-    }
+        compressPublicAssets: true,
+    },
 });

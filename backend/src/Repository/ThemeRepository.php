@@ -40,4 +40,15 @@ class ThemeRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllWithAccommodations(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.accommodations', 'a')
+            ->addSelect('a')
+            ->leftJoin('a.images', 'i')
+            ->addSelect('i')
+            ->getQuery()
+            ->getResult();
+    }
 }

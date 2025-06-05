@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+    import '~/types/theme';
+    import '~/types/accommodation';
     const comment = [
         {
             id: 1,
@@ -41,6 +43,28 @@
         { title: 'Star Wars', image: '/StarWars.png' },
         { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
     ];
+    const { theme, id } = useRoute().params;
+    const Location = ref<Accommodation[]>([]);
+
+    onMounted(async () => {
+        const { $api } = useNuxtApp();
+        try {
+            const response = await useAuthFetch<Accommodation>($api('/api/accommodations/' + id));
+            if (response) {
+                Location.value = response.data.value.accommodation;
+                Location.value.images = response.data.value.accommodation.images.map((image) => ({
+                    url: image.url,
+                    alt: image.alt || "Image de l'hébergement",
+                    main: image.main || false,
+                }));
+            } else {
+                Location.value = null;
+            }
+        } catch (error) {
+            console.error('Erreur lors de la récupération du logement :', error);
+            Location.value = null;
+        }
+    });
 </script>
 
 <template>
@@ -48,7 +72,8 @@
         <UHeader />
         <div class="max-w-7xl mx-auto w-full pt-8 px-4">
             <section id="rental-image" class="mb-20 pt-20">
-                <CarouselRental />
+                <h1 class="text-h1 mb-12 text-center">{{ Location.name }}</h1>
+                <CarouselRental :images="Location.images" />
             </section>
             <div class="flex flex-col md:flex-row gap-8">
                 <div class="flex-1 space-y-20">
@@ -61,7 +86,7 @@
                 </div>
                 <div class="relative w-full md:w-1/3">
                     <div class="sticky top-24">
-                        <BookingCard />
+                        <!-- <BookingCard /> -->
                     </div>
                 </div>
             </div>
@@ -73,4 +98,3 @@
         <UFooter />
     </main>
 </template>
-
