@@ -5,6 +5,8 @@ type User = {
     firstName: string;
     lastName: string;
     email: string;
+    phone?: string;
+    address?: string;
     roles: string[];
 };
 
@@ -38,6 +40,68 @@ export const useAuthStore = defineStore('auth', {
                 this.user = null;
                 this.isAuthenticated = false;
                 console.error('Error fetching user:', error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        async updateUser(updatedData: Partial<User>) {
+            this.isLoading = true;
+            try {
+                const { $api } = useNuxtApp();
+
+                const { data, error } = await useAuthFetch<User>($api('/api/me'), {
+                    method: 'PUT',
+                    body: updatedData,
+                    credentials: 'include',
+                });
+
+                if (data.value && !error.value) {
+                    this.user = data.value;
+                    return { success: true };
+                } else {
+                    return {
+                        success: false,
+                        error: error.value?.data?.message || 'Erreur lors de la mise à jour du profil',
+                    };
+                }
+            } catch (error) {
+                console.error('Update user error:', error);
+                return {
+                    success: false,
+                    error: 'Une erreur est survenue lors de la mise à jour du profil',
+                };
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        async deleteAccount() {
+            this.isLoading = true;
+            try {
+                const { $api } = useNuxtApp();
+
+                const { error } = await useFetch($api('/api/me'), {
+                    method: 'DELETE',
+                    credentials: 'include',
+                });
+
+                if (!error.value) {
+                    this.user = null;
+                    this.isAuthenticated = false;
+                    return { success: true };
+                }
+
+                return {
+                    success: false,
+                    error: error.value?.data?.message || 'Erreur lors de la suppression',
+                };
+            } catch (error) {
+                console.error('Delete account error:', error);
+                return {
+                    success: false,
+                    error: 'Une erreur est survenue',
+                };
             } finally {
                 this.isLoading = false;
             }

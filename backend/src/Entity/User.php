@@ -54,8 +54,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $address = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
+
 
     #[ORM\Column]
     private ?bool $isVerified = null;
@@ -194,6 +198,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->phone = $phone;
 
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
         return $this;
     }
 
