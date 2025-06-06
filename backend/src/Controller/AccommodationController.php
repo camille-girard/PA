@@ -49,9 +49,27 @@ final class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
+        $images = [];
+        foreach ($accommodation->getImages() as $image) {
+            $images[] = [
+                'url' => $image->getUrl(),
+                'alt' => 'Image du logement',
+                'main' => $image->isMain(),
+            ];
+        }
+
         return $this->json([
-            'accommodation' => $accommodation,
-        ], Response::HTTP_OK);
+            'id' => $accommodation->getId(),
+            'name' => $accommodation->getName(),
+            'description' => $accommodation->getDescription(),
+            'address' => $accommodation->getAddress(),
+            'capacity' => $accommodation->getCapacity(),
+            'price' => $accommodation->getPrice(),
+            'adventage' => $accommodation->getAdventage(),
+            'practicalInformations' => $accommodation->getPracticalInformations(),
+            'createdAt' => $accommodation->getCreatedAt()?->format('Y-m-d H:i:s'),
+            'images' => $images,
+        ]);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
