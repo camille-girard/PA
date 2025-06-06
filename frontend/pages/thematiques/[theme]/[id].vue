@@ -21,13 +21,11 @@ onMounted(async () => {
       useAuthFetch<any[]>($api(`/api/comments/accommodation/${id}`)),
     ]);
 
-    // Chargement du logement (images)
     if (accommodationResponse?.data?.value) {
       const acc = accommodationResponse.data.value;
       Location.value = acc;
     }
 
-    // Chargement des commentaires
     if (commentsResponse?.data?.value) {
       comment.value = commentsResponse.data.value.map((c: any) => ({
         id: c.id,
@@ -50,35 +48,26 @@ onMounted(async () => {
   <main>
     <UHeader />
     <div class="max-w-7xl mx-auto w-full pt-8 px-4">
-      <!-- Images -->
       <section id="rental-image" class="mb-20 pt-20">
         <h1 class="text-h1 mb-12 text-center">{{ Location?.name || 'Logement' }}</h1>
         <CarouselRental :images="Location?.images || []" />
       </section>
-
-      <!-- Colonne principale -->
       <div class="flex flex-col md:flex-row gap-8">
         <div class="flex-1 space-y-20">
           <RentalInformation />
           <RentalPraticalInformation />
-
-          <!-- Commentaires -->
           <section id="comments">
             <h2 class="text-h2 mb-6">Les commentaires</h2>
             <p v-if="!comment.length" class="text-gray-500">Aucun commentaire pour le moment.</p>
             <CommentCards v-else :items="comment" />
           </section>
         </div>
-
-        <!-- Sidebar -->
         <div class="relative w-full md:w-1/3">
           <div class="sticky top-24">
             <!-- <BookingCard /> -->
           </div>
         </div>
       </div>
-
-      <!-- Suggestions -->
       <section id="consult-trending" class="w-full pt-32">
         <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
         <RentalCards :items="rental" />
