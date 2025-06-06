@@ -188,13 +188,17 @@ class CommentController extends AbstractController
 
         $data = [];
         foreach ($comments as $comment) {
+            $client = $comment->getClient();
+
             $data[] = [
                 'id' => $comment->getId(),
                 'content' => $comment->getContent(),
                 'rating' => $comment->getRating(),
                 'createdAt' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
                 'client' => [
-                    'id' => $comment->getClient()->getId(),
+                    'id' => $client->getId(),
+                    'firstName' => $client->getFirstName(),
+                    'lastName' => $client->getLastName(),
                 ],
             ];
         }
