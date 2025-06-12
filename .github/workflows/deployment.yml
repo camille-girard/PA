@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/camille-girard/pa
+  REGISTRY: registry.nassimlounadi.fr
+  IMAGE_PREFIX: registry.nassimlounadi.fr/pa
 
 jobs:
   build-and-push:
