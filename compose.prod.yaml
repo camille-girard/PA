@@ -9,7 +9,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
 
   backend:
-    image: ghcr.io/camille-girard/backend
+    image: registry.nassimlounadi.fr/backend
     depends_on:
       - db
     healthcheck:
@@ -20,10 +20,10 @@ services:
       start_period: 20s
 
   frontend:
-    image: ghcr.io/camille-girard/frontend
+    image: registry.nassimlounadi.fr/frontend
 
   nginx:
-    image: ghcr.io/camille-girard/nginx
+    image: registry.nassimlounadi.fr/nginx
     ports:
       - '80:80'
     depends_on:
