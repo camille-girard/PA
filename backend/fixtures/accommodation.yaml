@@ -2,36 +2,41 @@ App\Entity\Accommodation:
   accommodation_1:
     owner: '@owner_1'
     theme: '@theme_1'
-    name: 'Logement dans la série Friends à New York'
-    description: 'Séjournez dans l‘appartement de Monica et Rachel à New York, avec une vue imprenable sur Central Park.'
-    address: '32 Jasper Street, New York, NY 10001'
+    name: 'Logement dans la série Friends à Paris'
+    description: 'Séjournez dans un appartement inspiré de la série Friends, avec vue sur la Tour Eiffel.'
+    address: '32 Rue de Paris, 75001 Paris, France'
     capacity: 2
     price: 120.50
-    adventage: ['gouter', 'Petit-déjeuner offert']
-    practical_informations: 'Wi-Fi gratuit, cuisine équipée à la Monica, salle de bain privée.'
+    adventage: ['Goûter', 'Petit-déjeuner offert']
+    practical_informations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée.'
     created_at: '<(new DateTimeImmutable())>'
+    latitude: 48.8584
+    longitude: 2.2945
 
   accommodation_2:
     owner: '@owner_1'
     theme: '@theme_2'
-    name: 'Château dans le film Harry Potter'
-    description: 'Séjournez dans le château de Poudlard, avec accès à la salle commune de Gryffondor.'
-    address: 'Hogwarts Castle, Scotland'
+    name: 'Château version Harry Potter en Alsace'
+    description: 'Un château magique en Alsace avec ambiance Gryffondor.'
+    address: 'Château Rue des Sorciers, 68150 Ribeauvillé, France'
     capacity: 4
     price: 250.00
     adventage: ['Accès à la salle commune', 'Visite du château']
-    practical_informations: 'Visite guidée du château, accès à la bibliothèque magique, repas à la Grande Salle.'
+    practical_informations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard.'
     created_at: '<(new DateTimeImmutable())>'
+    latitude: 48.1960
+    longitude: 7.3168
 
   accommodation_3:
     owner: '@owner_1'
     theme: '@theme_3'
-    name: 'Maison dans le dessin animé Toy Story'
-    description: 'Séjournez dans la maison de Woody et Buzz, avec un jardin rempli de jouets.'
-    address: '456 Rue des Jouets, Toyland, USA'
+    name: 'Maison Toy Story à Bordeaux'
+    description: 'Une maison ludique inspirée de Toy Story avec jardin plein de jouets.'
+    address: '456 Rue des Jouets, 33000 Bordeaux, France'
     capacity: 6
     price: 180.00
     adventage: ['Jardin', 'Salle de jeux']
-    practical_informations: 'Wi-Fi gratuit, salle de jeux pour enfants, jardin avec balançoire.'
+    practical_informations: 'Wi-Fi, salle de jeux, jardin avec balançoire.'
     created_at: '<(new DateTimeImmutable())>'
-
+    latitude: 44.8378
+    longitude: -0.5792
