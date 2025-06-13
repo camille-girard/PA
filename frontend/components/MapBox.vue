@@ -43,7 +43,7 @@ const loadMap = async () => {
         if (!isNaN(lat) && !isNaN(lng)) {
           const popupContent = `
             <a href="/thematiques/${acc.theme}/${acc.id}" target="_self"
-               class="relative block bg-white rounded-xl overflow-hidden max-w-xs shadow-xl text-sm no-underline hover:opacity-90 transition outline-none focus:outline-none">
+               class="relative block bg-white rounded-xl overflow-hidden max-w-xs shadow-xl text-sm no-underline transition outline-none focus:outline-none">
               <button class="absolute top-2 right-2 text-gray-400 hover:text-orange-600 text-xl z-10 close-popup"
                       type="button"
                       onclick="event.stopPropagation(); event.preventDefault(); this.closest('.mapboxgl-popup').remove();">
