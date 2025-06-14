@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: SupportTicket::class, mappedBy: 'user')]
     private Collection $supportTickets;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $totpSecret = null;
+
     public function __construct()
     {
         $this->supportTickets = new ArrayCollection();
@@ -263,6 +266,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             }
         }
 
+        return $this;
+    }
+
+    public function getTotpSecret(): ?string { return $this->totpSecret; }
+
+    public function setTotpSecret(?string $secret): self {
+        $this->totpSecret = $secret;
         return $this;
     }
 }
