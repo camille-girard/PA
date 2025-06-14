@@ -14,6 +14,9 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /**
+     * @phpstan-ignore-next-line
+     */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -31,8 +34,11 @@ class Accommodation
     #[ORM\Column]
     private ?float $price = null;
 
+    /**
+     * @var array<string>
+     */
     #[ORM\Column(type: Types::ARRAY)]
-    private array $adventage = [];
+    private array $advantage = [];
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $practicalInformations = null;
@@ -47,12 +53,21 @@ class Accommodation
     #[ORM\ManyToOne(inversedBy: 'accommodations')]
     private ?Theme $theme = null;
 
+    /**
+     * @var Collection<int, AccommodationImages>
+     */
     #[ORM\OneToMany(targetEntity: AccommodationImages::class, mappedBy: 'accommodation')]
     private Collection $images;
 
+    /**
+     * @var Collection<int, Booking>
+     */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'accommodation', orphanRemoval: true)]
     private Collection $bookings;
 
+    /**
+     * @var Collection<int, Comment>
+     */
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'accommodation', orphanRemoval: true)]
     private Collection $comments;
 
@@ -82,6 +97,7 @@ class Accommodation
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -93,6 +109,7 @@ class Accommodation
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -104,6 +121,7 @@ class Accommodation
     public function setAddress(string $address): static
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -115,6 +133,7 @@ class Accommodation
     public function setCapacity(int $capacity): static
     {
         $this->capacity = $capacity;
+
         return $this;
     }
 
@@ -126,17 +145,25 @@ class Accommodation
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
         return $this;
     }
 
-    public function getAdventage(): array
+    /**
+     * @return array<string>
+     */
+    public function getAdvantage(): array
     {
-        return $this->adventage;
+        return $this->advantage;
     }
 
-    public function setAdventage(array $adventage): static
+    /**
+     * @param array<string> $advantage
+     */
+    public function setAdvantage(array $advantage): static
     {
-        $this->adventage = $adventage;
+        $this->advantage = $advantage;
+
         return $this;
     }
 
@@ -148,6 +175,7 @@ class Accommodation
     public function setPracticalInformations(string $practicalInformations): static
     {
         $this->practicalInformations = $practicalInformations;
+
         return $this;
     }
 
@@ -159,6 +187,7 @@ class Accommodation
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -170,6 +199,7 @@ class Accommodation
     public function setOwner(?Owner $owner): static
     {
         $this->owner = $owner;
+
         return $this;
     }
 
@@ -181,9 +211,13 @@ class Accommodation
     public function setTheme(?Theme $theme): static
     {
         $this->theme = $theme;
+
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccommodationImages>
+     */
     public function getImages(): Collection
     {
         return $this->images;
@@ -210,6 +244,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Booking>
+     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -236,6 +273,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;
@@ -270,6 +310,7 @@ class Accommodation
     public function setLatitude(?float $latitude): static
     {
         $this->latitude = $latitude;
+
         return $this;
     }
 
@@ -281,6 +322,7 @@ class Accommodation
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
+
         return $this;
     }
 }
