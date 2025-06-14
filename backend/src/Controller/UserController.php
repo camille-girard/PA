@@ -23,7 +23,7 @@ final class UserController extends AbstractController
         $user = $userRepository->findOneBy(['email' => $current_user->getUserIdentifier()]);
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
-            'ignored_attributes' => ['password', 'userIdentifier']
+            'ignored_attributes' => ['password', 'userIdentifier'],
         ]);
 
         return JsonResponse::fromJsonString($userSerialized);
@@ -33,7 +33,7 @@ final class UserController extends AbstractController
     public function update(
         Request $request,
         EntityManagerInterface $em,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
     ): JsonResponse {
         /** @var User $user */
         $user = $this->getUser();
@@ -62,7 +62,7 @@ final class UserController extends AbstractController
         $em->flush();
 
         $json = $serializer->serialize($user, 'json', [
-            'ignored_attributes' => ['password', 'userIdentifier']
+            'ignored_attributes' => ['password', 'userIdentifier'],
         ]);
 
         return JsonResponse::fromJsonString($json);

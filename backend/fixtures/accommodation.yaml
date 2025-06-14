@@ -7,7 +7,7 @@ App\Entity\Accommodation:
     address: '32 Rue de Paris, 75001 Paris, France'
     capacity: 2
     price: 120.50
-    adventage: ['Goûter', 'Petit-déjeuner offert']
+    advantage: ['Goûter', 'Petit-déjeuner offert']
     practical_informations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée.'
     created_at: '<(new DateTimeImmutable())>'
     latitude: 48.8584
@@ -21,7 +21,7 @@ App\Entity\Accommodation:
     address: 'Château Rue des Sorciers, 68150 Ribeauvillé, France'
     capacity: 4
     price: 250.00
-    adventage: ['Accès à la salle commune', 'Visite du château']
+    advantage: ['Accès à la salle commune', 'Visite du château']
     practical_informations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard.'
     created_at: '<(new DateTimeImmutable())>'
     latitude: 48.1960
@@ -35,7 +35,7 @@ App\Entity\Accommodation:
     address: '456 Rue des Jouets, 33000 Bordeaux, France'
     capacity: 6
     price: 180.00
-    adventage: ['Jardin', 'Salle de jeux']
+    advantage: ['Jardin', 'Salle de jeux']
     practical_informations: 'Wi-Fi, salle de jeux, jardin avec balançoire.'
     created_at: '<(new DateTimeImmutable())>'
     latitude: 44.8378

@@ -1,9 +1,9 @@
 <script setup lang="ts">
+    import '~/types/theme';
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
     });
-    import '~/types/theme';
 
     const trending = ref<Theme[]>([]);
 
@@ -48,7 +48,7 @@
                     <h2 class="text-h2">Parcourez un lieu unique digne d’un film ou d’une série culte</h2>
                 </div>
                 <div class="flex justify-center">
-                    <img src="/Map.png" alt="Carte des lieux à Paris" class="rounded-2xl max-w-full w-[800px]" />
+                    <MapBox />
                 </div>
                 <div class="mt-10 text-center">
                     <NuxtLink to="/explorer">

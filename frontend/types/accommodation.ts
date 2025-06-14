@@ -5,10 +5,11 @@ export type Accommodation = {
     address: string;
     capacity: number;
     price: number;
-    adventage: string[];
+    advantage: string[];
     practicalInformations: string;
     images: any[];
     owner: Owner;
+    host: string[];
     theme: Theme;
     comments: any[];
 };
