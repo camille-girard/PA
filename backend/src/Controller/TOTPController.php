@@ -9,13 +9,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/api')]
 final class TOTPController extends AbstractController
 {
     #[Route('/2fa/setup', name: 'app_2fa_setup', methods: ['POST'])]
-    public function setup(User $user, EntityManagerInterface $entityManager): JsonResponse
+    public function setup(UserInterface $user, EntityManagerInterface $entityManager): JsonResponse
     {
+        /** @var User $user */
+
         $totp = TOTP::create();
         $totp->setLabel($user->getUserIdentifier());
         $totp->setIssuer('PopnBed');
@@ -32,8 +35,10 @@ final class TOTPController extends AbstractController
     }
 
     #[Route('/2fa/verify', name: 'app_2fa_verify', methods: ['POST'])]
-    public function verify(Request $request, User $user): JsonResponse
+    public function verify(Request $request, UserInterface $user): JsonResponse
     {
+        /** @var User $user */
+
         $data = json_decode($request->getContent(), true);
         $code = $data['code'] ?? null;
 
