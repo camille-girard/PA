@@ -269,10 +269,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTotpSecret(): ?string { return $this->totpSecret; }
+    public function getTotpSecret(): ?string
+    {
+        return $this->totpSecret;
+    }
 
-    public function setTotpSecret(?string $secret): self {
+    public function setTotpSecret(?string $secret): self
+    {
         $this->totpSecret = $secret;
+
         return $this;
     }
 }
