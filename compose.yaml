@@ -48,11 +48,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       target: dev
+    ports:
+      - '3000:3000'
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    ports:
-      - '3000:3000'
+    environment:
+      NITRO_PRESET: node
+
 
   nginx:
     build:
