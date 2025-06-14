@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use OTPHP\TOTP;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class TOTPController extends AbstractController
 {
     #[Route('/2fa/setup', name: 'app_2fa_setup', methods: ['POST'])]
-    public function index(User $user, EntityManagerInterface $entityManager): JsonResponse
+    public function setup(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
         $totp = TOTP::create();
         $totp->setLabel($user->getUserIdentifier());
@@ -29,5 +30,25 @@ final class TOTPController extends AbstractController
             'qrContent' => $qrContent,
             'secret' => $totp->getSecret(),
         ]);
+    }
+
+    #[Route('/2fa/verify', name: 'app_2fa_verify', methods: ['POST'])]
+    public function verify(Request $request, User $user): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $code = $data['code'] ?? null;
+
+        if (!$code) {
+            return $this->json(['error' => 'Code is required'], 400);
+        }
+
+        $totp = TOTP::create($user->getTotpSecret());
+        $isValid = $totp->verify($code);
+
+        if ($isValid) {
+            return $this->json(['message' => '2FA verification successful']);
+        }
+
+        return $this->json(['error' => 'Invalid code'], 400);
     }
 }
