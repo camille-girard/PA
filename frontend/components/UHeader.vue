@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const authStore = useAuthStore();
-const isMenuOpen = ref(false);
-const isProfileMenuOpen = ref(false);
+const authStore = useAuthStore()
+const isMenuOpen = ref(false)
+const isProfileMenuOpen = ref(false)
 
 const toggleProfileMenu = () => {
-  isProfileMenuOpen.value = !isProfileMenuOpen.value;
-};
+  isProfileMenuOpen.value = !isProfileMenuOpen.value
+}
 
 const closeProfileMenu = () => {
-  isProfileMenuOpen.value = false;
-};
+  isProfileMenuOpen.value = false
+}
 </script>
 
 <template>
@@ -28,21 +28,43 @@ const closeProfileMenu = () => {
       </nav>
 
       <div class="hidden md:block relative">
-        <UButton v-if="!authStore.isAuthenticated" size="lg" @click="navigateTo('/login')">
+        <UButton
+            v-if="!authStore.isAuthenticated"
+            size="lg"
+            @click="navigateTo('/login')"
+        >
           Se connecter
         </UButton>
 
         <div v-else>
           <button @click="toggleProfileMenu" class="rounded-full focus:outline-none">
-            <img src="/Patrick.jpg" alt="Avatar" class="w-12 h-12 rounded-full object-cover mb-4" />
+            <img
+                src="/Patrick.jpg"
+                alt="Avatar"
+                class="w-12 h-12 rounded-full object-cover mb-4"
+            />
           </button>
 
           <transition name="fade">
-            <div v-if="isProfileMenuOpen" @click.away="closeProfileMenu" class="absolute right-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md">
-              <ULink to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mon Profil</ULink>
-              <ULink to="/message" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Mes Messages</ULink>
-              <div class="flex justify-center">
-                <LogoutButton class="px-4 py-2 text-white bg-orange-600 rounded-md hover:bg-orange-500" />
+            <div
+                v-if="isProfileMenuOpen"
+                @click.away="closeProfileMenu"
+                class="absolute right-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md"
+            >
+              <ULink
+                  to="/profile"
+                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Mon Profil
+              </ULink>
+              <ULink
+                  to="/message"
+                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Mes Messages
+              </ULink>
+              <div class="px-2 pt-2">
+                <LogoutButton variant="transparent" />
               </div>
             </div>
           </transition>
@@ -57,22 +79,32 @@ const closeProfileMenu = () => {
             stroke-width="2"
             viewBox="0 0 24 24"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       </button>
     </div>
 
     <transition name="fade">
       <div v-if="isMenuOpen" class="md:hidden mt-4 px-4 space-y-4 pt-6">
-        <ULink to="/thematiques" class="block text-gray-700 font-medium">Thématiques</ULink>
-        <ULink to="/explorer" class="block text-gray-700 font-medium">Explorer</ULink>
+        <ULink to="/thematiques" class="block text-gray-700 font-medium"
+        >Thématiques</ULink
+        >
+        <ULink to="/explorer" class="block text-gray-700 font-medium"
+        >Explorer</ULink
+        >
 
         <template v-if="authStore.isAuthenticated">
-          <ULink to="/profile" class="block text-gray-700 font-medium">Mon Profil</ULink>
-          <ULink to="/message" class="block text-gray-700 font-medium">Mes Messages</ULink>
-          <div class="flex justify-center">
-            <LogoutButton class="px-4 py-2 text-white bg-orange-600 rounded-md hover:bg-orange-500" />
-          </div>
+          <ULink to="/profile" class="block text-gray-700 font-medium"
+          >Mon Profil</ULink
+          >
+          <ULink to="/message" class="block text-gray-700 font-medium"
+          >Mes Messages</ULink
+          >
+          <LogoutButton variant="transparent" />
         </template>
 
         <div v-else>
