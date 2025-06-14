@@ -65,10 +65,17 @@ final class AccommodationController extends AbstractController
             'address' => $accommodation->getAddress(),
             'capacity' => $accommodation->getCapacity(),
             'price' => $accommodation->getPrice(),
-            'adventage' => $accommodation->getAdventage(),
+            'advantage' => $accommodation->getAdvantage(),
             'practicalInformations' => $accommodation->getPracticalInformations(),
             'createdAt' => $accommodation->getCreatedAt()?->format('Y-m-d H:i:s'),
             'images' => $images,
+            'host' => [
+                'id' => $accommodation->getOwner()->getId(),
+                'lastName' => $accommodation->getOwner()->getLastName(),
+                'firstName' => $accommodation->getOwner()->getFirstName(),
+                'bio' => $accommodation->getOwner()->getBio(),
+                'email' => $accommodation->getOwner()->getEmail(),
+            ],
         ]);
     }
 
