@@ -60,7 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
-
     #[ORM\Column]
     private ?bool $isVerified = null;
 
@@ -209,6 +208,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
         return $this;
     }
 

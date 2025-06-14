@@ -1,15 +1,15 @@
-<script setup>
-    import { ref, computed } from 'vue';
-
+<script setup lang="ts">
     import UDatePicker from '~/components/molecules/UDatePicker.vue';
     import UInputNumber from '~/components/atoms/UInputNumber.vue';
 
-    const pricePerNight = 350;
+    interface PricePerNight {
+        pricePerNight: number;
+    }
+    const pricePerNight = defineProps<PricePerNight>();
 
     const arrival = ref('');
     const departure = ref('');
     const guests = ref('');
-    const total = ref('');
     const arrivalDate = ref(null);
     const departureDate = ref(null);
     const amountTravelers = ref(0);
@@ -21,13 +21,15 @@
         return nights > 0 ? nights : 0;
     });
 
-    const total = computed(() => numberOfNights.value * pricePerNight);
+    const total = computed(() => numberOfNights.value * pricePerNight.pricePerNight);
 </script>
 
 <template>
     <div class="w-full max-w-sm p-6 bg-white border border-gray-300 rounded-2xl shadow-sm space-y-4">
         <div class="text-center">
-            <p class="font-bold text-lg">{{ pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span></p>
+            <p class="font-bold text-lg">
+                {{ pricePerNight.pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span>
+            </p>
         </div>
         <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />
         <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
