@@ -13,6 +13,7 @@ export default defineNuxtConfig({
         '@nuxtjs/i18n',
         '@nuxtjs/sitemap',
     ],
+
     i18n: {
         locales: [
             { code: 'fr', language: 'fr-FR' },
@@ -24,23 +25,29 @@ export default defineNuxtConfig({
             optimizeTranslationDirective: false,
         },
     },
+
     tailwindcss: {
         exposeConfig: true,
         viewer: true,
     },
+
     runtimeConfig: {
         public: {
-            apiUrl: '',
+            apiUrl: process.env.NUXT_PUBLIC_API_URL,
+            mapboxToken: process.env.MAPBOX_TOKEN,
         },
     },
+
     colorMode: {
         preference: 'light',
         fallback: 'light',
         classSuffix: '',
     },
+
     build: {
         transpile: ['swagger-ui-dist'],
     },
+
     vite: {
         server: {
             allowedHosts: ['popnbed.com'],
@@ -49,6 +56,7 @@ export default defineNuxtConfig({
             include: ['swagger-ui-dist/swagger-ui-bundle.js'],
         },
     },
+
     components: {
         dirs: [
             {
@@ -57,6 +65,7 @@ export default defineNuxtConfig({
             },
         ],
     },
+
     googleFonts: {
         download: true,
         preload: true,
@@ -67,7 +76,8 @@ export default defineNuxtConfig({
             },
         },
     },
+
     nitro: {
         compressPublicAssets: true,
     },
-});
+})
