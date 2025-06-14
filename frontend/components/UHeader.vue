@@ -17,10 +17,10 @@ const closeProfileMenu = () => {
 <template>
   <header class="bg-white py-5 w-full fixed top-0 z-50 pt-8 px-4">
     <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
+      <NuxtLink to="/" class="flex items-center gap-2">
         <ULogo />
         <span class="text-body-sm font-semibold">PopnBed</span>
-      </a>
+      </NuxtLink>
 
       <nav class="hidden md:flex items-center gap-6">
         <ULink to="/thematiques">Thématiques</ULink>
