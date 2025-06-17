@@ -62,7 +62,12 @@ const closeProfileMenu = () => {
                   class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 Mes Messages
-              </ULink>
+              </ULink> <ULink
+                to="/booking"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              Mes Réservations
+            </ULink>
               <div class="px-2 pt-2">
                 <LogoutButton variant="transparent" />
               </div>
