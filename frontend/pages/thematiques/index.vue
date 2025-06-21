@@ -6,7 +6,7 @@
 
     onMounted(async () => {
         const { $api } = useNuxtApp();
-        const response = await useAuthFetch<ThemeSection>($api('/api/themes/accommodations'));
+        const response = await useAuthFetch<ThemeSection>($api('/api/themes/my-accommodation'));
         ThemeSections.value = response.data.value.themes.map((theme) => ({
             title: theme.name,
             items: theme.accommodations.map((accommodation) => ({

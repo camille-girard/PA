@@ -39,7 +39,7 @@
     });
 
     const baseClasses =
-        'flex w-full rounded-lg border border-gray-300 focus:ring-2 focus:outline-none placeholder:text-gray-400 text-gray-500 shadow-xs text-center';
+        'flex w-full rounded-lg border border-gray-300 focus:ring-2 focus:outline-none shadow-xs text-center';
 
     const variantClasses = {
         default: 'focus:border-orange-500 focus:ring-orange-500',
