@@ -92,13 +92,25 @@ class AccommodationController extends AbstractController
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json(['message' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $owner = $this->ownerRepository->findOneBy(['user' => $user]);
+
+        if (!$owner) {
+            return $this->json(['message' => 'Propriétaire non trouvé'], Response::HTTP_FORBIDDEN);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (null === $data) {
             return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        $requiredFields = ['name', 'description', 'address', 'price', 'capacity', 'ownerId'];
+        $requiredFields = ['name', 'description', 'address', 'price', 'capacity'];
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
@@ -112,11 +124,6 @@ class AccommodationController extends AbstractController
                 'message' => 'Champs obligatoires manquants',
                 'missingFields' => $missingFields,
             ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $owner = $this->ownerRepository->find($data['ownerId']);
-        if (!$owner) {
-            return $this->json(['message' => 'Propriétaire non trouvé'], Response::HTTP_BAD_REQUEST);
         }
 
         $accommodation = new Accommodation();
@@ -145,7 +152,9 @@ class AccommodationController extends AbstractController
 
         return $this->json([
             'message' => 'Hébergement créé avec succès',
-            'accommodation' => $accommodation,
+            'accommodation' => [
+                'id' => $accommodation->getId()
+            ],
         ], Response::HTTP_CREATED);
     }
 
