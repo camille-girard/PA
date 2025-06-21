@@ -16,9 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/api/accommodations', name: 'api_accommodations_')]
-#[OA\Tag(name: 'Accommodations')]
-final class AccommodationController extends AbstractController
+#[Route('/api/my-accommodation', name: 'api_my_accommodation_')]
+#[OA\Tag(name: 'My Accommodation')]
+class AccommodationController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -27,13 +27,18 @@ final class AccommodationController extends AbstractController
         private OwnerRepository $ownerRepository,
         private ValidatorInterface $validator,
         private ValidationErrorFormatterService $errorFormatter,
-    ) {
-    }
+    ) {}
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        $accommodations = $this->accommodationRepository->findAll();
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json(['message' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $accommodations = $this->accommodationRepository->findByOwnerId($user->getId());
 
         return $this->json([
             'accommodations' => $accommodations,
@@ -49,26 +54,31 @@ final class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $images = [];
-        foreach ($accommodation->getImages() as $image) {
-            $images[] = [
-                'url' => $image->getUrl(),
-                'alt' => 'Image du logement',
-                'main' => $image->isMain(),
-            ];
-        }
-
         return $this->json([
             'id' => $accommodation->getId(),
             'name' => $accommodation->getName(),
             'description' => $accommodation->getDescription(),
             'address' => $accommodation->getAddress(),
+            'city' => $accommodation->getCity(),
+            'postalCode' => $accommodation->getPostalCode(),
+            'country' => $accommodation->getCountry(),
+            'type' => $accommodation->getType(),
+            'theme' => $accommodation->getTheme()?->getName(),
+            'themeId' => $accommodation->getTheme()?->getId(),
+            'bedrooms' => $accommodation->getBedrooms(),
+            'bathrooms' => $accommodation->getBathrooms(),
             'capacity' => $accommodation->getCapacity(),
             'price' => $accommodation->getPrice(),
             'advantage' => $accommodation->getAdvantage(),
             'practicalInformations' => $accommodation->getPracticalInformations(),
+            'latitude' => $accommodation->getLatitude(),
+            'longitude' => $accommodation->getLongitude(),
             'createdAt' => $accommodation->getCreatedAt()?->format('Y-m-d H:i:s'),
-            'images' => $images,
+            'images' => array_map(fn($image) => [
+                'url' => $image->getUrl(),
+                'alt' => 'Image du logement',
+                'main' => $image->isMain(),
+            ], $accommodation->getImages()->toArray()),
             'host' => [
                 'id' => $accommodation->getOwner()->getId(),
                 'lastName' => $accommodation->getOwner()->getLastName(),
@@ -149,44 +159,33 @@ final class AccommodationController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
-
         if (!is_array($data)) {
             return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        if (isset($data['name'])) {
-            $accommodation->setName($data['name']);
-        }
-
-        if (isset($data['description'])) {
-            $accommodation->setDescription($data['description']);
-        }
-
-        if (isset($data['address'])) {
-            $accommodation->setAddress($data['address']);
-        }
-
-        if (isset($data['price'])) {
-            $accommodation->setPrice($data['price']);
-        }
-
-        if (isset($data['capacity'])) {
-            $accommodation->setCapacity($data['capacity']);
-        }
+        if (isset($data['name'])) $accommodation->setName($data['name']);
+        if (isset($data['description'])) $accommodation->setDescription($data['description']);
+        if (isset($data['address'])) $accommodation->setAddress($data['address']);
+        if (isset($data['city'])) $accommodation->setCity($data['city']);
+        if (isset($data['postalCode'])) $accommodation->setPostalCode($data['postalCode']);
+        if (isset($data['country'])) $accommodation->setCountry($data['country']);
+        if (isset($data['type'])) $accommodation->setType($data['type']);
+        if (isset($data['bedrooms'])) $accommodation->setBedrooms($data['bedrooms']);
+        if (isset($data['bathrooms'])) $accommodation->setBathrooms($data['bathrooms']);
+        if (isset($data['price'])) $accommodation->setPrice($data['price']);
+        if (isset($data['capacity'])) $accommodation->setCapacity($data['capacity']);
+        if (isset($data['latitude'])) $accommodation->setLatitude($data['latitude']);
+        if (isset($data['longitude'])) $accommodation->setLongitude($data['longitude']);
 
         if (isset($data['ownerId'])) {
             $owner = $this->ownerRepository->find($data['ownerId']);
-            if (!$owner) {
-                return $this->json(['message' => 'Propriétaire non trouvé'], Response::HTTP_BAD_REQUEST);
-            }
+            if (!$owner) return $this->json(['message' => 'Propriétaire non trouvé'], Response::HTTP_BAD_REQUEST);
             $accommodation->setOwner($owner);
         }
 
         if (isset($data['themeId'])) {
             $theme = $this->themeRepository->find($data['themeId']);
-            if (!$theme) {
-                return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
-            }
+            if (!$theme) return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
             $accommodation->setTheme($theme);
         }
 
@@ -215,8 +214,6 @@ final class AccommodationController extends AbstractController
         $this->entityManager->remove($accommodation);
         $this->entityManager->flush();
 
-        return $this->json([
-            'message' => 'Hébergement supprimé avec succès',
-        ], Response::HTTP_OK);
+        return $this->json(['message' => 'Hébergement supprimé avec succès'], Response::HTTP_OK);
     }
 }

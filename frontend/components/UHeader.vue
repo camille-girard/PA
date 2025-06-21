@@ -65,9 +65,15 @@ const closeProfileMenu = () => {
               </ULink> <ULink
                 to="/booking"
                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              Mes Réservations
-            </ULink>
+              >
+                Mes Réservations
+              </ULink>
+              <ULink
+                to="/my-accommodation"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Mon Hébergement
+              </ULink>
               <div class="px-2 pt-2">
                 <LogoutButton variant="transparent" />
               </div>
@@ -109,6 +115,13 @@ const closeProfileMenu = () => {
           <ULink to="/message" class="block text-gray-700 font-medium"
           >Mes Messages</ULink
           >
+          <ULink
+              :to="`/my-accommodation?ownerId=${authStore.user?.id}`"
+              class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          >
+            Mon Hébergement
+          </ULink>
+
           <LogoutButton variant="transparent" />
         </template>
 

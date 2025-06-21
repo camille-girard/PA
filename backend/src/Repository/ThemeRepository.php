@@ -44,7 +44,7 @@ class ThemeRepository extends ServiceEntityRepository
     public function findAllWithAccommodations(): array
     {
         return $this->createQueryBuilder('t')
-            ->leftJoin('t.accommodations', 'a')
+            ->leftJoin('t.my-accommodation', 'a')
             ->addSelect('a')
             ->leftJoin('a.images', 'i')
             ->addSelect('i')

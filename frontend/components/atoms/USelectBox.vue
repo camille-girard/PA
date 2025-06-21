@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import ChrevronDownIcon from '~/components/atoms/icons/ChrevronDownIcon.vue';
-    import XIcon from '~/components/atoms/icons/XIcon.vue';
 
     interface SelectOption {
         label: string;
@@ -153,11 +152,11 @@
     });
 
     const baseClasses =
-        'border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder shadow-xs w-full';
+        'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none shadow-xs w-full focus:border-orange-500 focus:ring-orange-500 px-3 py-2 px-10';
 
     const variantClasses = {
-        default: 'border-primary focus:ring-primary hover:border-secondary',
-        destructive: 'border-error-subtle focus:ring-error',
+        default: 'focus:border-orange-500 focus:ring-orange-500',
+        destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
         disabled: 'bg-disabled border-disabled-subtle text-fg-disabled cursor-not-allowed',
     };
 
@@ -196,14 +195,6 @@
             </div>
 
             <div class="flex items-center">
-                <button
-                    v-if="modelValue && (Array.isArray(modelValue) ? modelValue.length > 0 : modelValue !== null)"
-                    type="button"
-                    class="mr-1 p-0.5 text-tertiary hover:text-tertiary-hover"
-                    @click.stop="clearSelection($event)"
-                >
-                    <XIcon class="size-4" />
-                </button>
                 <ChrevronDownIcon class="size-5 text-tertiary" />
             </div>
         </div>
@@ -245,7 +236,7 @@
                         >
                             <div
                                 class="flex items-center gap-2 w-full text-secondary group-hover:text-secondary-hover text-sm font-semibold"
-                                :class="{ '!text-brand-secondary': isSelected(option) }"
+                                :class="{ '!text-brand-primary': isSelected(option) }"
                             >
                                 <component
                                     :is="option.icon"
@@ -257,7 +248,7 @@
                                 <!-- Indicateur de sélection -->
                                 <svg
                                     v-if="isSelected(option)"
-                                    class="ml-auto size-4 text-brand-secondary"
+                                    class="ml-auto size-4 text-brand-primary"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -277,39 +268,3 @@
     </div>
 </template>
 
-<style scoped>
-    /* Animations pour l'apparition et disparition du dropdown */
-    .dropdown-bottom-right-enter-active,
-    .dropdown-bottom-right-leave-active,
-    .dropdown-bottom-left-enter-active,
-    .dropdown-bottom-left-leave-active {
-        transition:
-            opacity 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .dropdown-bottom-right-enter-from,
-    .dropdown-bottom-right-leave-to,
-    .dropdown-bottom-left-enter-from,
-    .dropdown-bottom-left-leave-to {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    .dropdown-top-right-enter-active,
-    .dropdown-top-right-leave-active,
-    .dropdown-top-left-enter-active,
-    .dropdown-top-left-leave-active {
-        transition:
-            opacity 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .dropdown-top-right-enter-from,
-    .dropdown-top-right-leave-to,
-    .dropdown-top-left-enter-from,
-    .dropdown-top-left-leave-to {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-</style>
