@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, watchEffect } from 'vue';
+import { ref, onMounted, watch, watchEffect, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { nanoid } from 'nanoid';
-import UInput from '~/components/atoms/UInput.vue';
-import UInputNumber from '~/components/atoms/UInputNumber.vue';
-import UButton from '~/components/atoms/UButton.vue';
-import USelectBox from '~/components/atoms/USelectBox.vue';
+import { useAuthStore } from '~/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
+const auth = useAuthStore();
 
 const accommodationId = route.params.id;
+const isEditing = computed(() => Boolean(accommodationId));
 
 const title = ref('');
 const theme = ref('');
@@ -53,6 +52,11 @@ const error = ref(null);
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 onMounted(async () => {
+  if (!isEditing.value) {
+    isLoading.value = false;
+    return;
+  }
+
   try {
     const res = await fetch(`${config.public.apiUrl}/api/my-accommodation/${accommodationId}`, {
       credentials: 'include',
@@ -68,7 +72,7 @@ onMounted(async () => {
     city.value = data.city;
     postalCode.value = data.postalCode;
     country.value = data.country || 'France';
-    theme.value = typeof data.theme === 'string' ? data.theme : data.theme?.name || '';
+    theme.value = data.theme || '';
     type.value = data.type;
     capacity.value = data.capacity;
     pricePerNight.value = data.price;
@@ -153,14 +157,14 @@ function removeImage(id: string) {
 }
 
 async function handleSubmit() {
-  const payload = {
+  const payload: Record<string, any> = {
     name: title.value,
     description: description.value,
     address: address.value,
     city: city.value,
     postalCode: postalCode.value,
     country: country.value,
-    theme: theme.value,
+    themeId: themeOptions.find(t => t.value === theme.value)?.id || null,
     type: type.value,
     price: pricePerNight.value,
     capacity: capacity.value,
@@ -172,8 +176,17 @@ async function handleSubmit() {
     maxStay: maxStay.value,
   };
 
-  const res = await fetch(`${config.public.apiUrl}/api/my-accommodation/${accommodationId}`, {
-    method: 'PUT',
+  if (!isEditing.value) {
+    payload.ownerId = auth.user?.id;
+  }
+
+  const method = isEditing.value ? 'PUT' : 'POST';
+  const url = isEditing.value
+      ? `${config.public.apiUrl}/api/my-accommodation/${accommodationId}`
+      : `${config.public.apiUrl}/api/my-accommodation`;
+
+  const res = await fetch(url, {
+    method,
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -181,6 +194,13 @@ async function handleSubmit() {
 
   if (!res.ok) {
     alert('Erreur lors de la sauvegarde');
+    return;
+  }
+
+  const json = await res.json();
+
+  if (!isEditing.value) {
+    router.push(`/my-accommodation/${json.accommodation.id}/edit`);
   } else {
     showSuccessMessage.value = true;
     setTimeout(() => {
@@ -216,16 +236,11 @@ async function handleConfirmDelete() {
 </script>
 
 <template>
-  <div
-      v-if="showSuccessMessage"
-      class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300"
-  >
-    Hébergement modifié avec succès !
+  <div v-if="showSuccessMessage" class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+    Hébergement {{ isEditing ? 'modifié' : 'créé' }} avec succès !
   </div>
-  <div
-      v-if="showDeletePopup"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  >
+
+  <div v-if="showDeletePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
       <h3 class="text-lg font-semibold mb-4">Confirmer la suppression</h3>
       <p class="mb-6">Êtes-vous sûr de vouloir supprimer ce logement ?</p>
@@ -235,10 +250,12 @@ async function handleConfirmDelete() {
       </div>
     </div>
   </div>
+
   <form class="space-y-16 max-w-4xl mx-auto" @submit.prevent="handleSubmit">
+    <!-- INFOS DE BASE -->
     <section>
       <h2 class="text-h2 font-bold mb-6">Informations du logement</h2>
-      <UInput type="text" label="Titre de l'annonce" placeholder="Titre de l'annonce" v-model="title" required />
+      <UInput label="Titre de l'annonce" placeholder="Titre de l'annonce" v-model="title" required />
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         <USelectBox v-model="theme" :options="themeOptions" label="Thème" placeholder="Sélectionner..." required />
@@ -246,29 +263,28 @@ async function handleConfirmDelete() {
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <UInputNumber v-model="bedrooms" label="Chambres" :min="0" class="w-full" />
-        <UInputNumber v-model="bathrooms" label="Salles de bain" :min="0" class="w-full" />
-        <UInputNumber v-model="capacity" label="Capacité" :min="1" class="w-full" required />
+        <UInputNumber v-model="bedrooms" label="Chambres" :min="0" />
+        <UInputNumber v-model="bathrooms" label="Salles de bain" :min="0" />
+        <UInputNumber v-model="capacity" label="Capacité" :min="1" required />
       </div>
 
       <div class="mt-4">
-        <label for="description" class="text-body-sm block mb-2">Description *</label>
+        <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Description *</label>
         <textarea
             id="description"
             v-model="description"
             rows="6"
             maxlength="20000"
             placeholder="Décrivez votre logement"
-            class="w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 px-4 py-3 resize-none"
+            class="w-full rounded-lg border border-gray-300 focus:ring-orange-500 focus:border-orange-500 px-4 py-3"
         />
-        <p class="text-body-sm mt-1">Maximum 20 000 caractères.</p>
+        <p class="text-sm text-gray-400 mt-1">Maximum 20 000 caractères.</p>
       </div>
     </section>
-
     <section>
       <h2 class="text-h2 mb-6">Adresse</h2>
-      <UInput type="text" label="Adresse complète" placeholder="Adresse complète" v-model="address" required />
-      <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow z-10 relative">
+      <UInput label="Adresse complète" placeholder="Adresse complète" v-model="address" required />
+      <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow relative z-10">
         <li
             v-for="s in suggestions"
             :key="s.id"
@@ -280,17 +296,17 @@ async function handleConfirmDelete() {
       </ul>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <UInput type="text" label="Ville" placeholder="Ville" v-model="city" required />
-        <UInput type="text" label="Code postal" placeholder="Code postal" v-model="postalCode" required />
+        <UInput label="Ville" placeholder="Ville" v-model="city" required />
+        <UInput label="Code postal" placeholder="Code postal" v-model="postalCode" required />
       </div>
-      <UInput type="text" label="Pays" placeholder="Pays" class="mt-4" v-model="country" required />
+      <UInput label="Pays" placeholder="Pays" class="mt-4" v-model="country" required />
     </section>
-
     <section>
       <h2 class="text-h2 mb-6">Ajouter vos photos</h2>
       <input ref="fileInputRef" type="file" class="hidden" accept="image/*" multiple @change="handleImageUpload" />
+
       <div
-          class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-200 transition border-dashed border-2"
+          class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 border-dashed border-2"
           @click="fileInputRef?.click()"
           @dragover.prevent
           @drop.prevent
@@ -312,19 +328,19 @@ async function handleConfirmDelete() {
         </div>
       </div>
     </section>
-
     <section>
       <h2 class="text-h2 mb-6">Prix et disponibilité</h2>
-      <UInputNumber v-model="pricePerNight" label="Prix par nuit" :min="1" class="w-full" required />
+      <UInputNumber v-model="pricePerNight" label="Prix par nuit" :min="1" required />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <UInputNumber v-model="minStay" label="Séjour minimum" :min="1" class="w-full" />
-        <UInputNumber v-model="maxStay" label="Séjour maximum" :min="1" class="w-full" />
+        <UInputNumber v-model="minStay" label="Séjour minimum" :min="1" />
+        <UInputNumber v-model="maxStay" label="Séjour maximum" :min="1" />
       </div>
     </section>
-
     <div class="flex justify-between pt-10 gap-6">
       <UButton type="submit" variant="primary" class="w-full max-w-md">Enregistrer et continuer</UButton>
-      <UButton type="button" variant="danger" class="w-full max-w-md" @click="confirmDelete">Supprimer</UButton>
+      <UButton v-if="isEditing" type="button" variant="danger" class="w-full max-w-md" @click="confirmDelete">
+        Supprimer
+      </UButton>
     </div>
   </form>
 </template>

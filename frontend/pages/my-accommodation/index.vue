@@ -56,7 +56,7 @@ onMounted(async () => {
         </div>
 
         <div class="mt-10 text-center">
-          <NuxtLink to="/my-accommodation/newAccommodation">
+          <NuxtLink to="/my-accommodation/create">
             <UButton class="mx-auto">Ajouter un logement</UButton>
           </NuxtLink>
         </div>

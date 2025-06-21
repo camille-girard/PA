@@ -23,17 +23,19 @@ final class ThemeController extends AbstractController
         private ThemeRepository $themeRepository,
         private ValidatorInterface $validator,
         private ValidationErrorFormatterService $errorFormatter,
-    ) {
-    }
+    ) {}
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): JsonResponse
     {
         $themes = $this->themeRepository->findAll();
 
-        return $this->json([
-            'themes' => $themes,
-        ], Response::HTTP_OK);
+        $data = array_map(fn(Theme $theme) => [
+            'id' => $theme->getId(),
+            'name' => $theme->getName(),
+        ], $themes);
+
+        return $this->json($data, Response::HTTP_OK);
     }
 
     #[Route('/my-accommodation', name: 'my-accommodation', methods: ['GET'])]
