@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { nanoid } from 'nanoid';
 import UInput from '~/components/atoms/UInput.vue';
 import UInputNumber from '~/components/atoms/UInputNumber.vue';
 import UButton from '~/components/atoms/UButton.vue';
 import USelectBox from '~/components/atoms/USelectBox.vue';
-import { nanoid } from 'nanoid';
 
 const route = useRoute();
 const router = useRouter();
@@ -196,30 +196,31 @@ function confirmDelete() {
 async function handleConfirmDelete() {
   showDeletePopup.value = false;
 
-  const res = await fetch(`${config.public.apiUrl}/api/my-accommodation/${accommodationId}`, {
-    method: 'DELETE',
-    credentials: 'include',
-  });
+  try {
+    const res = await fetch(`${config.public.apiUrl}/api/my-accommodation/${accommodationId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
 
-  if (res.ok) {
-    showSuccessMessage.value = true;
-    setTimeout(() => {
-      showSuccessMessage.value = false;
+    if (res.ok) {
       router.push('/my-accommodation');
-    }, 4000);
-  } else {
-    alert('Erreur lors de la suppression');
+    } else {
+      const errText = await res.text();
+      alert('Erreur lors de la suppression : ' + errText);
+    }
+  } catch (err) {
+    alert('Erreur réseau lors de la suppression');
+    console.error(err);
   }
 }
 </script>
-
 
 <template>
   <div
       v-if="showSuccessMessage"
       class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-300"
   >
-    Hébergement modifié !
+    Hébergement modifié avec succès !
   </div>
   <div
       v-if="showDeletePopup"
@@ -247,7 +248,7 @@ async function handleConfirmDelete() {
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <UInputNumber v-model="bedrooms" label="Chambres" :min="0" class="w-full" />
         <UInputNumber v-model="bathrooms" label="Salles de bain" :min="0" class="w-full" />
-        <UInputNumber v-model="capacity" label="Capacité" :min="1" class="w-full" required/>
+        <UInputNumber v-model="capacity" label="Capacité" :min="1" class="w-full" required />
       </div>
 
       <div class="mt-4">
