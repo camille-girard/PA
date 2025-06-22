@@ -6,15 +6,17 @@ import UDatePicker from '~/components/molecules/UDatePicker.vue';
 import UInputNumber from '~/components/atoms/UInputNumber.vue';
 import UButton from '~/components/atoms/UButton.vue';
 
-interface PricePerNight {
+interface Props {
   pricePerNight: number;
+  accommodationId: number;
+  title: string;
 }
-const pricePerNight = defineProps<PricePerNight>();
+
+const props = defineProps<Props>();
 
 const arrivalDate = ref<Date | null>(null);
 const departureDate = ref<Date | null>(null);
 const amountTravelers = ref<number>(0);
-
 const showModal = ref(false);
 
 const router = useRouter();
@@ -27,32 +29,30 @@ const numberOfNights = computed(() => {
   return nights > 0 ? nights : 0;
 });
 
-const total = computed(() => numberOfNights.value * pricePerNight.pricePerNight);
+const total = computed(() => numberOfNights.value * props.pricePerNight);
 
 const handleBooking = () => {
-  // Validation des champs requis
   if (!arrivalDate.value || !departureDate.value || amountTravelers.value <= 0) {
     showModal.value = true;
     return;
   }
 
-  // Redirection si non connecté
   if (!auth.isAuthenticated) {
     router.push('/login');
     return;
   }
 
-  // Redirection vers page de demande de réservation
   router.push({
     path: '/booking/booking-request',
     query: {
-      title: 'Logement dans la série Friends à Paris', // à adapter dynamiquement si nécessaire
+      title: props.title,
       arrival: arrivalDate.value.toISOString(),
       departure: departureDate.value.toISOString(),
       guests: amountTravelers.value.toString(),
       price: total.value.toFixed(2),
-      pricePerNight: pricePerNight.pricePerNight.toString(),
+      pricePerNight: props.pricePerNight.toString(),
       nights: numberOfNights.value.toString(),
+      accommodationId: props.accommodationId.toString(),
     },
   });
 };
@@ -62,7 +62,7 @@ const handleBooking = () => {
   <div class="w-full max-w-sm p-6 bg-white border border-gray-300 rounded-2xl shadow-sm space-y-4">
     <div class="text-center">
       <p class="font-bold text-lg">
-        {{ pricePerNight.pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span>
+        {{ props.pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span>
       </p>
     </div>
 
@@ -70,8 +70,8 @@ const handleBooking = () => {
     <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
     <UInputNumber
         v-model="amountTravelers"
-        placeholder="Nombre de voyageur"
-        :min="0"
+        placeholder="Nombre de voyageurs"
+        :min="1"
         class="w-full"
         suffix="voyageur"
     />

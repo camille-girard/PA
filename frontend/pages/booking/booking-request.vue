@@ -1,18 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { loadStripe } from '@stripe/stripe-js';
+import { useAuthStore } from '~/stores/auth';
 
 const isLoading = ref(false);
-
 const route = useRoute();
+const auth = useAuthStore();
+const user = auth.user;
 
 const title = route.query.title as string;
 const arrival = new Date(route.query.arrival as string);
 const departure = new Date(route.query.departure as string);
 const guests = Number(route.query.guests);
-const price = Number(route.query.price);
-const nights = Number(route.query.nights);
 const pricePerNight = Number(route.query.pricePerNight);
+const nights = Number(route.query.nights);
+
+const accommodationId = Number(route.query.accommodationId);
+const clientId = user?.id;
 
 const formattedArrival = arrival.toLocaleDateString('fr-FR', {
   day: 'numeric',
@@ -28,21 +33,34 @@ const formattedDeparture = departure.toLocaleDateString('fr-FR', {
 const totalPrice = (pricePerNight * nights + 12 + 5).toFixed(2);
 
 const createCheckout = async () => {
+  console.log('user:', user);
+  console.log('clientId:', clientId);
+  console.log('accommodationId:', accommodationId);
+
+  if (!clientId || !accommodationId) {
+    alert("Informations manquantes pour créer la réservation.");
+    return;
+  }
+
   try {
     isLoading.value = true;
 
-    const res = await $fetch('/api/create-checkout-session', {
+    const res = await $fetch('/api/checkout/create-session', {
       method: 'POST',
       body: {
-        title,
-        amount: Number(totalPrice),
+        totalPrice: Number(totalPrice),
+        clientId,
+        accommodationId,
+        startDate: arrival.toISOString().split('T')[0],
+        endDate: departure.toISOString().split('T')[0],
       },
     });
 
-    if (res?.url) {
-      window.location.href = res.url;
+    if (res?.id) {
+      const stripe = await loadStripe('pk_test_51PVKMCKnwz4ouw1LKDOGFG9UlGQPb6VzbQBgM4czJs41hmYl5s5aHdqkuoS5RrB5cxS2MYXAmQRlO79Fg5zW2dMx00YzNqpxig');
+      await stripe?.redirectToCheckout({ sessionId: res.id });
     } else {
-      alert("Erreur : URL de paiement non reçue.");
+      alert("Erreur : ID de session Stripe non reçu.");
     }
   } catch (e) {
     console.error('Stripe Checkout error:', e);
