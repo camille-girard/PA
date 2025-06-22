@@ -32,8 +32,7 @@
         'update:modelValue': [value: string | number];
     }>();
 
-    const baseClasses =
-        'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none shadow-xs w-full';
+    const baseClasses = 'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none shadow-xs w-full';
 
     const variantClasses = {
         default: 'focus:border-orange-500 focus:ring-orange-500',

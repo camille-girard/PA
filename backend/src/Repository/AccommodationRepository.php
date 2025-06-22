@@ -24,5 +24,4 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 }

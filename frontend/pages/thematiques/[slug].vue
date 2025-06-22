@@ -8,7 +8,7 @@
         const { $api } = useNuxtApp();
         const route = useRoute();
 
-        const response = await useAuthFetch<Theme>($api('/api/themes/my-accommodation/' + route.params.slug));
+        const response = await useAuthFetch<Theme>($api('/api/themes/accommodation/' + route.params.slug));
 
         Theme.value = response.data.value.themes;
         Theme.value.accommodations = response.data.value.themes.accommodations.map((accommodation) => ({
@@ -38,7 +38,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">{{ Theme.name }}</h2>
                 </div>
-                <locationCards :items="Theme.accommodations" />
+                <LocationCards :items="Theme.accommodations" />
             </section>
         </div>
         <UFooter />
