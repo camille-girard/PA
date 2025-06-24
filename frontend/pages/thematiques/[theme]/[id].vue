@@ -1,15 +1,17 @@
 <script setup lang="ts">
     import '~/types/theme';
     import '~/types/accommodation';
+    import { useRecentlyViewedStore } from '~/stores/recentlyViewed';
 
     const comment = ref([]);
-    const rental = [
-        { title: 'Friends', image: '/friends.png' },
-        { title: 'Star Wars', image: '/StarWars.png' },
-        { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
-    ];
-
+    const recentlyViewedStore = useRecentlyViewedStore();
     const { theme, id } = useRoute().params;
+
+    const currentId = typeof id === 'string' ? parseInt(id) : id;
+    const recentlyViewed = computed(() => {
+        return recentlyViewedStore.getRecentlyViewedExcept(currentId);
+    });
+
     const Location = ref<Accommodation | null>(null);
 
     onMounted(async () => {
@@ -23,6 +25,15 @@
 
             if (accommodationResponse?.data?.value) {
                 Location.value = accommodationResponse.data.value;
+
+                const accommodationToAdd = {
+                    ...accommodationResponse.data.value,
+                    theme: {
+                        slug: theme,
+                    },
+                };
+
+                recentlyViewedStore.addAccommodation(accommodationToAdd);
             } else {
                 console.warn("Pas de données d'accommodation reçues");
             }
@@ -65,18 +76,18 @@
                 </div>
                 <div class="relative w-full md:w-1/3">
                     <div class="sticky top-24">
-                      <BookingCard
-                          v-if="Location"
-                          :price-per-night="Location.price"
-                          :accommodation-id="Location.id"
-                          :title="Location.name"
-                      />
+                        <BookingCard
+                            v-if="Location"
+                            :price-per-night="Location.price"
+                            :accommodation-id="Location.id"
+                            :title="Location.name"
+                        />
                     </div>
                 </div>
             </div>
-            <section id="consult-trending" class="w-full pt-32">
+            <section v-if="recentlyViewed.length > 0" id="consult-trending" class="w-full pt-32">
                 <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
-                <RentalCards :items="rental" />
+                <RentalCards :items="recentlyViewed" :link-prefix="`/thematiques/${theme}`" />
             </section>
         </div>
         <UFooter />

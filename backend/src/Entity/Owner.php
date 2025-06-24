@@ -61,7 +61,6 @@ class Owner extends User
     public function removeAccommodation(Accommodation $accommodation): static
     {
         if ($this->accommodations->removeElement($accommodation)) {
-            // set the owning side to null (unless already changed)
             if ($accommodation->getOwner() === $this) {
                 $accommodation->setOwner(null);
             }
@@ -91,7 +90,6 @@ class Owner extends User
     public function removeMessage(Message $message): static
     {
         if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
             if ($message->getOwner() === $this) {
                 $message->setOwner(null);
             }
@@ -115,6 +113,7 @@ class Owner extends User
     public function setNotation(float $notation): static
     {
         $this->notation = $notation;
+
         return $this;
     }
 

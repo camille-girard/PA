@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Accommodation;
 use App\Entity\AccommodationImages;
+use App\Entity\Owner;
 use App\Repository\AccommodationRepository;
 use App\Repository\OwnerRepository;
 use App\Repository\ThemeRepository;
@@ -15,8 +16,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/accommodations', name: 'api_accommodation_')]
 #[OA\Tag(name: 'Accommodation')]
@@ -45,6 +46,7 @@ class AccommodationController extends AbstractController
     #[Route('/me', name: 'my-accommodation', methods: ['GET'])]
     public function myAccommodation(): JsonResponse
     {
+        /** @var Owner|null $user */
         $user = $this->getUser();
 
         if (!$user) {
@@ -57,7 +59,6 @@ class AccommodationController extends AbstractController
             'accommodations' => $accommodations,
         ], Response::HTTP_OK);
     }
-
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(int $id): JsonResponse
@@ -106,6 +107,7 @@ class AccommodationController extends AbstractController
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        /** @var Owner|null $user */
         $user = $this->getUser();
 
         if (!$user) {

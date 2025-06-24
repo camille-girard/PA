@@ -89,6 +89,9 @@ class Accommodation
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?Theme $theme = null;
 
+    /**
+     * @var Collection<int, AccommodationImages>
+     */
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private Collection $images;
@@ -267,11 +270,17 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getAdvantage(): array
     {
         return $this->advantage;
     }
 
+    /**
+     * @param array<string> $advantage
+     */
     public function setAdvantage(array $advantage): static
     {
         $this->advantage = $advantage;
@@ -327,6 +336,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccommodationImages>
+     */
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     public function getImages(): Collection
     {
@@ -354,6 +366,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Booking>
+     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -380,6 +395,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;

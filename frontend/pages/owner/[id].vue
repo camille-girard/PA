@@ -18,19 +18,22 @@
         try {
             const response = await useAuthFetch<Owner>($api('/api/owners/' + route.params.id));
 
-            if (response.data.value.owner) {
-                owner.value = response.data.value.owner;
-                comments.value = response.data.value.owner.comments || [];
-                rentals.value = response.data.value.owner.accommodations.map((accommodation) => ({
-                    title: accommodation.name,
-                    image: accommodation.images[0].url,
-                    description: accommodation.description,
-                    id: accommodation.id,
-                    slug: accommodation.theme.slug,
-                }));
+            if (response.data.value) {
+                owner.value = response.data.value;
+                comments.value = response.data.value.comments || [];
+
+                if (response.data.value.accommodations) {
+                    rentals.value = response.data.value.accommodations.map((accommodation) => ({
+                        title: accommodation.name,
+                        image: accommodation.images?.[0]?.url || 'https://via.placeholder.com/400x250',
+                        description: accommodation.description,
+                        id: accommodation.id,
+                        slug: accommodation.theme?.slug || 'default-slug',
+                    }));
+                }
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération des données du propriétaire :', error);
+            console.error('Erreur lors de la récupération des données du propriétaire :', error);
         }
     });
 </script>

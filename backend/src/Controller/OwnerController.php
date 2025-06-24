@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/owners', name: 'api_owners_')]
 #[OA\Tag(name: 'Owners')]
@@ -32,7 +32,7 @@ final class OwnerController extends AbstractController
     {
         $owners = $this->ownerRepository->findBy(['isDeleted' => false]);
 
-        $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read','accommodation:read', 'booking:read']);
+        $json = $serializer->serialize($owners, 'json', ['groups' => ['owner:read', 'accommodation:read', 'booking:read']]);
 
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
@@ -47,7 +47,7 @@ final class OwnerController extends AbstractController
         }
 
         $json = $serializer->serialize($owner, 'json', [
-            'groups' => ['owner:read', 'accommodation:read', 'booking:read']
+            'groups' => ['owner:read', 'accommodation:read', 'booking:read'],
         ]);
 
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
@@ -62,7 +62,7 @@ final class OwnerController extends AbstractController
             return $this->json(['message' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
         }
 
-        $requiredFields = ['name', 'email', 'phone']; // Ajustez selon les champs de votre entité Owner
+        $requiredFields = ['name', 'email', 'phone'];
         $missingFields = [];
 
         foreach ($requiredFields as $field) {

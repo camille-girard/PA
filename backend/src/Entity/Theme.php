@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 class Theme
@@ -14,15 +15,18 @@ class Theme
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read', 'theme:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read', 'theme:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['theme:read'])]
     private ?string $description = null;
 
     /**
@@ -32,6 +36,7 @@ class Theme
     private Collection $accommodations;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $slug = null;
 
     public function __construct()
@@ -89,7 +94,6 @@ class Theme
     public function removeAccommodation(Accommodation $accommodation): static
     {
         if ($this->accommodations->removeElement($accommodation)) {
-            // set the owning side to null (unless already changed)
             if ($accommodation->getTheme() === $this) {
                 $accommodation->setTheme(null);
             }
