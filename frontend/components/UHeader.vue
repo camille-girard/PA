@@ -33,15 +33,15 @@
                 </UButton>
 
                 <div v-else>
-                    <button @click="toggleProfileMenu" class="rounded-full focus:outline-none">
+                    <button class="rounded-full focus:outline-none" @click="toggleProfileMenu">
                         <img src="/Patrick.jpg" alt="Avatar" class="w-12 h-12 rounded-full object-cover mb-4" />
                     </button>
 
                     <transition name="fade">
                         <div
                             v-if="isProfileMenuOpen"
-                            @click.away="closeProfileMenu"
                             class="absolute right-0 mt-2 py-2 w-48 bg-white shadow-lg rounded-md"
+                            @click.away="closeProfileMenu"
                         >
                             <ULink to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                                 Mon Profil

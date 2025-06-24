@@ -24,6 +24,7 @@ class AccommodationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     /**
      * @throws \Exception
      */
@@ -162,5 +163,4 @@ class AccommodationRepository extends ServiceEntityRepository
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
-
 }

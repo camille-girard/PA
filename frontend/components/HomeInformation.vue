@@ -271,7 +271,7 @@
     <form class="space-y-16 max-w-4xl mx-auto" @submit.prevent="handleSubmit">
         <section>
             <h2 class="text-h2 font-bold mb-6">Informations du logement</h2>
-            <UInput label="Titre de l'annonce" placeholder="Titre de l'annonce" v-model="title" required />
+            <UInput v-model="title" label="Titre de l'annonce" placeholder="Titre de l'annonce" required />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <USelectBox
@@ -325,7 +325,7 @@
         </section>
         <section>
             <h2 class="text-h2 mb-6">Adresse</h2>
-            <UInput label="Adresse complète" placeholder="Adresse complète" v-model="address" required />
+            <UInput v-model="address" label="Adresse complète" placeholder="Adresse complète" required />
             <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow relative z-10">
                 <li
                     v-for="s in suggestions"
@@ -338,10 +338,10 @@
             </ul>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <UInput label="Ville" placeholder="Ville" v-model="city" required />
-                <UInput label="Code postal" placeholder="Code postal" v-model="postalCode" required />
+                <UInput v-model="city" label="Ville" placeholder="Ville" required />
+                <UInput v-model="postalCode" label="Code postal" placeholder="Code postal" required />
             </div>
-            <UInput label="Pays" placeholder="Pays" class="mt-4" v-model="country" required />
+            <UInput v-model="country" label="Pays" placeholder="Pays" class="mt-4" required />
         </section>
         <section>
             <h2 class="text-h2 mb-6">Ajouter vos photos</h2>

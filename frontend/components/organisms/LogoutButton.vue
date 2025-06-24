@@ -10,10 +10,10 @@
 <template>
     <UButton
         :disabled="authStore.isLoading"
-        @click="handleLogout"
         variant="transparent"
         :icon="LogoutIcon"
         icon-position="leading"
+        @click="handleLogout"
     >
         {{ authStore.isLoading ? 'Logging out...' : 'Logout' }}
     </UButton>

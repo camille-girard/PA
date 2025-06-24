@@ -11,13 +11,12 @@
             title: theme.name,
             items: theme.accommodations.map((accommodation) => ({
                 title: accommodation.name,
-                image: accommodation.images,
+                image: accommodation.images[0]?.url,
                 id: accommodation.id,
                 slug: theme.slug,
             })),
             slug: theme.slug,
         }));
-        console.log(ThemeSections);
     });
 </script>
 
