@@ -7,10 +7,10 @@
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-start gap-8">
             <div class="flex flex-col items-start gap-4">
                 <div>
-                    <a href="/" class="flex items-center gap-2">
+                    <NuxtLink to="/" class="flex items-center gap-2">
                         <ULogo />
-                        <span class="text-body-md">PopnBed</span>
-                    </a>
+                        <span class="text-body-sm font-semibold">PopnBed</span>
+                    </NuxtLink>
                 </div>
                 <div class="flex gap-4">
                     <a href="#" class="w-9 h-9 flex items-center justify-center">

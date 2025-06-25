@@ -14,9 +14,6 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    /**
-     * @phpstan-ignore-next-line
-     */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -28,15 +25,30 @@ class Accommodation
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $country = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $bedrooms = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $bathrooms = null;
+
     #[ORM\Column]
     private ?int $capacity = null;
 
     #[ORM\Column]
     private ?float $price = null;
 
-    /**
-     * @var array<string>
-     */
     #[ORM\Column(type: Types::ARRAY)]
     private array $advantage = [];
 
@@ -46,29 +58,20 @@ class Accommodation
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'accommodations')]
+    #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Owner $owner = null;
 
-    #[ORM\ManyToOne(inversedBy: 'accommodations')]
+    #[ORM\ManyToOne(inversedBy: 'accommodation')]
     private ?Theme $theme = null;
 
-    /**
-     * @var Collection<int, AccommodationImages>
-     */
-    #[ORM\OneToMany(targetEntity: AccommodationImages::class, mappedBy: 'accommodation')]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
     private Collection $images;
 
-    /**
-     * @var Collection<int, Booking>
-     */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'accommodation', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class, orphanRemoval: true)]
     private Collection $bookings;
 
-    /**
-     * @var Collection<int, Comment>
-     */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'accommodation', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
     #[ORM\Column(nullable: true)]
@@ -76,6 +79,12 @@ class Accommodation
 
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 1])]
+    private ?int $minStay = 1;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 7])]
+    private ?int $maxStay = 7;
 
     public function __construct()
     {
@@ -125,6 +134,78 @@ class Accommodation
         return $this;
     }
 
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getBedrooms(): ?int
+    {
+        return $this->bedrooms;
+    }
+
+    public function setBedrooms(?int $bedrooms): static
+    {
+        $this->bedrooms = $bedrooms;
+
+        return $this;
+    }
+
+    public function getBathrooms(): ?int
+    {
+        return $this->bathrooms;
+    }
+
+    public function setBathrooms(?int $bathrooms): static
+    {
+        $this->bathrooms = $bathrooms;
+
+        return $this;
+    }
+
     public function getCapacity(): ?int
     {
         return $this->capacity;
@@ -149,17 +230,11 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return array<string>
-     */
     public function getAdvantage(): array
     {
         return $this->advantage;
     }
 
-    /**
-     * @param array<string> $advantage
-     */
     public function setAdvantage(array $advantage): static
     {
         $this->advantage = $advantage;
@@ -215,9 +290,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, AccommodationImages>
-     */
     public function getImages(): Collection
     {
         return $this->images;
@@ -226,7 +298,7 @@ class Accommodation
     public function addImage(AccommodationImages $image): static
     {
         if (!$this->images->contains($image)) {
-            $this->images->add($image);
+            $this->images[] = $image;
             $image->setAccommodation($this);
         }
 
@@ -244,9 +316,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Booking>
-     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -255,7 +324,7 @@ class Accommodation
     public function addBooking(Booking $booking): static
     {
         if (!$this->bookings->contains($booking)) {
-            $this->bookings->add($booking);
+            $this->bookings[] = $booking;
             $booking->setAccommodation($this);
         }
 
@@ -273,9 +342,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Comment>
-     */
     public function getComments(): Collection
     {
         return $this->comments;
@@ -284,7 +350,7 @@ class Accommodation
     public function addComment(Comment $comment): static
     {
         if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
+            $this->comments[] = $comment;
             $comment->setAccommodation($this);
         }
 
@@ -322,6 +388,30 @@ class Accommodation
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getMinStay(): ?int
+    {
+        return $this->minStay;
+    }
+
+    public function setMinStay(?int $minStay): static
+    {
+        $this->minStay = $minStay;
+
+        return $this;
+    }
+
+    public function getMaxStay(): ?int
+    {
+        return $this->maxStay;
+    }
+
+    public function setMaxStay(?int $maxStay): static
+    {
+        $this->maxStay = $maxStay;
 
         return $this;
     }

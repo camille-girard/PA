@@ -6,12 +6,12 @@
 
     onMounted(async () => {
         const { $api } = useNuxtApp();
-        const response = await useAuthFetch<ThemeSection>($api('/api/themes/accommodations'));
+        const response = await useAuthFetch<ThemeSection>($api('/api/themes/accommodation'));
         ThemeSections.value = response.data.value.themes.map((theme) => ({
             title: theme.name,
             items: theme.accommodations.map((accommodation) => ({
                 title: accommodation.name,
-                image: accommodation.images[0].url,
+                image: accommodation.images[0]?.url,
                 id: accommodation.id,
                 slug: theme.slug,
             })),
