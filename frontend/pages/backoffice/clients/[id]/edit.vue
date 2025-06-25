@@ -7,18 +7,18 @@ definePageMeta({
   layout: 'backoffice',
 })
 
+const { public: { apiUrl } } = useRuntimeConfig()
+
 const route = useRoute()
 const router = useRouter()
 
 const id = route.params.id
 
-// Données du client
 const { data: client, refresh, pending } = await useFetch(`/api/clients/${id}`, {
-  baseURL: 'http://localhost',
+  baseURL: apiUrl,
   transform: (res) => res.client,
 })
 
-// Formulaire réactif
 const form = reactive({
   firstName: '',
   lastName: '',
@@ -27,7 +27,6 @@ const form = reactive({
   isVerified: false,
 })
 
-// Pré-remplissage dès que les données arrivent
 watchEffect(() => {
   if (client.value) {
     form.firstName = client.value.firstName
@@ -42,7 +41,6 @@ const saving = ref(false)
 const success = ref(false)
 const errorMsg = ref('')
 
-// Enregistrement
 async function save() {
   saving.value = true
   success.value = false
@@ -51,7 +49,7 @@ async function save() {
   try {
     await $fetch(`/api/clients/${id}`, {
       method: 'PUT',
-      baseURL: 'http://localhost',
+      baseURL: apiUrl,
       body: {
         firstName: form.firstName,
         lastName: form.lastName,
@@ -72,27 +70,53 @@ async function save() {
 </script>
 
 <template>
-  <div class="space-y-6 max-w-xl">
-    <h1 class="text-2xl font-bold">Modifier le client</h1>
+  <div class="max-w-3xl p-6 md:p-10 dark:bg-gray-900 space-y-8">
+    <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">Modifier le client</h1>
 
-    <form @submit.prevent="save" class="space-y-4">
-      <Input v-model="form.firstName" label="Prénom" name="firstName" type="text" required />
-      <Input v-model="form.lastName" label="Nom" name="lastName" type="text" required />
-      <Input v-model="form.email" label="Email" name="email" type="email" required />
-      <Input v-model="form.phone" label="Téléphone" name="phone" type="tel" />
-      <Checkbox v-model="form.isVerified" name="isVerified" label="Compte vérifié" />
+    <form @submit.prevent="save" class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending">
+      <Input
+          v-model="form.firstName"
+          label="Prénom"
+          name="firstName"
+          type="text"
+          required
+      />
+      <Input
+          v-model="form.lastName"
+          label="Nom"
+          name="lastName"
+          type="text"
+          required
+      />
+      <Input
+          class="md:col-span-2"
+          v-model="form.email"
+          label="Email"
+          name="email"
+          type="email"
+          required
+      />
+      <Input
+          class="md:col-span-2"
+          v-model="form.phone"
+          label="Téléphone"
+          name="phone"
+          type="tel"
+      />
 
-      <div class="flex justify-between items-center">
-        <button
-            type="submit"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+        <UButton
             :disabled="saving"
+            :isLoading="saving"
+            size="lg"
+            variant="primary"
+            type="submit"
         >
-          {{ saving ? 'Enregistrement...' : 'Enregistrer' }}
-        </button>
+          {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
+        </UButton>
 
-        <span v-if="success" class="text-green-600 text-sm">✅ Modifications enregistrées</span>
-        <span v-if="errorMsg" class="text-red-600 text-sm">❌ {{ errorMsg }}</span>
+        <span v-if="success" class="text-green-600 text-sm">Modifications enregistrées</span>
+        <span v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</span>
       </div>
     </form>
   </div>

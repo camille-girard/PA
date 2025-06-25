@@ -14,6 +14,7 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['booking:read'])]
     /**
      * @phpstan-ignore-next-line
      */

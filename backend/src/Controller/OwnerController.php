@@ -30,7 +30,7 @@ final class OwnerController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(SerializerInterface $serializer): JsonResponse
     {
-        $owners = $this->ownerRepository->findAll();
+        $owners = $this->ownerRepository->findBy(['isDeleted' => false]);
 
         $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read']);
 
@@ -149,11 +149,11 @@ final class OwnerController extends AbstractController
             return $this->json(['message' => 'Owner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($owner);
+        $owner->setIsDeleted(true);
         $this->entityManager->flush();
 
         return $this->json([
-            'message' => 'Owner successfully deleted',
+            'message' => 'Owner successfully archived',
         ], Response::HTTP_OK);
     }
 }

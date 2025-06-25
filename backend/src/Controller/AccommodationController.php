@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/accommodations', name: 'api_accommodations_')]
 #[OA\Tag(name: 'Accommodations')]
@@ -31,14 +32,15 @@ final class AccommodationController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
         $accommodations = $this->accommodationRepository->findAll();
 
-        return $this->json([
-            'accommodations' => $accommodations,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($accommodations, 'json', ['groups' => 'accommodation:read']);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
+
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(int $id): JsonResponse

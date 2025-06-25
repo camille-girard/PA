@@ -91,22 +91,24 @@
         if (props.disabled) return;
 
         const target = event.target as HTMLInputElement;
-        let value = parseFloat(target.value);
+        let value = target.value.replace(',', '.');
 
-        if (isNaN(value)) {
+        let number = parseFloat(value);
+
+        if (isNaN(number)) {
             inputValue.value = 0;
             return;
         }
 
-        if (props.min !== undefined && value < props.min) {
-            value = props.min;
+        if (props.min !== undefined && number < props.min) {
+            number = props.min;
         }
 
-        if (props.max !== undefined && value > props.max) {
-            value = props.max;
+        if (props.max !== undefined && number > props.max) {
+            number = props.max;
         }
 
-        inputValue.value = value;
+        inputValue.value = number;
     }
 </script>
 
