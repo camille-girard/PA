@@ -46,8 +46,6 @@ class ThemeRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')
             ->leftJoin('t.accommodations', 'a')
             ->addSelect('a')
-            ->leftJoin('a.images', 'i')
-            ->addSelect('i')
             ->getQuery()
             ->getResult();
     }

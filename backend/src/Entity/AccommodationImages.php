@@ -11,9 +11,6 @@ class AccommodationImages
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    /**
-     * @phpstan-ignore-next-line
-     */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -23,6 +20,7 @@ class AccommodationImages
     private ?bool $isMain = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     private ?Accommodation $accommodation = null;
 
     public function getId(): ?int

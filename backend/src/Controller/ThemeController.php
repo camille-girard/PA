@@ -36,7 +36,7 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    #[Route('/accommodations', name: 'accommodations', methods: ['GET'])]
+    #[Route('/accommodation', name: 'accommodation', methods: ['GET'])]
     public function getThemesWithAccommodations(): JsonResponse
     {
         $themes = $this->themeRepository->findAllWithAccommodations();
@@ -50,7 +50,7 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_OK);
     }
 
-    #[Route('/accommodations/{slug}', name: 'accommodations_by_slug', methods: ['GET'])]
+    #[Route('/accommodation/{slug}', name: 'accommodations_by_slug', methods: ['GET'])]
     public function getThemesWithAccommodationsBySlug(string $slug): JsonResponse
     {
         $theme = $this->themeRepository->findOneBy(['slug' => $slug]);
