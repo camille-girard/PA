@@ -3,16 +3,23 @@ import UTable from '~/components/organisms/UTable.vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import EditIcon from '~/components/atoms/icons/EditIcon.vue'
 import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
-
-const { data: bookingData, pending, error } = await useFetch('/api/bookings', {
-  baseURL: 'http://localhost',
-})
-
-const bookings = computed(() => bookingData.value || [])
+import ConfirmPopover from '~/components/ConfirmPopover.vue'
+import { useRuntimeConfig } from '#app'
 
 definePageMeta({
   layout: 'backoffice',
 })
+
+const { public: { apiUrl } } = useRuntimeConfig()
+
+const { data: bookingData, pending, error } = await useFetch('/api/bookings', {
+  baseURL: apiUrl,
+})
+
+const bookings = computed(() => bookingData.value || [])
+
+const successMsg = ref('')
+const errorMsg = ref('')
 
 const columns = [
   { key: 'client', label: 'Client', sortable: true },
@@ -28,6 +35,7 @@ const columns = [
 
 const bookingsData = computed(() =>
     bookings.value.map(b => ({
+      id: b.id,
       client: `${b.client?.firstName || ''} ${b.client?.lastName || ''}`,
       owner: `${b.accommodation?.owner?.firstName || ''} ${b.accommodation?.owner?.lastName || ''}`,
       accommodation: b.accommodation?.name,
@@ -41,23 +49,44 @@ const bookingsData = computed(() =>
 
 function getStatusProps(status: string) {
   switch (status) {
-    case 'accepted':
-      return { label: 'Acceptée', color: 'success' }
-    case 'pending':
-      return { label: 'En attente', color: 'warning' }
-    case 'refused':
-      return { label: 'Refusée', color: 'error' }
-    default:
-      return { label: status, color: 'gray' }
+    case 'accepted': return { label: 'Acceptée', color: 'success' }
+    case 'pending': return { label: 'En attente', color: 'warning' }
+    case 'refused': return { label: 'Refusée', color: 'error' }
+    default: return { label: status, color: 'gray' }
+  }
+}
+
+async function refreshBookings() {
+  const { data } = await useFetch('/api/bookings', { baseURL: apiUrl })
+  bookingData.value = data.value
+}
+
+async function deleteBooking(id: number) {
+  successMsg.value = ''
+  errorMsg.value = ''
+
+  try {
+    await $fetch(`/api/bookings/${id}`, {
+      method: 'DELETE',
+      baseURL: apiUrl,
+    })
+    await refreshBookings()
+    successMsg.value = 'Réservation supprimée avec succès.'
+  } catch (error: any) {
+    errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.'
+    console.error(error)
   }
 }
 </script>
 
-<template>
-  <div>
-    <p class="text-2xl font-semibold mb-4">Réservations</p>
 
-    <!-- Wrapping the table in a horizontal scroll container -->
+<template>
+  <div class="space-y-6">
+    <p class="text-2xl font-semibold">Réservations</p>
+
+    <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
+    <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
+
     <div class="w-full overflow-x-auto">
       <div class="min-w-[800px]">
         <UTable :columns="columns" :data="bookingsData">
@@ -67,14 +96,25 @@ function getStatusProps(status: string) {
             </UBadge>
           </template>
 
-          <template #cell-actions>
+          <template #cell-actions="{ row }">
             <div class="flex items-center gap-4">
-              <button class="text-blue-500 hover:text-bblue-800">
+              <NuxtLink
+                  :to="`/backoffice/bookings/${row.id}/edit`"
+                  class="text-blue-500 hover:text-blue-800"
+              >
                 <EditIcon class="w-6 h-6" />
-              </button>
-              <button class="text-red-500 hover:text-red-700">
-                <TrashIcon class="w-6 h-6" />
-              </button>
+              </NuxtLink>
+
+              <ConfirmPopover
+                  :itemName="`la réservation de ${row.client}`"
+                  @confirm="deleteBooking(row.id)"
+              >
+                <template #trigger>
+                  <button class="text-red-500 hover:text-red-700">
+                    <TrashIcon class="w-6 h-6" />
+                  </button>
+                </template>
+              </ConfirmPopover>
             </div>
           </template>
         </UTable>
@@ -82,5 +122,6 @@ function getStatusProps(status: string) {
     </div>
   </div>
 </template>
+
 
 

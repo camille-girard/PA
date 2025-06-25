@@ -30,7 +30,7 @@ final class ClientController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(SerializerInterface $serializer): JsonResponse
     {
-        $clients = $this->clientRepository->findAll();
+        $clients = $this->clientRepository->findBy(['isDeleted' => false]);
 
         $json = $serializer->serialize($clients, 'json', ['groups' => 'client:read']);
 
@@ -180,9 +180,9 @@ final class ClientController extends AbstractController
             return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($client);
+        $client->setIsDeleted(true);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Client supprimé avec succès'], Response::HTTP_OK);
+        return $this->json(['message' => 'Client archivé avec succès'], Response::HTTP_OK);
     }
 }
