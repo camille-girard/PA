@@ -70,10 +70,10 @@ async function save() {
 </script>
 
 <template>
-  <div class="max-w-3xl p-6 md:p-10 dark:bg-gray-900 space-y-8">
-    <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">Modifier le client</h1>
+  <div class="max-w-3xl space-y-6">
+    <h1 class="text-2xl font-semibold">Modifier le client</h1>
 
-    <form @submit.prevent="save" class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending">
+    <form @submit.prevent="save" class="grid pt-6 gap-6 md:grid-cols-2" :aria-busy="saving || pending">
       <Input
           v-model="form.firstName"
           label="Prénom"

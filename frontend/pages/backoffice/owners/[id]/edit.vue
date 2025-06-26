@@ -14,7 +14,6 @@
 
   const { data: owner, refresh, pending } = await useFetch(`/api/owners/${id}`, {
     baseURL: apiUrl,
-    transform: (res) => res.owner,
   })
 
   const form = reactive({
@@ -25,15 +24,15 @@
     isVerified: false,
   })
 
-  watchEffect(() => {
-    if (owner.value) {
-      form.firstName = owner.value.firstName
-      form.lastName = owner.value.lastName
-      form.email = owner.value.email
-      form.phone = owner.value.phone
-      form.isVerified = owner.value.isVerified
+  watch(owner, (newOwner) => {
+    if (newOwner) {
+      form.firstName = newOwner.firstName
+      form.lastName = newOwner.lastName
+      form.email = newOwner.email
+      form.phone = newOwner.phone
+      form.isVerified = newOwner.isVerified
     }
-  })
+  }, { immediate: true })
 
   const saving = ref(false)
   const success = ref(false)
@@ -68,10 +67,10 @@
 </script>
 
 <template>
-  <div class="max-w-3xl p-6 md:p-10 dark:bg-gray-900 space-y-8">
-    <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">Modifier l’hôte</h1>
+  <div class="max-w-3xl space-y-6">
+    <h1 class="text-2xl font-semibold">Modifier l’hôte</h1>
 
-    <form @submit.prevent="save" class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending">
+    <form @submit.prevent="save" class="grid gap-6 pt-6 md:grid-cols-2" :aria-busy="saving || pending">
       <Input
           v-model="form.firstName"
           label="Prénom"

@@ -58,8 +58,8 @@ const getStatusProps = (status: string) =>
 </script>
 
 <template>
-  <div class="space-y-10 p-6 md:p-10">
-    <h1 class="text-3xl font-semibold">Fiche hôte</h1>
+  <div class="space-y-6">
+    <h1 class="text-2xl font-semibold">Fiche hôte</h1>
 
     <UCard>
       <template #header>
@@ -85,7 +85,7 @@ const getStatusProps = (status: string) =>
     </UCard>
 
     <div>
-      <h2 class="text-xl font-semibold mb-4">Hébergements</h2>
+      <h2 class="text-lg font-semibold mb-4">Hébergements</h2>
 
       <UTable :columns="columns" :data="accommodations">
         <template #cell-status="{ value }">
@@ -95,7 +95,7 @@ const getStatusProps = (status: string) =>
         </template>
 
         <template #cell-actions="{ row }">
-          <UButton size="xs" @click="openAvailability(row)">
+          <UButton class="bg-brand-500" size="sm" @click="openAvailability(row)">
             Voir disponibilités
           </UButton>
         </template>
