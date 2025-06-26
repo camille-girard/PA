@@ -2,36 +2,65 @@ App\Entity\Accommodation:
   accommodation_1:
     owner: '@owner_1'
     theme: '@theme_1'
-    name: 'Logement dans la série Friends à New York'
-    description: 'Séjournez dans l‘appartement de Monica et Rachel à New York, avec une vue imprenable sur Central Park.'
-    address: '32 Jasper Street, New York, NY 10001'
+    name: 'Logement dans la série Friends à Paris'
+    description: 'Séjournez dans un appartement inspiré de la série Friends, avec vue sur la Tour Eiffel.'
+    address: '32 Avenue de l’Opéra, 75002 Paris, France'
+    city: 'Paris'
+    postalCode: '75002'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 1
+    bathrooms: 1
     capacity: 2
     price: 120.50
-    adventage: ['gouter', 'Petit-déjeuner offert']
-    practical_informations: 'Wi-Fi gratuit, cuisine équipée à la Monica, salle de bain privée.'
-    created_at: '<(new DateTimeImmutable())>'
+    minStay: 1
+    maxStay: 7
+    advantage: ['Goûter', 'Petit-déjeuner offert']
+    practicalInformations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée.'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.8686
+    longitude: 2.3320
 
   accommodation_2:
     owner: '@owner_1'
     theme: '@theme_2'
-    name: 'Château dans le film Harry Potter'
-    description: 'Séjournez dans le château de Poudlard, avec accès à la salle commune de Gryffondor.'
-    address: 'Hogwarts Castle, Scotland'
+    name: 'Château version Harry Potter en Alsace'
+    description: 'Un château magique en Alsace avec ambiance Gryffondor.'
+    address: '1 Rue de la Liberté, 68150 Ribeauvillé, France'
+    city: 'Ribeauvillé'
+    postalCode: '68150'
+    country: 'France'
+    type: 'Château'
+    bedrooms: 3
+    bathrooms: 2
     capacity: 4
     price: 250.00
-    adventage: ['Accès à la salle commune', 'Visite du château']
-    practical_informations: 'Visite guidée du château, accès à la bibliothèque magique, repas à la Grande Salle.'
-    created_at: '<(new DateTimeImmutable())>'
+    minStay: 2
+    maxStay: 10
+    advantage: ['Accès à la salle commune', 'Visite du château']
+    practicalInformations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard.'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.1988
+    longitude: 7.3209
 
   accommodation_3:
     owner: '@owner_1'
     theme: '@theme_3'
-    name: 'Maison dans le dessin animé Toy Story'
-    description: 'Séjournez dans la maison de Woody et Buzz, avec un jardin rempli de jouets.'
-    address: '456 Rue des Jouets, Toyland, USA'
+    name: 'Maison Toy Story à Bordeaux'
+    description: 'Une maison ludique inspirée de Toy Story avec jardin plein de jouets.'
+    address: '45 Rue Sainte-Catherine, 33000 Bordeaux, France'
+    city: 'Bordeaux'
+    postalCode: '33000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
     capacity: 6
     price: 180.00
-    adventage: ['Jardin', 'Salle de jeux']
-    practical_informations: 'Wi-Fi gratuit, salle de jeux pour enfants, jardin avec balançoire.'
-    created_at: '<(new DateTimeImmutable())>'
-
+    minStay: 1
+    maxStay: 7
+    advantage: ['Jardin', 'Salle de jeux']
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire.'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 44.8378
+    longitude: -0.5792

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+    import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
     const authStore = useAuthStore();
 
     async function handleLogout() {
@@ -7,7 +8,13 @@
 </script>
 
 <template>
-    <UButton :disabled="authStore.isLoading" @click="handleLogout">
+    <UButton
+        :disabled="authStore.isLoading"
+        variant="transparent"
+        :icon="LogoutIcon"
+        icon-position="leading"
+        @click="handleLogout"
+    >
         {{ authStore.isLoading ? 'Logging out...' : 'Logout' }}
     </UButton>
 </template>

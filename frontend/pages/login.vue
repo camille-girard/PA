@@ -3,7 +3,6 @@
         title: 'Login - PopnBed',
         description: 'Accédez à votre compte PopnBed pour réserver des hébergements inspirés de films.',
     });
-
     definePageMeta({
         middleware: 'auth',
     });
@@ -58,4 +57,3 @@
         <UFooter />
     </main>
 </template>
-

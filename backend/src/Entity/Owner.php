@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OwnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -23,6 +24,9 @@ class Owner extends User
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'owner')]
     private Collection $messages;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $bio = null;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     #[Groups(['owner:read'])]
@@ -111,6 +115,18 @@ class Owner extends User
     public function setNotation(float $notation): static
     {
         $this->notation = $notation;
+        return $this;
+    }
+
+    public function getBio(): ?string
+    {
+        return $this->bio;
+    }
+
+    public function setBio(?string $bio): static
+    {
+        $this->bio = $bio;
+
         return $this;
     }
 }

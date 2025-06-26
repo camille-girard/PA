@@ -17,7 +17,8 @@ RUN apk add --update --no-cache \
     git \
     openssh \
     rsync \
-    patch
+    patch \
+    gzip
 
 RUN apk add mysql-client && \
     install-php-extensions pdo_mysql \

@@ -22,7 +22,6 @@ const stats = [
 
     <StatsCard :stats="stats" />
 
-    <AllIcons />
+  <AllIcons />
 
 </template>
-
