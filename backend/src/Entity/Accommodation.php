@@ -26,53 +26,54 @@ class Accommodation
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $address = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $postalCode = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $country = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $type = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(nullable: true)]
     private ?int $bedrooms = null;
 
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(nullable: true)]
     private ?int $bathrooms = null;
 
     #[ORM\Column]
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?int $capacity = null;
 
     #[ORM\Column]
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?float $price = null;
 
     /**
      * @var array<string>
      */
     #[ORM\Column(type: Types::ARRAY)]
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private array $advantage = [];
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $practicalInformations = null;
 
     #[ORM\Column]
@@ -81,7 +82,7 @@ class Accommodation
 
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?Owner $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
@@ -89,6 +90,7 @@ class Accommodation
     private ?Theme $theme = null;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private Collection $images;
 
     /**
@@ -101,7 +103,7 @@ class Accommodation
     /**
      * @var Collection<int, Comment>
      */
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
@@ -114,9 +116,11 @@ class Accommodation
     private ?float $longitude = null;
 
     #[ORM\Column(type: 'integer', options: ['default' => 1])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?int $minStay = 1;
 
     #[ORM\Column(type: 'integer', options: ['default' => 7])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?int $maxStay = 7;
 
     public function __construct()
@@ -323,6 +327,7 @@ class Accommodation
         return $this;
     }
 
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     public function getImages(): Collection
     {
         return $this->images;
