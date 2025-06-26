@@ -38,6 +38,7 @@ class Owner extends User
     /**
      * @return Collection<int, Accommodation>
      */
+    #[Groups(['owner:read'])]
     public function getAccommodations(): Collection
     {
         return $this->accommodations;
@@ -101,6 +102,7 @@ class Owner extends User
         return $this->accommodations->count();
     }
 
+    #[Groups(['owner:read'])]
     public function getNotation(): float
     {
         return $this->notation;

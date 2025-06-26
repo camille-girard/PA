@@ -32,13 +32,13 @@ final class OwnerController extends AbstractController
     {
         $owners = $this->ownerRepository->findBy(['isDeleted' => false]);
 
-        $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read']);
+        $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read','accommodation:read', 'booking:read']);
 
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer): JsonResponse
     {
         $owner = $this->ownerRepository->find($id);
 
@@ -46,9 +46,11 @@ final class OwnerController extends AbstractController
             return $this->json(['message' => 'Owner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'owner' => $owner,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($owner, 'json', [
+            'groups' => ['owner:read', 'accommodation:read', 'booking:read']
+        ]);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]

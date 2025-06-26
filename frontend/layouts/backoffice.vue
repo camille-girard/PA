@@ -54,6 +54,24 @@ const authStore = useAuthStore()
             </li>
 
             <li>
+              <ULink to="/backoffice/themes"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                     exact-active-class="bg-brand-600 text-white">
+                <LightningIcon class="w-7 h-7 mr-3" />
+                Themes
+              </ULink>
+            </li>
+
+            <li>
+              <ULink to="/backoffice/accommodations"
+                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                     exact-active-class="bg-brand-600 text-white">
+                <PinIcon class="w-7 h-7 mr-3" />
+                Logements
+              </ULink>
+            </li>
+
+            <li>
               <ULink to="/backoffice/tickets"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">

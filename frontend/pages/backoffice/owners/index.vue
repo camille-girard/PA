@@ -7,6 +7,7 @@
   import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
   import EditIcon from '~/components/atoms/icons/EditIcon.vue'
   import ConfirmPopover from '~/components/ConfirmPopover.vue'
+  import EyeView from '~/components/atoms/icons/EyeView.vue'
   import { useRouter } from 'vue-router'
   import { useRuntimeConfig } from '#app'
 
@@ -107,6 +108,15 @@
 
       <template #cell-actions="{ row }">
         <div class="flex items-center gap-4">
+
+          <NuxtLink
+              :to="`/backoffice/owners/${row.id}`"
+              class="text-brand-600 hover:text-brand-700"
+          >
+            <EyeView class="w-6 h-6" />
+          </NuxtLink>
+
+
           <NuxtLink
               :to="`/backoffice/owners/${row.id}/edit`"
               class="text-blue-500 hover:text-blue-800"
