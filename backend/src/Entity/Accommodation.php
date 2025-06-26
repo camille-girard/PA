@@ -32,21 +32,27 @@ class Accommodation
     #[Groups(['booking:read', 'owner:read'])]
     private ?string $address = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $postalCode = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $country = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $type = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(nullable: true)]
     private ?int $bedrooms = null;
 
+    #[Groups(['booking:read', 'owner:read'])]
     #[ORM\Column(nullable: true)]
     private ?int $bathrooms = null;
 
@@ -79,7 +85,7 @@ class Accommodation
     private ?Owner $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
-    #[Groups(['owner:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?Theme $theme = null;
 
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
@@ -99,9 +105,11 @@ class Accommodation
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[Groups(['booking:read', 'owner:read', 'accommodation:read'])]
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
+    #[Groups(['booking:read', 'owner:read', 'accommodation:read'])]
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
