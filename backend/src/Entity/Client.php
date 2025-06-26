@@ -16,12 +16,14 @@ class Client extends User
      * @var array<string>
      */
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[Groups(['client:read'])]
     private ?array $preferences = null;
 
     /**
      * @var Collection<int, Booking>
      */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'client')]
+    #[Groups(['client:read'])]
     private Collection $bookings;
 
     /**
@@ -47,6 +49,7 @@ class Client extends User
     /**
      * @return array<string>|null
      */
+    #[Groups(['client:read'])]
     public function getPreferences(): ?array
     {
         return $this->preferences;
@@ -65,6 +68,7 @@ class Client extends User
     /**
      * @return Collection<int, Booking>
      */
+    #[Groups(['client:read'])]
     public function getBookings(): Collection
     {
         return $this->bookings;
