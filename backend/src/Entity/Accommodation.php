@@ -22,40 +22,46 @@ class Accommodation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['accommodation:read', 'booking:read'])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['booking:read'])]
+    #[Groups(['booking:read', 'owner:read'])]
     private ?string $address = null;
 
     #[ORM\Column]
+    #[Groups(['owner:read'])]
     private ?int $capacity = null;
 
     #[ORM\Column]
+    #[Groups(['owner:read'])]
     private ?float $price = null;
 
     /**
      * @var array<string>
      */
     #[ORM\Column(type: Types::ARRAY)]
+    #[Groups(['owner:read'])]
     private array $adventage = [];
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['owner:read'])]
     private ?string $practicalInformations = null;
 
     #[ORM\Column]
+    #[Groups(['owner:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['booking:read'])]
+    #[Groups(['booking:read', 'owner:read'])]
     private ?Owner $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodations')]
+    #[Groups(['owner:read'])]
     private ?Theme $theme = null;
 
     /**
@@ -67,12 +73,14 @@ class Accommodation
     /**
      * @var Collection<int, Booking>
      */
+    #[Groups(['owner:read'])]
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'accommodation', orphanRemoval: true)]
     private Collection $bookings;
 
     /**
      * @var Collection<int, Comment>
      */
+    #[Groups(['owner:read'])]
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'accommodation', orphanRemoval: true)]
     private Collection $comments;
 

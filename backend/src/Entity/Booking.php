@@ -21,31 +21,31 @@ class Booking
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'string', enumType: BookingStatus::class)]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private BookingStatus $status;
 
     #[ORM\Column]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?float $totalPrice = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?Client $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['booking:read', 'client:read'])]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?Accommodation $accommodation = null;
 
     public function getId(): ?int
