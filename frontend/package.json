@@ -22,6 +22,8 @@
         "@nuxtjs/tailwindcss": "^6.13.2",
         "@pinia/nuxt": "^0.10.1",
         "eslint": "^9.23.0",
+        "mapbox-gl": "^2.15.0",
+        "nanoid": "^5.1.5",
         "nuxt": "^3.16.1",
         "pinia": "^3.0.1",
         "pinia-plugin-persistedstate": "^4.2.0",
