@@ -33,8 +33,8 @@ const bookings = computed(() =>
 </script>
 
 <template>
-  <div class="space-y-10 p-6 md:p-10">
-    <h1 class="text-3xl font-semibold">Fiche client</h1>
+  <div class="space-y-6">
+    <h1 class="text-2xl font-semibold">Fiche client</h1>
 
     <UCard>
       <template #header>
@@ -60,7 +60,7 @@ const bookings = computed(() =>
     </UCard>
 
     <div>
-      <h2 class="text-xl font-semibold mb-4">Réservations</h2>
+      <h2 class="text-lg font-semibold mb-4">Réservations</h2>
       <UTable
           :columns="[
           { key: 'accommodation', label: 'Hébergement' },

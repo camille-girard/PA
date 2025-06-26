@@ -16,20 +16,17 @@
 
 <template>
   <div>
-    <!-- Bouton déclencheur -->
     <div @click="open = true">
       <slot name="trigger" />
     </div>
 
-    <!-- Modale -->
     <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center">
-      <!-- Overlay flouté -->
+
       <div
           class="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm"
           @click="open = false"
       />
 
-      <!-- Contenu modale -->
       <div class="relative z-10 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl w-full max-w-md">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {{ title || 'Confirmer la suppression ?' }}
