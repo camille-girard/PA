@@ -5,6 +5,7 @@ import EditIcon from '~/components/atoms/icons/EditIcon.vue'
 import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
 import ConfirmPopover from '~/components/ConfirmPopover.vue'
 import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
 definePageMeta({
   layout: 'backoffice',
@@ -12,7 +13,7 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: bookingData, pending, error } = await useFetch('/api/bookings', {
+const { data: bookingData, pending, error } = await useAuthFetch('/api/bookings', {
   baseURL: apiUrl,
 })
 
@@ -57,7 +58,7 @@ function getStatusProps(status: string) {
 }
 
 async function refreshBookings() {
-  const { data } = await useFetch('/api/bookings', { baseURL: apiUrl })
+  const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl })
   bookingData.value = data.value
 }
 

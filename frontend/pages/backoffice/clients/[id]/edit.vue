@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import Input from '~/components/atoms/UInput.vue'
-import Checkbox from '~/components/atoms/UCheckbox.vue'
+import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
 definePageMeta({
   layout: 'backoffice',
@@ -14,7 +15,7 @@ const router = useRouter()
 
 const id = route.params.id
 
-const { data: client, refresh, pending } = await useFetch(`/api/clients/${id}`, {
+const { data: client, refresh, pending } = await useAuthFetch(`/api/clients/${id}`, {
   baseURL: apiUrl,
   transform: (res) => res.client,
 })
@@ -47,7 +48,7 @@ async function save() {
   errorMsg.value = ''
 
   try {
-    await $fetch(`/api/clients/${id}`, {
+    await useAuthFetch(`/api/clients/${id}`, {
       method: 'PUT',
       baseURL: apiUrl,
       body: {

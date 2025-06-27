@@ -6,6 +6,8 @@ import UBadge from '~/components/atoms/UBadge.vue'
 import UTable from '~/components/organisms/UTable.vue'
 import UButton from '~/components/atoms/UButton.vue'
 import BaseModal from '~/components/BaseModal.vue'
+import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
 definePageMeta({ layout: 'backoffice' })
 
@@ -13,7 +15,7 @@ const { public: { apiUrl } } = useRuntimeConfig()
 const route = useRoute()
 const id = route.params.id
 
-const { data: owner, pending } = await useFetch(`/api/owners/${id}`, {
+const { data: owner, pending } = await useAuthFetch(`/api/owners/${id}`, {
   baseURL: apiUrl,
 
 })

@@ -5,6 +5,8 @@ import UInputNumber from '~/components/atoms/UInputNumber.vue'
 import USelectBox from '~/components/atoms/USelectBox.vue'
 import UDatePicker from '~/components/molecules/UDatePicker.vue'
 import UButton from '~/components/atoms/UButton.vue'
+import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
 definePageMeta({ layout: 'backoffice' })
 
@@ -12,12 +14,12 @@ const { public: { apiUrl } } = useRuntimeConfig()
 const route = useRoute()
 const id = route.params.id
 
-const { data: booking, refresh, pending } = await useFetch(`/api/bookings/${id}`, {
+const { data: booking, refresh, pending } = await useAuthFetch(`/api/bookings/${id}`, {
   baseURL: apiUrl,
   transform: (res) => res.booking,
 })
 
-const { data: clients } = await useFetch('/api/clients', {
+const { data: clients } = await useAuthFetch('/api/clients', {
   baseURL: apiUrl,
   transform: res => res.map((c: any) => ({
     label: `${c.firstName} ${c.lastName}`,
@@ -25,7 +27,7 @@ const { data: clients } = await useFetch('/api/clients', {
   }))
 })
 
-const { data: accommodations } = await useFetch('/api/accommodations', {
+const { data: accommodations } = await useAuthFetch('/api/accommodations', {
   baseURL: apiUrl,
   transform: res => res.map((a: any) => ({
     label: a.name,
