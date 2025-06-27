@@ -113,11 +113,11 @@ async function deleteTheme(id: number) {
       <template  #header> <span class=" text-lg font-medium"> Ajouter un nouveau thème</span> </template>
       <div class="flex flex-col gap-4">
         <UInput v-model="newTheme.name" label="Nom" type="text" required />
-        <UTextarea v-model="newTheme.description" label="Description" class="md:col-span-2" required />
+        <UTextarea v-model="newTheme.description" label="Description" required />
         <UButton
             :isLoading="isSaving"
             :disabled="!newTheme.name || !newTheme.description"
-            class="md:col-span-2 justify-self-start"
+            class=" w-fit justify-self-start"
             @click="saveNewTheme"
         >
           Ajouter
@@ -125,7 +125,9 @@ async function deleteTheme(id: number) {
       </div>
     </UCard>
 
-    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div>
+      <h2 class="text-lg font-semibold my-4"> Tous les themes </h2>
+      <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
       <UCard v-for="theme in themes" :key="theme.id">
         <template #header>
           <div class="flex justify-between items-center">
@@ -163,6 +165,7 @@ async function deleteTheme(id: number) {
           </div>
         </template>
       </UCard>
+    </div>
     </div>
   </div>
 </template>

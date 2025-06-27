@@ -4,6 +4,8 @@ import { ref, computed } from 'vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import UCard from '~/components/molecules/UCard.vue'
 import UTable from '~/components/organisms/UTable.vue'
+import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
 definePageMeta({ layout: 'backoffice' })
 
@@ -11,7 +13,7 @@ const route = useRoute()
 const id = route.params.id
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: client, pending } = await useFetch(`/api/clients/${id}`, {
+const { data: client, pending } = await useAuthFetch(`/api/clients/${id}`, {
   baseURL: apiUrl,
   transform: (res) => res.client,
 })

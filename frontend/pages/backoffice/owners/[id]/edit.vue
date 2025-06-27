@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { useRoute } from 'vue-router'
   import Input from '~/components/atoms/UInput.vue'
-  import Checkbox from '~/components/atoms/UCheckbox.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+
 
   definePageMeta({
     layout: 'backoffice',
@@ -12,7 +14,7 @@
 
   const { public: { apiUrl } } = useRuntimeConfig()
 
-  const { data: owner, refresh, pending } = await useFetch(`/api/owners/${id}`, {
+  const { data: owner, refresh, pending } = await useAuthFetch(`/api/owners/${id}`, {
     baseURL: apiUrl,
   })
 

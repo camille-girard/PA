@@ -10,20 +10,22 @@
   import EyeView from '~/components/atoms/icons/EyeView.vue'
   import { useRouter } from 'vue-router'
   import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+
 
   definePageMeta({ layout: 'backoffice' })
 
   const router = useRouter()
   const { public: { apiUrl } } = useRuntimeConfig()
 
-  const { data: ownerData } = await useFetch('/api/owners', { baseURL: apiUrl })
+  const { data: ownerData } = await useAuthFetch('/api/owners', { baseURL: apiUrl })
   const owners = computed(() => ownerData.value || [])
 
   const successMsg = ref('')
   const errorMsg = ref('')
 
   async function refreshOwners() {
-    const { data } = await useFetch('/api/owners', { baseURL: apiUrl })
+    const { data } = await useAuthFetch('/api/owners', { baseURL: apiUrl })
     ownerData.value = data.value
   }
 

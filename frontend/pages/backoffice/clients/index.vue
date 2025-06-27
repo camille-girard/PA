@@ -1,88 +1,89 @@
 <script setup lang="ts">
-  import UTable from '~/components/organisms/UTable.vue';
-  import UBadge from '~/components/atoms/UBadge.vue';
-  import TrashIcon from "~/components/atoms/icons/TrashIcon.vue";
-  import EditIcon from "~/components/atoms/icons/EditIcon.vue";
-  import ConfirmPopover from '~/components/ConfirmPopover.vue'
-  import EyeView from '~/components/atoms/icons/EyeView.vue'
-  import { useRuntimeConfig } from '#app'
+import UTable from '~/components/organisms/UTable.vue';
+import UBadge from '~/components/atoms/UBadge.vue';
+import TrashIcon from "~/components/atoms/icons/TrashIcon.vue";
+import EditIcon from "~/components/atoms/icons/EditIcon.vue";
+import ConfirmPopover from '~/components/ConfirmPopover.vue'
+import EyeView from '~/components/atoms/icons/EyeView.vue'
+import { useRuntimeConfig } from '#app'
+import { useAuthFetch } from '~/composables/useAuthFetch'
 
-  definePageMeta({
-    layout: 'backoffice',
-  })
+definePageMeta({
+  layout: 'backoffice',
+})
 
-  const { public: { apiUrl } } = useRuntimeConfig()
+const { public: { apiUrl } } = useRuntimeConfig()
 
-  const { data: clientData, pending, error } = await useFetch('/api/clients', {
-    baseURL: apiUrl,
-  })
+const { data: clientData, pending, error } = await useAuthFetch('/api/clients', {
+  baseURL: apiUrl,
+})
 
-  const clients = computed(() => clientData.value || [])
+const clients = computed(() => clientData.value || [])
 
-  const columns = [
-    { key: 'client', label: 'Client', sortable: true },
-    { key: 'phone', label: 'Téléphone' },
-    { key: 'email', label: 'Email' },
-    { key: 'bookingCount', label: 'Réservations' },
-    { key: 'status', label: 'Status' },
-    { key: 'actions', label: '' }
-  ]
+const columns = [
+  { key: 'client', label: 'Client', sortable: true },
+  { key: 'phone', label: 'Téléphone' },
+  { key: 'email', label: 'Email' },
+  { key: 'bookingCount', label: 'Réservations' },
+  { key: 'status', label: 'Status' },
+  { key: 'actions', label: '' }
+]
 
-  const clientsData = computed(() =>
-      clients.value.map(client => ({
-        id: client.id,
-        client: `${client.firstName} ${client.lastName}`,
-        phone: client.phone || 'Non renseigné',
-        email: client.email,
-        bookingCount: client.bookingCount ?? 0,
-        status: client.isVerified ? 'active' : 'inactive',
-        _original: client,
-      }))
-  )
+const clientsData = computed(() =>
+    clients.value.map(client => ({
+      id: client.id,
+      client: `${client.firstName} ${client.lastName}`,
+      phone: client.phone || 'Non renseigné',
+      email: client.email,
+      bookingCount: client.bookingCount ?? 0,
+      status: client.isVerified ? 'active' : 'inactive',
+      _original: client,
+    }))
+)
 
-  function getStatusProps(status: string) {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return { label: 'Active', color: 'success' }
-      case 'inactive':
-        return { label: 'Inactive', color: 'error' }
-      case 'pending':
-      case 'en attente':
-        return { label: 'En attente', color: 'warning' }
-      default:
-        return { label: status, color: 'brand' }
-    }
+function getStatusProps(status: string) {
+  switch (status.toLowerCase()) {
+    case 'active':
+      return { label: 'Active', color: 'success' }
+    case 'inactive':
+      return { label: 'Inactive', color: 'error' }
+    case 'pending':
+    case 'en attente':
+      return { label: 'En attente', color: 'warning' }
+    default:
+      return { label: status, color: 'brand' }
   }
+}
 
-  const successMsg = ref('')
-  const errorMsg = ref('')
+const successMsg = ref('')
+const errorMsg = ref('')
 
-  async function refreshClients() {
-    const { data } = await useFetch('/api/clients', { baseURL: apiUrl })
-    clientData.value = data.value
+async function refreshClients() {
+  const { data } = await useAuthFetch('/api/clients', { baseURL: apiUrl })
+  clientData.value = data.value
+}
+
+async function deleteClient(id: string) {
+  successMsg.value = ''
+  errorMsg.value = ''
+
+  try {
+    await $fetch(`/api/clients/${id}`, {
+      method: 'DELETE',
+      baseURL: apiUrl,
+    })
+
+    await refreshClients()
+
+    successMsg.value = 'Client supprimé avec succès.'
+  } catch (error: any) {
+    errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.'
+    console.error(error)
   }
-
-  async function deleteClient(id: string) {
-
-    successMsg.value = ''
-    errorMsg.value = ''
-
-    try {
-      await $fetch(`/api/clients/${id}`, {
-        method: 'DELETE',
-        baseURL: apiUrl,
-      })
-
-      await refreshClients()
-
-      successMsg.value = 'Client supprimé avec succès.'
-    } catch (error: any) {
-      errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.'
-      console.error(error)
-    }
-  }
+}
 
 </script>
+
 
 <template>
   <div class="space-y-6">
