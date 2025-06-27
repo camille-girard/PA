@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/owners', name: 'api_owners_')]
 #[OA\Tag(name: 'Owners')]
@@ -27,17 +28,17 @@ final class OwnerController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
-        $owners = $this->ownerRepository->findAll();
+        $owners = $this->ownerRepository->findBy(['isDeleted' => false]);
 
-        return $this->json([
-            'owners' => $owners,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($owners, 'json', ['groups' => 'owner:read','accommodation:read', 'booking:read']);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer): JsonResponse
     {
         $owner = $this->ownerRepository->find($id);
 
@@ -45,9 +46,11 @@ final class OwnerController extends AbstractController
             return $this->json(['message' => 'Owner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'owner' => $owner,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($owner, 'json', [
+            'groups' => ['owner:read', 'accommodation:read', 'booking:read']
+        ]);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -148,11 +151,11 @@ final class OwnerController extends AbstractController
             return $this->json(['message' => 'Owner not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($owner);
+        $owner->setIsDeleted(true);
         $this->entityManager->flush();
 
         return $this->json([
-            'message' => 'Owner successfully deleted',
+            'message' => 'Owner successfully archived',
         ], Response::HTTP_OK);
     }
 }
