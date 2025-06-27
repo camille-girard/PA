@@ -6,6 +6,7 @@ use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
 class Booking
@@ -13,31 +14,38 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['booking:read', 'client:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?\DateTimeInterface $startDate = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(type: 'string', enumType: BookingStatus::class)]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private BookingStatus $status;
 
     #[ORM\Column]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?float $totalPrice = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?Client $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['booking:read', 'client:read', 'owner:read'])]
     private ?Accommodation $accommodation = null;
 
     public function getId(): ?int

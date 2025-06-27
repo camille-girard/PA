@@ -38,11 +38,7 @@ export default defineNuxtConfig({
         },
     },
 
-    colorMode: {
-        preference: 'light',
-        fallback: 'light',
-        classSuffix: '',
-    },
+
 
     build: {
         transpile: ['swagger-ui-dist'],

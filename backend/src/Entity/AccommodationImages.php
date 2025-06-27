@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AccommodationImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationImagesRepository::class)]
 class AccommodationImages
@@ -13,6 +14,7 @@ class AccommodationImages
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client extends User
@@ -15,12 +16,14 @@ class Client extends User
      * @var array<string>
      */
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[Groups(['client:read'])]
     private ?array $preferences = null;
 
     /**
      * @var Collection<int, Booking>
      */
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'client')]
+    #[Groups(['client:read'])]
     private Collection $bookings;
 
     /**
@@ -46,6 +49,7 @@ class Client extends User
     /**
      * @return array<string>|null
      */
+    #[Groups(['client:read'])]
     public function getPreferences(): ?array
     {
         return $this->preferences;
@@ -64,6 +68,7 @@ class Client extends User
     /**
      * @return Collection<int, Booking>
      */
+    #[Groups(['client:read'])]
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -149,5 +154,11 @@ class Client extends User
         }
 
         return $this;
+    }
+
+    #[Groups(['client:read'])]
+    public function getBookingCount(): int
+    {
+        return $this->bookings->count();
     }
 }
