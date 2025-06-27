@@ -86,7 +86,7 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
         }
 
-        $requiredFields = ['name', 'description', 'image'];
+        $requiredFields = ['name', 'description'];
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
@@ -105,7 +105,6 @@ final class ThemeController extends AbstractController
         $theme = new Theme();
         $theme->setName($data['name']);
         $theme->setDescription($data['description']);
-        $theme->setImage($data['image']);
 
         if (isset($data['slug'])) {
             $theme->setSlug($data['slug']);
@@ -148,10 +147,6 @@ final class ThemeController extends AbstractController
 
         if (isset($data['description'])) {
             $theme->setDescription($data['description']);
-        }
-
-        if (isset($data['image'])) {
-            $theme->setImage($data['image']);
         }
 
         $errors = $this->validator->validate($theme);
