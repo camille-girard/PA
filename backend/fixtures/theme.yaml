@@ -2,17 +2,14 @@ App\Entity\Theme:
   theme_1:
     name: 'Série TV'
     description: 'Séjournez dans votre série TV préférée'
-    image: 'https://picsum.photos/300/200'
     slug: 'serie-tv'
 
   theme_2:
     name: 'Film fantastique'
     description: 'Séjournez dans votre film préféré'
-    image: 'https://picsum.photos/300/200'
     slug: 'fantastique'
 
   theme_3:
     name: 'Dessin animé'
     description: 'Séjournez dans votre jeu vidéo préféré'
-    image: 'https://picsum.photos/300/200'
     slug: 'dessin-anime'
