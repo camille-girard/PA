@@ -95,8 +95,6 @@ const handleBooking = () => {
       </button>
     </div>
   </div>
-
-  <!-- Modale d'erreur -->
   <div
       v-if="showModal"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"

@@ -81,9 +81,7 @@ const createCheckout = async () => {
             <h1 class="text-h1">Demande de réservation</h1>
           </div>
         </div>
-
         <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-8 space-y-8 border border-gray-200">
-          <!-- Info logement -->
           <div class="space-y-2 text-center">
             <h2 class="text-2xl font-bold text-gray-900">{{ title }}</h2>
             <div class="text-md text-gray-700">
@@ -94,8 +92,6 @@ const createCheckout = async () => {
               <p>{{ guests }} personne{{ guests > 1 ? 's' : '' }}</p>
             </div>
           </div>
-
-          <!-- Détail du prix -->
           <div class="border-t pt-6 space-y-4">
             <h3 class="text-xl font-bold text-gray-900">Détail du prix</h3>
             <ul class="text-gray-800 space-y-2">
@@ -117,8 +113,6 @@ const createCheckout = async () => {
               <span>{{ totalPrice }} €</span>
             </div>
           </div>
-
-          <!-- Bouton -->
           <div class="pt-6 flex justify-center">
             <UButton
                 size="lg"
