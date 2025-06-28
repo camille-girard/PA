@@ -1,5 +1,6 @@
 <?php
 
+// src/Controller/CheckoutController.php
 namespace App\Controller;
 
 use Stripe\Stripe;
@@ -17,35 +18,34 @@ class CheckoutController extends AbstractController
     {
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-        $data = json_decode($request->getContent(), true);
+        $data            = json_decode($request->getContent(), true);
+        $price           = (float) $data['totalPrice'];      // euros
+        $clientId        = (int)   $data['clientId'];
+        $accommodationId = (int)   $data['accommodationId'];
+        $startDate       = $data['startDate'];
+        $endDate         = $data['endDate'];
 
-        $price = $data['totalPrice']; // en euros
-        $clientId = $data['clientId'];
-        $accommodationId = $data['accommodationId'];
-        $startDate = $data['startDate'];
-        $endDate = $data['endDate'];
+        $baseUrl = $_ENV['FRONT_BASE_URL'] ?? 'http://localhost:8085';
 
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => 'Réservation PopnBed',
-                    ],
-                    'unit_amount' => $price * 100, // Stripe attend des centimes
+                    'currency'     => 'eur',
+                    'product_data' => [ 'name' => 'Réservation PopnBed' ],
+                    'unit_amount'  => (int) round($price * 100), // centimes
                 ],
                 'quantity' => 1,
             ]],
-            'mode' => 'payment',
-            'success_url' => 'http://localhost:8085/booking/success',
-            'cancel_url' => 'http://localhost:8085/booking/cancel',
-            'metadata' => [
-                'client_id' => $clientId,
+            'mode'        => 'payment',
+            'success_url' => $baseUrl.'/booking/success?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url'  => $baseUrl.'/booking/cancel',
+            'metadata'    => [
+                'client_id'        => $clientId,
                 'accommodation_id' => $accommodationId,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'total_price' => $price,
+                'start_date'       => $startDate,
+                'end_date'         => $endDate,
+                'total_price'      => $price,
             ],
         ]);
 

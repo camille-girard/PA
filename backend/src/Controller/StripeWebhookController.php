@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Booking;
+use App\Enum\BookingStatus;
 use App\Repository\AccommodationRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,47 +20,74 @@ class StripeWebhookController extends AbstractController
     public function __invoke(
         Request $request,
         EntityManagerInterface $em,
-        ClientRepository $clientRepository,
-        AccommodationRepository $accommodationRepository,
-        LoggerInterface $logger
+        ClientRepository $clientRepo,
+        AccommodationRepository $accommodationRepo,
+        LoggerInterface $logger,
     ): Response {
-        $payload = $request->getContent();
+        $payload   = $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
-        $endpointSecret = $_ENV['STRIPE_WEBHOOK_SECRET'];
+        $secret    = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
 
-        try {
-            $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
-        } catch (\Exception $e) {
-            $logger->error('❌ Erreur de Webhook Stripe : ' . $e->getMessage());
-            return new Response('Webhook error: ' . $e->getMessage(), 400);
+        if (!$secret) {
+            $logger->error('❌ STRIPE_WEBHOOK_SECRET manquant dans .env');
+            return new Response('Configuration error', 500);
         }
 
-        // Log basique dans un fichier si besoin
-        file_put_contents('stripe_webhook.log', '✅ Webhook reçu : ' . $event->type . " à " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
-        $logger->info('✅ Webhook Stripe reçu : ' . $event->type);
+        try {
+            $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+        } catch (\Throwable $e) {
+            $logger->error('❌ Stripe Webhook Signature ERROR: ' . $e->getMessage());
+            file_put_contents('var/log/stripe_webhook_error.log', $e->getMessage() . "\n", FILE_APPEND);
+            return new Response('Invalid signature', 400);
+        }
+
+        $logger->info('✅ Stripe Webhook reçu : ' . $event->type);
+        file_put_contents('var/log/stripe_webhook.log', "→ " . $event->type . " à " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
 
         if ($event->type === 'checkout.session.completed') {
-            $session = $event->data->object;
+            try {
+                $session = $event->data->object;
 
-            $client = $clientRepository->find($session->metadata->client_id ?? null);
-            $accommodation = $accommodationRepository->find($session->metadata->accommodation_id ?? null);
+                // Log debug du contenu brut
+                $logger->info('📦 Données session : ' . json_encode($session));
+                file_put_contents('var/log/stripe_webhook.log', json_encode($session) . "\n", FILE_APPEND);
 
-            if ($client && $accommodation) {
-                $booking = new Booking();
-                $booking->setClient($client);
-                $booking->setAccommodation($accommodation);
-                $booking->setStartDate(new \DateTime($session->metadata->start_date));
-                $booking->setEndDate(new \DateTime($session->metadata->end_date));
-                $booking->setTotalPrice($session->metadata->total_price);
-                $booking->setStatus('accepted');
+                $clientId        = $session->metadata->client_id        ?? null;
+                $accommodationId = $session->metadata->accommodation_id ?? null;
+                $startDate       = $session->metadata->start_date       ?? null;
+                $endDate         = $session->metadata->end_date         ?? null;
+                $totalPrice      = (float) ($session->metadata->total_price ?? 0);
 
-                $em->persist($booking);
-                $em->flush();
+                if ($clientId && $accommodationId && $startDate && $endDate) {
+                    $client = $clientRepo->find($clientId);
+                    $accommodation = $accommodationRepo->find($accommodationId);
 
-                $logger->info('✅ Réservation enregistrée en BDD pour client #' . $client->getId());
-                file_put_contents('stripe_webhook.log', '✅ Réservation créée pour client #' . $client->getId() . "\n", FILE_APPEND);
-            } else {
-                $logger->warning('⚠️ Données manquantes pour créer une réservation.');
+                    if ($client && $accommodation) {
+                        $booking = new Booking();
+                        $booking
+                            ->setClient($client)
+                            ->setAccommodation($accommodation)
+                            ->setStartDate(new \DateTimeImmutable($startDate))
+                            ->setEndDate(new \DateTimeImmutable($endDate))
+                            ->setTotalPrice($totalPrice)
+                            ->setStatus(BookingStatus::Accepted)
+                            ->setCreatedAt(new \DateTimeImmutable());
+
+                        $em->persist($booking);
+                        $em->flush();
+
+                        $logger->info("✅ Réservation enregistrée : ID #{$booking->getId()}");
+                        file_put_contents('var/log/stripe_webhook.log', "✅ Booking créé : ID #{$booking->getId()}\n", FILE_APPEND);
+                    } else {
+                        $logger->warning("⚠️ Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
+                    }
+                } else {
+                    $logger->warning("⚠️ Données metadata manquantes dans la session.");
+                }
+            } catch (\Throwable $e) {
+                $logger->error('❌ Erreur traitement checkout.session.completed : ' . $e->getMessage());
+                file_put_contents('var/log/stripe_webhook_error.log', $e->getMessage() . "\n", FILE_APPEND);
+                return new Response('Erreur serveur', 500);
             }
         }
 
