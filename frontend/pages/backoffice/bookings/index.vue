@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import UTable from '~/components/organisms/UTable.vue'
 import UBadge from '~/components/atoms/UBadge.vue'
-import EditIcon from '~/components/atoms/icons/EditIcon.vue'
 import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
 import ConfirmPopover from '~/components/ConfirmPopover.vue'
 import { useRuntimeConfig } from '#app'
@@ -99,12 +98,6 @@ async function deleteBooking(id: number) {
 
           <template #cell-actions="{ row }">
             <div class="flex items-center gap-4">
-              <NuxtLink
-                  :to="`/backoffice/bookings/${row.id}/edit`"
-                  class="text-blue-500 hover:text-blue-800"
-              >
-                <EditIcon class="w-6 h-6" />
-              </NuxtLink>
 
               <ConfirmPopover
                   :itemName="`la réservation de ${row.client}`"

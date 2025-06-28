@@ -26,7 +26,7 @@ const _emit = defineEmits<{
 }>();
 
 const baseClasses =
-    'w-full border rounded-lg shadow-xs text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2';
+    'w-full border rounded-lg shadow-xs text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 px-3 py-2';
 
 const variantClasses = {
   default: 'border-gray-300 focus:border-orange-500 focus:ring-orange-500',
