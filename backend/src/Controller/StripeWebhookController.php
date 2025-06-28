@@ -29,24 +29,23 @@ class StripeWebhookController extends AbstractController
         $secret    = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
 
         if (!$secret) {
-            $logger->error('❌ STRIPE_WEBHOOK_SECRET manquant dans .env');
+            $logger->error('STRIPE_WEBHOOK_SECRET manquant dans .env');
             return new Response('Configuration error', 500);
         }
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
         } catch (\Throwable $e) {
-            $logger->error('❌ Stripe Webhook Signature ERROR: ' . $e->getMessage());
+            $logger->error('Stripe Webhook Signature ERROR: ' . $e->getMessage());
             return new Response('Invalid signature', 400);
         }
 
-        $logger->info('✅ Stripe Webhook reçu : ' . $event->type);
+        $logger->info('Stripe Webhook reçu : ' . $event->type);
 
         if ($event->type === 'checkout.session.completed') {
             try {
                 $session = $event->data->object;
 
-                // Log debug du contenu brut
                 $logger->info('📦 Données session : ' . json_encode($session));
 
                 $clientId        = $session->metadata->client_id        ?? null;
@@ -73,15 +72,15 @@ class StripeWebhookController extends AbstractController
                         $em->persist($booking);
                         $em->flush();
 
-                        $logger->info("✅ Réservation enregistrée : ID #{$booking->getId()}");
+                        $logger->info("Réservation enregistrée : ID #{$booking->getId()}");
                     } else {
-                        $logger->warning("⚠️ Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
+                        $logger->warning("Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
                     }
                 } else {
-                    $logger->warning("⚠️ Données metadata manquantes dans la session.");
+                    $logger->warning("Données metadata manquantes dans la session.");
                 }
             } catch (\Throwable $e) {
-                $logger->error('❌ Erreur traitement checkout.session.completed : ' . $e->getMessage());
+                $logger->error('Erreur traitement checkout.session.completed : ' . $e->getMessage());
                 return new Response('Erreur serveur', 500);
             }
         }

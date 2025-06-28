@@ -1,6 +1,5 @@
 <?php
 
-// src/Controller/CheckoutController.php
 namespace App\Controller;
 
 use Stripe\Stripe;

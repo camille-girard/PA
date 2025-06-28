@@ -9,7 +9,6 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
-// Sécurité : rediriger si non connecté
 if (!auth.user) {
   router.push('/login')
 }
