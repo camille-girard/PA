@@ -1,74 +1,80 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { loadStripe } from '@stripe/stripe-js';
-import { useAuthStore } from '~/stores/auth';
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { loadStripe } from '@stripe/stripe-js'
+import { useAuthStore } from '~/stores/auth'
 
-const isLoading = ref(false);
-const route = useRoute();
-const auth = useAuthStore();
-const user = auth.user;
+const isLoading = ref(false)
+const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
 
-const title = route.query.title as string;
-const arrival = new Date(route.query.arrival as string);
-const departure = new Date(route.query.departure as string);
-const guests = Number(route.query.guests);
-const pricePerNight = Number(route.query.pricePerNight);
-const nights = Number(route.query.nights);
+// Sécurité : rediriger si non connecté
+if (!auth.user) {
+  router.push('/login')
+}
 
-const accommodationId = Number(route.query.accommodationId);
-const clientId = user?.id;
+const user = computed(() => auth.user)
+const clientId = computed(() => user.value?.id)
+
+const title = route.query.title as string
+const arrival = new Date(route.query.arrival as string)
+const departure = new Date(route.query.departure as string)
+const guests = Number(route.query.guests)
+const pricePerNight = Number(route.query.pricePerNight)
+const nights = Number(route.query.nights)
+const accommodationId = Number(route.query.accommodationId)
 
 const formattedArrival = arrival.toLocaleDateString('fr-FR', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
-});
+})
 const formattedDeparture = departure.toLocaleDateString('fr-FR', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
-});
+})
 
-const totalPrice = (pricePerNight * nights + 12 + 5).toFixed(2);
+const totalPrice = (pricePerNight * nights + 12 + 5).toFixed(2)
 
 const createCheckout = async () => {
-  console.log('user:', user);
-  console.log('clientId:', clientId);
-  console.log('accommodationId:', accommodationId);
+  console.log('user:', user.value)
+  console.log('clientId:', clientId.value)
+  console.log('accommodationId:', accommodationId)
 
-  if (!clientId || !accommodationId) {
-    alert("Informations manquantes pour créer la réservation.");
-    return;
+  if (!clientId.value || !accommodationId) {
+    alert("Informations manquantes pour créer la réservation.")
+    return
   }
 
   try {
-    isLoading.value = true;
+    isLoading.value = true
 
     const res = await $fetch('/api/checkout/create-session', {
       method: 'POST',
       body: {
         totalPrice: Number(totalPrice),
-        clientId,
+        clientId: clientId.value,
         accommodationId,
         startDate: arrival.toISOString().split('T')[0],
         endDate: departure.toISOString().split('T')[0],
       },
-    });
+    })
 
     if (res?.id) {
-      const stripe = await loadStripe('pk_test_51PVKMCKnwz4ouw1LKDOGFG9UlGQPb6VzbQBgM4czJs41hmYl5s5aHdqkuoS5RrB5cxS2MYXAmQRlO79Fg5zW2dMx00YzNqpxig');
-      await stripe?.redirectToCheckout({ sessionId: res.id });
+      const stripe = await loadStripe('pk_test_51PVKMCKnwz4ouw1LKDOGFG9UlGQPb6VzbQBgM4czJs41hmYl5s5aHdqkuoS5RrB5cxS2MYXAmQRlO79Fg5zW2dMx00YzNqpxig')
+      await stripe?.redirectToCheckout({ sessionId: res.id })
     } else {
-      alert("Erreur : ID de session Stripe non reçu.");
+      alert("Erreur : ID de session Stripe non reçu.")
     }
   } catch (e) {
-    console.error('Stripe Checkout error:', e);
-    alert("Une erreur est survenue pendant le paiement.");
+    console.error('Stripe Checkout error:', e)
+    alert("Une erreur est survenue pendant le paiement.")
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 </script>
 
 <template>
@@ -117,7 +123,7 @@ const createCheckout = async () => {
             <UButton
                 size="lg"
                 variant="primary"
-                :disabled="isLoading"
+                :disabled="isLoading || !clientId"
                 @click="createCheckout"
             >
               {{ isLoading ? 'Chargement...' : 'Passer au paiement' }}

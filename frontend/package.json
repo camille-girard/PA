@@ -21,7 +21,7 @@
         "@nuxtjs/sitemap": "^7.3.0",
         "@nuxtjs/tailwindcss": "^6.13.2",
         "@pinia/nuxt": "^0.10.1",
-        "@stripe/stripe-js": "^7.3.1",
+        "@stripe/stripe-js": "^7.4.0",
         "date-fns": "^4.1.0",
         "eslint": "^9.23.0",
         "mapbox-gl": "^2.15.0",
