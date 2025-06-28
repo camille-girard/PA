@@ -37,12 +37,10 @@ class StripeWebhookController extends AbstractController
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
         } catch (\Throwable $e) {
             $logger->error('❌ Stripe Webhook Signature ERROR: ' . $e->getMessage());
-            file_put_contents('var/log/stripe_webhook_error.log', $e->getMessage() . "\n", FILE_APPEND);
             return new Response('Invalid signature', 400);
         }
 
         $logger->info('✅ Stripe Webhook reçu : ' . $event->type);
-        file_put_contents('var/log/stripe_webhook.log', "→ " . $event->type . " à " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
 
         if ($event->type === 'checkout.session.completed') {
             try {
@@ -50,7 +48,6 @@ class StripeWebhookController extends AbstractController
 
                 // Log debug du contenu brut
                 $logger->info('📦 Données session : ' . json_encode($session));
-                file_put_contents('var/log/stripe_webhook.log', json_encode($session) . "\n", FILE_APPEND);
 
                 $clientId        = $session->metadata->client_id        ?? null;
                 $accommodationId = $session->metadata->accommodation_id ?? null;
@@ -70,14 +67,13 @@ class StripeWebhookController extends AbstractController
                             ->setStartDate(new \DateTimeImmutable($startDate))
                             ->setEndDate(new \DateTimeImmutable($endDate))
                             ->setTotalPrice($totalPrice)
-                            ->setStatus(BookingStatus::Accepted)
+                            ->setStatus(BookingStatus::ACCEPTED)
                             ->setCreatedAt(new \DateTimeImmutable());
 
                         $em->persist($booking);
                         $em->flush();
 
                         $logger->info("✅ Réservation enregistrée : ID #{$booking->getId()}");
-                        file_put_contents('var/log/stripe_webhook.log', "✅ Booking créé : ID #{$booking->getId()}\n", FILE_APPEND);
                     } else {
                         $logger->warning("⚠️ Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
                     }
@@ -86,7 +82,6 @@ class StripeWebhookController extends AbstractController
                 }
             } catch (\Throwable $e) {
                 $logger->error('❌ Erreur traitement checkout.session.completed : ' . $e->getMessage());
-                file_put_contents('var/log/stripe_webhook_error.log', $e->getMessage() . "\n", FILE_APPEND);
                 return new Response('Erreur serveur', 500);
             }
         }
