@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import UCard from '~/components/molecules/UCard.vue'
 import UTable from '~/components/organisms/UTable.vue'
@@ -13,17 +13,40 @@ const route = useRoute()
 const id = route.params.id
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: client, pending } = await useAuthFetch(`/api/clients/${id}`, {
+interface Booking {
+  id: number
+  accommodation?: {
+    name?: string
+  }
+  startDate: string
+  endDate: string
+  status: string
+  totalPrice: number
+}
+
+interface Client {
+  id: number
+  firstName?: string
+  lastName?: string
+  email?: string
+  phone?: string
+  createdAt: string
+  isVerified: boolean
+  preferences?: string[]
+  bookings?: Booking[]
+}
+
+const { data: client, pending } = await useAuthFetch<Client>(`/api/clients/${id}`, {
   baseURL: apiUrl,
   transform: (res) => res.client,
 })
 
-const getStatusProps = (status: boolean) => status
-    ? { label: 'Actif', color: 'success' }
-    : { label: 'Inactif', color: 'error' }
+const getStatusProps = (verified: boolean | undefined) => verified
+    ? { label: 'Vérifié', color: 'success' }
+    : { label: 'Non vérifié', color: 'error' }
 
 const bookings = computed(() =>
-    client.value?.bookings?.map((b: any) => ({
+    client.value?.bookings?.map((b: Booking) => ({
       id: b.id,
       accommodation: b.accommodation?.name ?? '—',
       startDate: new Date(b.startDate).toLocaleDateString(),
@@ -33,6 +56,7 @@ const bookings = computed(() =>
     })) ?? []
 )
 </script>
+
 
 <template>
   <div class="space-y-6">
@@ -45,10 +69,10 @@ const bookings = computed(() =>
             {{ client?.firstName }} {{ client?.lastName }}
           </div>
           <UBadge
-              :color="getStatusProps(client?.isVerified).color"
+              :color="getStatusProps(client?.verified).color"
               variant="pill"
           >
-            {{ getStatusProps(client?.isVerified).label }}
+            {{ getStatusProps(client?.verified).label }}
           </UBadge>
         </div>
       </template>

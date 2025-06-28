@@ -12,7 +12,7 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: bookingData, pending, error } = await useAuthFetch('/api/bookings', {
+const { data: bookingData } = await useAuthFetch('/api/bookings', {
   baseURL: apiUrl,
 })
 
