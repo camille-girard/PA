@@ -3,24 +3,37 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
+#[ORM\DiscriminatorMap([
+    'user' => User::class,
+    'client' => Client::class,
+    'owner' => Owner::class,
+    'admin' => Admin::class,
+])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['client:read', 'owner:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['client:read', 'owner:read'])]
     private ?string $email = null;
 
     /**
@@ -36,10 +49,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['client:read', 'owner:read', 'booking:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['client:read', 'owner:read', 'booking:read'])]
     private ?string $lastName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['client:read', 'owner:read'])]
+    private ?string $phone = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
+    #[ORM\Column]
+    #[Groups(['client:read', 'owner:read'])]
+    private ?bool $isVerified = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, SupportTicket>
+     */
+    #[ORM\OneToMany(targetEntity: SupportTicket::class, mappedBy: 'user')]
+    private Collection $supportTickets;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isDeleted = false;
+
+    public function __construct()
+    {
+        $this->supportTickets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -137,6 +183,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastName = $lastName;
 
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SupportTicket>
+     */
+    public function getSupportTickets(): Collection
+    {
+        return $this->supportTickets;
+    }
+
+    public function addSupportTicket(SupportTicket $supportTicket): static
+    {
+        if (!$this->supportTickets->contains($supportTicket)) {
+            $this->supportTickets->add($supportTicket);
+            $supportTicket->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupportTicket(SupportTicket $supportTicket): static
+    {
+        if ($this->supportTickets->removeElement($supportTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($supportTicket->getUser() === $this) {
+                $supportTicket->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function isDeleted(): bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
         return $this;
     }
 }

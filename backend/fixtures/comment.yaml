@@ -1,0 +1,29 @@
+# backend/fixtures/comment.yaml
+App\Entity\Comment:
+  comment_1:
+    content: 'Super séjour, Jean-François nous mets aux petits soins et la maison est incroyable !'
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-2 days"))>'
+    client: '@client_1'
+    accommodation: '@accommodation_1'
+
+  comment_2:
+    content: 'Un séjour parmis les orgres plus qu’agréable. Mes enfants été aux anges. La maison est fidèle au dessin...'
+    rating: 3
+    createdAt: '<(new DateTimeImmutable("-1 week"))>'
+    client: '@client_2'
+    accommodation: '@accommodation_2'
+
+  comment_3:
+    content: 'J’y ai amené mes petits enfants pour les vacances. Endroit douillé bien que les toilettes soient à l’extérieur.'
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-5 days"))>'
+    client: '@client_2'
+    accommodation: '@accommodation_1'
+
+  comment_4:
+    content: 'Grand fan de Shrek, c’est juste incroyable ! Et Jean-François est au top !'
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-3 week"))>'
+    client: '@client_1'
+    accommodation: '@accommodation_2'

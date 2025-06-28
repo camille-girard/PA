@@ -17,7 +17,8 @@ RUN apk add --update --no-cache \
     git \
     openssh \
     rsync \
-    patch
+    patch \
+    gzip
 
 RUN apk add mysql-client && \
     install-php-extensions pdo_mysql \
@@ -45,7 +46,8 @@ RUN apk add --update --no-cache \
     vim \
     nano \
     htop \
-    sudo
+    sudo \
+    fcgi
 
 RUN install-php-extensions xdebug
 

@@ -1,0 +1,11 @@
+App\Entity\Owner:
+  owner_1:
+    email: 'owner@example.com'
+    roles: ['ROLE_OWNER']
+    password: 'password123'
+    first_name: 'RICHARD'
+    last_name: 'PASTIS'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+    notation: '5'
+    bio: 'Passionné de voyages et de découvertes, j‘aime partager des expériences uniques avec mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'

@@ -7,7 +7,7 @@ body,
 #__nuxt {
     height: 100%;
     width: 100%;
-    @apply bg-primary;
+
     font-family: 'Poppins';
 }
 
@@ -18,12 +18,16 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .shadow-xs-skeuomorphic {
-    box-shadow: 0px 0px 0px 1px rgba(10, 13, 18, 0.18) inset, 0px -2px 0px 0px rgba(10, 13, 18, 0.05) inset,
+    box-shadow:
+        0px 0px 0px 1px rgba(10, 13, 18, 0.18) inset,
+        0px -2px 0px 0px rgba(10, 13, 18, 0.05) inset,
         0px 1px 2px 0px rgba(10, 13, 18, 0.05);
 }
 
 .shadow-xs-custom {
-    box-shadow: inset 0 1px #ffffff1f, 0 1px 2px #0a0d120d;
+    box-shadow:
+        inset 0 1px #ffffff1f,
+        0 1px 2px #0a0d120d;
 }
 
 .bg-linear-grad {
@@ -53,7 +57,7 @@ input[type='number']::-webkit-outer-spin-button {
     --brand-300: #f7b27a;
     --brand-400: #f38744;
     --brand-500: #ef6820;
-    --brand-600: #e04f16;
+    --brand-600: #e04f16; /* Primary color for the brand */
     --brand-700: #b93815;
     --brand-800: #932f19;
     --brand-900: #772917;
@@ -175,11 +179,11 @@ input[type='number']::-webkit-outer-spin-button {
     --text-placeholder: var(--gray-500);
     --text-placeholder-subtle: var(--gray-300);
 
-    --text-brand-primary: var(--brand-900);
+    --text-brand-primary: var(--brand-600);
     --text-brand-secondary: var(--brand-700);
     --text-brand-secondary-hover: var(--brand-800);
-    --text-brand-tertiary: var(--brand-600);
-    --text-brand-tertiary-alt: var(--brand-600);
+    --text-brand-tertiary: var(--brand-900);
+    --text-brand-tertiary-alt: var(--brand-900);
 
     --text-error-primary: var(--error-600);
     --text-error-primary-hover: var(--error-700);
@@ -319,6 +323,11 @@ input[type='number']::-webkit-outer-spin-button {
     --featured-icon-light-fg-error: var(--error-600);
     --featured-icon-light-fg-warning: var(--warning-600);
     --featured-icon-light-fg-success: var(--success-600);
+
+    /* Padding X */
+    --container-padding-x: 1rem;
+
+    /* Padding Y */
 }
 
 .dark {
@@ -355,9 +364,9 @@ input[type='number']::-webkit-outer-spin-button {
 
     --bg-overlay: var(--gray-800);
 
-    --bg-brand-primary: var(--brand-500);
+    --bg-brand-primary: var(--brand-600);
     --bg-brand-primary-alt: var(--bg-secondary);
-    --bg-brand-secondary: var(--brand-600);
+    --bg-brand-secondary: var(--brand-700);
     --bg-brand-solid: var(--brand-600);
     --bg-brand-solid-hover: var(--brand-500);
     --bg-brand-section: var(--bg-secondary);
@@ -442,9 +451,9 @@ input[type='number']::-webkit-outer-spin-button {
 
     --fg-brand-primary: var(--brand-500);
     --fg-brand-primary-alt: var(--gray-300);
-    --fg-brand-secondary: var(--brand-500);
-    --fg-brand-secondary-alt: var(--gray-600);
-    --fg-brand-secondary-hover: var(--gray-500);
+    --fg-brand-secondary: var(--brand-600);
+    --fg-brand-secondary-alt: var(--gray-700);
+    --fg-brand-secondary-hover: var(--gray-600);
 
     --fg-error-primary: var(--error-500);
     --fg-error-secondary: var(--error-400);
@@ -491,4 +500,22 @@ input[type='number']::-webkit-outer-spin-button {
     --featured-icon-light-fg-error: var(--error-200);
     --featured-icon-light-fg-warning: var(--warning-200);
     --featured-icon-light-fg-success: var(--success-200);
+}
+
+@media (min-width: 640px) {
+    :root {
+        --container-padding-x: 2rem; /* 32px */
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --container-padding-x: 3rem; /* 48px */
+    }
+}
+
+@media (min-width: 1280px) {
+    :root {
+        --container-padding-x: 6.5rem; /* 104px */
+    }
 }

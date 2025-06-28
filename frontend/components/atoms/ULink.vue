@@ -1,41 +1,39 @@
 <script setup lang="ts">
-interface Props {
-    to: string;
-    variant?: 'primary' | 'secondary';
-    size?: 'sm' | 'md';
-    disabled?: boolean;
-    showExternalIcon?: boolean;
-    className?: string;
-}
+    interface Props {
+        to: string;
+        variant?: 'primary' | 'secondary';
+        size?: 'sm' | 'md';
+        disabled?: boolean;
+        showExternalIcon?: boolean;
+        className?: string;
+    }
 
-const props = withDefaults(defineProps<Props>(), {
-    variant: 'primary',
-    size: 'md',
-    disabled: false,
-    showExternalIcon: true,
-    className: '',
-});
+    const props = withDefaults(defineProps<Props>(), {
+        variant: 'primary',
+        size: 'md',
+        disabled: false,
+        showExternalIcon: true,
+        className: '',
+    });
 
-const _emit = defineEmits(['click']);
+    const _emit = defineEmits(['click']);
 
-const isExternal = computed<boolean>(() => {
-    return props.to.startsWith('http') || props.to.startsWith('mailto:') || props.to.startsWith('tel:');
-});
+    const isExternal = computed<boolean>(() => {
+        return props.to.startsWith('http') || props.to.startsWith('mailto:') || props.to.startsWith('tel:');
+    });
 
-const baseClasses =
-    'flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
+    const baseClasses =
+        'text-body-md flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
 
-const variantClasses = {
-    primary:
-        'text-brand-secondary hover:text-brand-secondary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
-    secondary:
-        'text-tertiary hover:text-tertiary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
-};
+    const variantClasses = {
+        primary: 'hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        secondary: 'text-tertiary hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+    };
 
-const sizeClasses = {
-    sm: 'text-sm',
-    md: 'text-base',
-};
+    const sizeClasses = {
+        sm: 'text-body-sm',
+        md: 'text-body-md',
+    };
 </script>
 
 <template>

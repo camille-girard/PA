@@ -1,6 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-    content: [],
+    content: [
+        './components/**/*.{vue,js,ts}',
+        './layouts/**/*.vue',
+        './pages/**/*.vue',
+        './composable/**/*.{js,ts}',
+        './plugins/**/*.{js,ts}',
+        './app.vue',
+        './nuxt.config.{js,ts}',
+    ],
     darkMode: 'class',
     theme: {
         extend: {
@@ -423,9 +431,91 @@ export default {
             },
             spacing: {
                 4.5: '1.125rem',
-                82: '20.5rem'
+                82: '20.5rem',
             },
         },
     },
-    plugins: [],
+    plugins: [
+        function ({ addComponents }) {
+            addComponents({
+                '.text-h1': {
+                    fontWeight: '700',
+                    lineHeight: '1.2',
+                    fontSize: '2rem', // 32px
+                    '@screen sm': { fontSize: '2.5rem' }, // 40px
+                    '@screen md': { fontSize: '2.75rem' }, // 44px
+                    '@screen lg': { fontSize: '3rem' }, // 48px
+                },
+                '.text-h2': {
+                    fontWeight: '700',
+                    lineHeight: '1.3',
+                    fontSize: '1.5rem', // 24px
+                    '@screen sm': { fontSize: '1.75rem' }, // 28px
+                    '@screen md': { fontSize: '2rem' }, // 32px
+                    '@screen lg': { fontSize: '2.25rem' }, // 36px
+                },
+                '.text-h3': {
+                    fontWeight: '700',
+                    lineHeight: '1.3',
+                    fontSize: '1.25rem',
+                    '@screen sm': { fontSize: '1.5rem' },
+                    '@screen md': { fontSize: '1.75rem' },
+                    '@screen lg': { fontSize: '2rem' }, // 32px
+                },
+                '.text-h4': {
+                    fontWeight: '600',
+                    lineHeight: '1.4',
+                    fontSize: '1rem',
+                    '@screen sm': { fontSize: '1.25rem' },
+                    '@screen md': { fontSize: '1.5rem' },
+                    '@screen lg': { fontSize: '1.75rem' },
+                },
+                '.text-h5': {
+                    fontWeight: '600',
+                    lineHeight: '1.4',
+                    fontSize: '1.125rem', // 18px
+                    '@screen sm': { fontSize: '1.25rem' }, // 20px
+                    '@screen md': { fontSize: '1.375rem' }, // 22px
+                    '@screen lg': { fontSize: '1.5rem' }, // 24px
+                },
+                '.text-h6': {
+                    fontWeight: '600',
+                    lineHeight: '1.4',
+                    fontSize: '1rem', // 16px
+                    '@screen sm': { fontSize: '1.125rem' }, // 18px
+                    '@screen md': { fontSize: '1.25rem' }, // 20px
+                    '@screen lg': { fontSize: '1.375rem' }, // 22px
+                },
+                '.text-body-md': {
+                    fontWeight: '400',
+                    lineHeight: '1.6',
+                    fontSize: '0.9375rem', // 15px
+                    '@screen sm': { fontSize: '1rem' }, // 16px
+                    '@screen md': { fontSize: '1.0625rem' }, // 17px
+                    '@screen lg': { fontSize: '1rem' }, // 16px
+                },
+                '.text-body-sm': {
+                    fontWeight: '400',
+                    lineHeight: '1.5',
+                    fontSize: '0.8125rem', // 13px
+                    '@screen sm': { fontSize: '0.875rem' }, // 14px
+                    '@screen md': { fontSize: '0.875rem' },
+                    '@screen lg': { fontSize: '0.875rem' },
+                },
+                '.text-body-lg': {
+                    fontWeight: '400',
+                    lineHeight: '1.7',
+                    fontSize: '1rem', // 16px
+                    '@screen sm': { fontSize: '1.0625rem' }, // 17px
+                    '@screen md': { fontSize: '1.125rem' }, // 18px
+                    '@screen lg': { fontSize: '1.125rem' }, // 18px
+                },
+                '.px-container': {
+                    paddingLeft: 'var(--container-padding-x)',
+                    paddingRight: 'var(--container-padding-x)',
+                },
+            });
+        },
+
+    ],
 };

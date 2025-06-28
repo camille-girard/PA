@@ -1,108 +1,108 @@
 <script setup lang="ts">
-import AlertCircleIcon from '~/components/atoms/icons/AlertCircleIcon.vue';
-import SaveIcon from '~/components/atoms/icons/SaveIcon.vue';
-import SettingsIcon from '~/components/atoms/icons/SettingsIcon.vue';
-import UserIcon from '~/components/atoms/icons/UserIcon.vue';
-import UCalendar from '~/components/organisms/UCalendar.vue';
-import type { Column } from '~/components/organisms/UTable.vue';
-import type { Toast } from '~/types/toast';
+    import AlertCircleIcon from '~/components/atoms/icons/AlertCircleIcon.vue';
+    import SaveIcon from '~/components/atoms/icons/SaveIcon.vue';
+    import SettingsIcon from '~/components/atoms/icons/SettingsIcon.vue';
+    import UserIcon from '~/components/atoms/icons/UserIcon.vue';
+    import UCalendar from '~/components/organisms/UCalendar.vue';
+    import type { Column } from '~/components/organisms/UTable.vue';
+    import type { Toast } from '~/types/toast';
 
-const authStore = useAuthStore();
+    const authStore = useAuthStore();
 
-type CheckboxIndeterminateProp = boolean | 'indeterminate';
+    type CheckboxIndeterminateProp = boolean | 'indeterminate';
 
-const checkbox = ref<CheckboxIndeterminateProp>('indeterminate');
-const switchValue = ref<boolean>(false);
-const isModalOpen = ref(false);
-const isSecondModalOpen = ref(false);
-const numberValue = ref(0);
-const selectedDate = ref(new Date());
+    const checkbox = ref<CheckboxIndeterminateProp>('indeterminate');
+    const switchValue = ref<boolean>(false);
+    const isModalOpen = ref(false);
+    const isSecondModalOpen = ref(false);
+    const numberValue = ref(0);
+    const selectedDate = ref(new Date());
 
-const toast = useToast();
+    const toast = useToast();
 
-function showSuccessToast() {
-    toast.success('Well done!', 'Operation completed successfully!');
-}
+    function showSuccessToast() {
+        toast.success('Well done!', 'Operation completed successfully!');
+    }
 
-function showErrorToast() {
-    toast.error('Oups !', 'Une erreur est survenue.');
-}
+    function showErrorToast() {
+        toast.error('Oups !', 'Une erreur est survenue.');
+    }
 
-function showWarningToast() {
-    toast.warning('Attention !', 'Tu vas te faire mal si tu tombes du lit');
-}
+    function showWarningToast() {
+        toast.warning('Attention !', 'Tu vas te faire mal si tu tombes du lit');
+    }
 
-function showInfoToast() {
-    toast.info('Petite inforamtion', 'Tu vas devenir riche très bientôt.');
-}
+    function showInfoToast() {
+        toast.info('Petite inforamtion', 'Tu vas devenir riche très bientôt.');
+    }
 
-const toastInfo: Toast = {
-    id: 'idTest',
-    title: 'Title',
-    message: 'message',
-    type: 'info',
-    createdAt: Date.now(),
-};
+    const toastInfo: Toast = {
+        id: 'idTest',
+        title: 'Title',
+        message: 'message',
+        type: 'info',
+        createdAt: Date.now(),
+    };
 
-const toastSuccess: Toast = {
-    id: 'idTest',
-    title: 'Title',
-    message: 'message',
-    type: 'success',
-    createdAt: Date.now(),
-};
+    const toastSuccess: Toast = {
+        id: 'idTest',
+        title: 'Title',
+        message: 'message',
+        type: 'success',
+        createdAt: Date.now(),
+    };
 
-const toastError: Toast = {
-    id: 'idTest',
-    title: 'Title',
-    message: 'message',
-    type: 'error',
-    createdAt: Date.now(),
-};
+    const toastError: Toast = {
+        id: 'idTest',
+        title: 'Title',
+        message: 'message',
+        type: 'error',
+        createdAt: Date.now(),
+    };
 
-const toastWarning: Toast = {
-    id: 'idTest',
-    title: 'Title',
-    message: 'message',
-    type: 'warning',
-    createdAt: Date.now(),
-};
+    const toastWarning: Toast = {
+        id: 'idTest',
+        title: 'Title',
+        message: 'message',
+        type: 'warning',
+        createdAt: Date.now(),
+    };
 
-const columns: Column[] = [
-    { key: 'name', label: 'Name', sortable: true },
-    { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Role' },
-    { key: 'status', label: 'Status' },
-];
+    const columns: Column[] = [
+        { key: 'name', label: 'Name', sortable: true },
+        { key: 'email', label: 'Email' },
+        { key: 'role', label: 'Role' },
+        { key: 'status', label: 'Status' },
+    ];
 
-type User = {
-    avatar: string;
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-};
+    type User = {
+        avatar: string;
+        name: string;
+        email: string;
+        role: string;
+        status: string;
+    };
 
-const users: User[] = [
-    {
-        avatar: '/avatar-test.png',
-        name: 'John Doe',
-        email: 'john@example.com',
-        role: 'Admin',
-        status: 'Active',
-    },
-    {
-        avatar: '/avatar-test.png',
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        role: 'Student',
-        status: 'Disabled',
-    },
-];
+    const users: User[] = [
+        {
+            avatar: '/avatar-test.png',
+            name: 'John Doe',
+            email: 'john@example.com',
+            role: 'Admin',
+            status: 'Active',
+        },
+        {
+            avatar: '/avatar-test.png',
+            name: 'Jane Doe',
+            email: 'jane@example.com',
+            role: 'Student',
+            status: 'Disabled',
+        },
+    ];
 
-function handleRowClick(row: Record<string, unknown>) {
-    alert(`Row clicked: ${row.name}`);
-}
+    function handleRowClick(row: Record<string, unknown>) {
+        alert(`Row clicked: ${row.name}`);
+    }
 </script>
 
 <template>
@@ -429,7 +429,7 @@ function handleRowClick(row: Record<string, unknown>) {
                     <UTable selectable :columns="columns" :data="users" @row-click="handleRowClick">
                         <template #cell-name="{ row }">
                             <div class="flex items-center gap-2">
-                                <img :src="row.avatar as string" class="w-8 h-8 rounded-full" >
+                                <img :src="row.avatar as string" class="w-8 h-8 rounded-full" />
                                 <div>
                                     <p class="text-primary font-medium">{{ row.name }}</p>
                                     <p>@{{ (row.name as string).split(' ')[0].toLowerCase() }}</p>
@@ -447,7 +447,7 @@ function handleRowClick(row: Record<string, unknown>) {
                     <UTable selectable :columns="columns" :data="[]" @row-click="handleRowClick">
                         <template #cell-name="{ row }">
                             <div class="flex items-center gap-2">
-                                <img :src="row.avatar as string" class="w-8 h-8 rounded-full" >
+                                <img :src="row.avatar as string" class="w-8 h-8 rounded-full" />
                                 <div>
                                     <p class="text-primary font-medium">{{ row.name }}</p>
                                     <p>@{{ (row.name as string).split(' ')[0].toLowerCase() }}</p>
