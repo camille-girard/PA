@@ -11,6 +11,7 @@ App\Entity\Client:
       'pool'
     ]
     is_verified: true
+    phone: '+33612345678'
     created_at: '<(new DateTimeImmutable())>'
 
   client_2:
@@ -21,4 +22,5 @@ App\Entity\Client:
     last_name: 'En croute'
     preferences: [ 'pets', 'smoking', 'wheelchair', 'pool', 'wifi' ]
     is_verified: true
+    phone: '+33687654321'
     created_at: '<(new DateTimeImmutable())>'

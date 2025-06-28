@@ -16,6 +16,15 @@ class AccommodationRepository extends ServiceEntityRepository
         parent::__construct($registry, Accommodation::class);
     }
 
+    public function findByOwnerId(int $ownerId): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.owner = :ownerId')
+            ->setParameter('ownerId', $ownerId)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @throws \Exception
      */

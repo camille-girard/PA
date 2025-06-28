@@ -1,17 +1,3 @@
-<template>
-    <div class="swagger-container">
-        <div class="swagger-header">
-            <h1>API Documentation</h1>
-            <div class="theme-toggle">
-                <button class="theme-button" @click="toggleTheme">
-                    {{ isDarkMode ? '☀️' : '🌙' }}
-                </button>
-            </div>
-        </div>
-        <div id="swagger-ui"></div>
-    </div>
-</template>
-
 <script setup lang="ts">
     import { onMounted, ref, watch } from 'vue';
     import SwaggerUI from 'swagger-ui-dist/swagger-ui-bundle.js';
@@ -69,7 +55,6 @@
         initSwaggerUI();
     });
 
-    // Surveiller les changements d'URL pour actualiser l'UI
     watch(
         () => props.url,
         (newUrl) => {
@@ -79,7 +64,6 @@
         }
     );
 
-    // Surveiller les changements de thème
     watch(
         () => colorMode.value,
         () => {
@@ -88,70 +72,8 @@
         }
     );
 </script>
-
-<style>
-    .swagger-container {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        width: 100%;
-    }
-
-    .swagger-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .dark .swagger-header {
-        background-color: #343a40;
-        color: white;
-        border-bottom: 1px solid #495057;
-    }
-
-    .theme-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 1.25rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-    }
-
-    #swagger-ui {
-        height: 100%;
-        flex-grow: 1;
-        overflow: auto;
-    }
-
-    /* Styles pour le mode sombre */
-    .swagger-ui.swagger-dark {
-        filter: invert(88%) hue-rotate(180deg);
-    }
-
-    .swagger-ui.swagger-dark img {
-        filter: invert(100%) hue-rotate(180deg);
-    }
-
-    /* Personnalisation des boutons d'opération */
-    .swagger-ui .opblock-summary-method {
-        border-radius: 4px;
-        font-weight: 600;
-    }
-
-    /* Amélioration de la lisibilité des titres */
-    .swagger-ui .opblock-tag {
-        font-size: 1.2rem !important;
-        font-weight: 600 !important;
-    }
-
-    /* Arrondir les blocs */
-    .swagger-ui .opblock {
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-</style>
+<template>
+    <div class="swagger-container">
+        <div id="swagger-ui"></div>
+    </div>
+</template>

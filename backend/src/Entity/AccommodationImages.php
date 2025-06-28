@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AccommodationImagesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationImagesRepository::class)]
 class AccommodationImages
@@ -11,11 +12,9 @@ class AccommodationImages
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    /**
-     * @phpstan-ignore-next-line
-     */
     private ?int $id = null;
 
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
@@ -23,6 +22,7 @@ class AccommodationImages
     private ?bool $isMain = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     private ?Accommodation $accommodation = null;
 
     public function getId(): ?int

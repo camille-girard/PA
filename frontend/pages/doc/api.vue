@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-    const apiDocUrl = 'http://localhost/api/doc.json';
+    const apiDocUrl = 'http://localhost:8085/api/doc.json';
 </script>
 
 <style scoped>

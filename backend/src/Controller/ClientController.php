@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/clients', name: 'api_clients_')]
 #[OA\Tag(name: 'Clients')]
@@ -27,13 +28,13 @@ final class ClientController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
-        $clients = $this->clientRepository->findAll();
+        $clients = $this->clientRepository->findBy(['isDeleted' => false]);
 
-        return $this->json([
-            'clients' => $clients,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($clients, 'json', ['groups' => 'client:read']);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
@@ -179,9 +180,9 @@ final class ClientController extends AbstractController
             return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($client);
+        $client->setIsDeleted(true);
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Client supprimé avec succès'], Response::HTTP_OK);
+        return $this->json(['message' => 'Client archivé avec succès'], Response::HTTP_OK);
     }
 }

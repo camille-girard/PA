@@ -7,4 +7,5 @@ App\Entity\Owner:
     last_name: 'PASTIS'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
+    notation: '5'
     bio: 'Passionné de voyages et de découvertes, j‘aime partager des expériences uniques avec mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'

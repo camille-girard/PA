@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
 class Accommodation
@@ -14,68 +15,113 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['accommodation:read', 'booking:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $address = null;
 
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $country = null;
+
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $type = null;
+
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(nullable: true)]
+    private ?int $bedrooms = null;
+
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\Column(nullable: true)]
+    private ?int $bathrooms = null;
+
     #[ORM\Column]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?int $capacity = null;
 
     #[ORM\Column]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?float $price = null;
 
     /**
      * @var array<string>
      */
     #[ORM\Column(type: Types::ARRAY)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private array $advantage = [];
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $practicalInformations = null;
 
     #[ORM\Column]
+    #[Groups(['owner:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'accommodations')]
+    #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?Owner $owner = null;
 
-    #[ORM\ManyToOne(inversedBy: 'accommodations')]
+    #[ORM\ManyToOne(inversedBy: 'accommodation')]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?Theme $theme = null;
 
-    /**
-     * @var Collection<int, AccommodationImages>
-     */
-    #[ORM\OneToMany(targetEntity: AccommodationImages::class, mappedBy: 'accommodation')]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private Collection $images;
 
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'accommodation', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Booking::class, orphanRemoval: true)]
+    #[Groups(['owner:read'])]
     private Collection $bookings;
 
     /**
      * @var Collection<int, Comment>
      */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'accommodation', orphanRemoval: true)]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
+    #[Groups(['booking:read', 'owner:read', 'accommodation:read'])]
     #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
+    #[Groups(['booking:read', 'owner:read', 'accommodation:read'])]
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 1])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    private ?int $minStay = 1;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 7])]
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    private ?int $maxStay = 7;
 
     public function __construct()
     {
@@ -125,6 +171,78 @@ class Accommodation
         return $this;
     }
 
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getBedrooms(): ?int
+    {
+        return $this->bedrooms;
+    }
+
+    public function setBedrooms(?int $bedrooms): static
+    {
+        $this->bedrooms = $bedrooms;
+
+        return $this;
+    }
+
+    public function getBathrooms(): ?int
+    {
+        return $this->bathrooms;
+    }
+
+    public function setBathrooms(?int $bathrooms): static
+    {
+        $this->bathrooms = $bathrooms;
+
+        return $this;
+    }
+
     public function getCapacity(): ?int
     {
         return $this->capacity;
@@ -149,17 +267,11 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return array<string>
-     */
     public function getAdvantage(): array
     {
         return $this->advantage;
     }
 
-    /**
-     * @param array<string> $advantage
-     */
     public function setAdvantage(array $advantage): static
     {
         $this->advantage = $advantage;
@@ -215,9 +327,7 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, AccommodationImages>
-     */
+    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     public function getImages(): Collection
     {
         return $this->images;
@@ -226,7 +336,7 @@ class Accommodation
     public function addImage(AccommodationImages $image): static
     {
         if (!$this->images->contains($image)) {
-            $this->images->add($image);
+            $this->images[] = $image;
             $image->setAccommodation($this);
         }
 
@@ -244,9 +354,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Booking>
-     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -255,7 +362,7 @@ class Accommodation
     public function addBooking(Booking $booking): static
     {
         if (!$this->bookings->contains($booking)) {
-            $this->bookings->add($booking);
+            $this->bookings[] = $booking;
             $booking->setAccommodation($this);
         }
 
@@ -273,9 +380,6 @@ class Accommodation
         return $this;
     }
 
-    /**
-     * @return Collection<int, Comment>
-     */
     public function getComments(): Collection
     {
         return $this->comments;
@@ -284,7 +388,7 @@ class Accommodation
     public function addComment(Comment $comment): static
     {
         if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
+            $this->comments[] = $comment;
             $comment->setAccommodation($this);
         }
 
@@ -322,6 +426,30 @@ class Accommodation
     public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getMinStay(): ?int
+    {
+        return $this->minStay;
+    }
+
+    public function setMinStay(?int $minStay): static
+    {
+        $this->minStay = $minStay;
+
+        return $this;
+    }
+
+    public function getMaxStay(): ?int
+    {
+        return $this->maxStay;
+    }
+
+    public function setMaxStay(?int $maxStay): static
+    {
+        $this->maxStay = $maxStay;
 
         return $this;
     }

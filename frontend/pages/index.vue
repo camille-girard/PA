@@ -10,6 +10,7 @@
     onMounted(async () => {
         const { $api } = useNuxtApp();
         const response = await useAuthFetch<Theme>($api('/api/themes/'));
+
         trending.value = response.data.value.themes.map((theme) => ({
             title: theme.name,
             image: theme.image,
@@ -36,7 +37,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">Les tendances du moment</h2>
                 </div>
-                <RentalCards :items="trending" />
+                <RentalCards :items="trending" link-prefix="thematiques" />
                 <div class="mt-10 text-center">
                     <NuxtLink to="/tendances">
                         <UButton class="mx-auto">Voir plus</UButton>
