@@ -14,7 +14,7 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: clientData, pending, error } = await useAuthFetch('/api/clients', {
+const { data: clientData} = await useAuthFetch('/api/clients', {
   baseURL: apiUrl,
 })
 
@@ -25,7 +25,7 @@ const columns = [
   { key: 'phone', label: 'Téléphone' },
   { key: 'email', label: 'Email' },
   { key: 'bookingCount', label: 'Réservations' },
-  { key: 'status', label: 'Status' },
+  { key: 'status', label: 'Vérification' },
   { key: 'actions', label: '' }
 ]
 
@@ -36,20 +36,17 @@ const clientsData = computed(() =>
       phone: client.phone || 'Non renseigné',
       email: client.email,
       bookingCount: client.bookingCount ?? 0,
-      status: client.isVerified ? 'active' : 'inactive',
+      status: client.isVerified ? 'verified' : 'unverified',
       _original: client,
     }))
 )
 
 function getStatusProps(status: string) {
   switch (status.toLowerCase()) {
-    case 'active':
-      return { label: 'Active', color: 'success' }
-    case 'inactive':
-      return { label: 'Inactive', color: 'error' }
-    case 'pending':
-    case 'en attente':
-      return { label: 'En attente', color: 'warning' }
+    case 'verified':
+      return { label: 'Vérifié', color: 'success' }
+    case 'unverified':
+      return { label: 'Non vérifié', color: 'error' }
     default:
       return { label: status, color: 'brand' }
   }
@@ -76,14 +73,16 @@ async function deleteClient(id: string) {
     await refreshClients()
 
     successMsg.value = 'Client supprimé avec succès.'
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.'
-    console.error(error)
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data) {
+      errorMsg.value = (error.data as { message: string }).message;
+    } else {
+      errorMsg.value = 'Erreur lors de la suppression.';
+    }
+    console.error(error);
   }
 }
-
 </script>
-
 
 <template>
   <div class="space-y-6">
@@ -93,14 +92,12 @@ async function deleteClient(id: string) {
     <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
 
     <UTable :columns="columns" :data="clientsData">
-      <!-- status -->
       <template #cell-status="{ value }">
         <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-fit">
           {{ getStatusProps(value).label }}
         </UBadge>
       </template>
 
-      <!-- actions -->
       <template #cell-actions="{ row }">
         <div class="flex items-center gap-4">
           <NuxtLink
@@ -127,8 +124,6 @@ async function deleteClient(id: string) {
               </button>
             </template>
           </ConfirmPopover>
-
-
         </div>
       </template>
     </UTable>

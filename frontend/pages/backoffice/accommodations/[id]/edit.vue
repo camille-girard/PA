@@ -127,7 +127,7 @@ async function save() {
 
     success.value = true
     await refresh()
-  } catch (error) {
+  } catch (error: any) {
     errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
   } finally {
     saving.value = false
