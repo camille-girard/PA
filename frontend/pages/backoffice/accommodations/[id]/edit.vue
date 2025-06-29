@@ -35,6 +35,7 @@ interface Accommodation {
 
 definePageMeta({
   layout: 'backoffice',
+  middleware: 'admin',
 })
 
 const route = useRoute()

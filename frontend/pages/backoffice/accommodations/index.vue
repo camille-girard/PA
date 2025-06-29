@@ -12,6 +12,7 @@ import UBadge from '~/components/atoms/UBadge.vue'
 
 definePageMeta({
   layout: 'backoffice',
+  middleware: 'admin',
 })
 
 const { public: { apiUrl } } = useRuntimeConfig()

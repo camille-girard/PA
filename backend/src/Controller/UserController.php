@@ -24,6 +24,7 @@ final class UserController extends AbstractController
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
             'ignored_attributes' => ['password', 'userIdentifier'],
+            'groups' => ['me:read']
         ]);
 
         return JsonResponse::fromJsonString($userSerialized);

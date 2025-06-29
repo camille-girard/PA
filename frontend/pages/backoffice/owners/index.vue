@@ -13,7 +13,10 @@
   import { useAuthFetch } from '~/composables/useAuthFetch'
 
 
-  definePageMeta({ layout: 'backoffice' })
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
   const router = useRouter()
   const { public: { apiUrl } } = useRuntimeConfig()
