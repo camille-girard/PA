@@ -2,6 +2,7 @@
     interface TrendingItem {
         title: string;
         image: string;
+        price?: number;
     }
 
     const _props = withDefaults(
@@ -24,7 +25,11 @@
         >
             <img :src="item.image" :alt="item.title" class="w-full h-56 object-cover" />
             <div class="px-4 py-3">
-                <p class="text-h6">{{ item.title }}</p>
+                <p class="text-h6 font-semibold text-gray-900 mb-1">{{ item.title }}</p>
+                <p v-if="typeof item.price === 'number'" class="text-orange-600 font-bold text-base">
+                    {{ item.price.toFixed(2) }} €
+                    <span class="text-sm text-gray-500 font-medium">/ nuit</span>
+                </p>
             </div>
         </NuxtLink>
     </div>

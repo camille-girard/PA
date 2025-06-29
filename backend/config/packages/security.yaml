@@ -37,6 +37,7 @@ security:
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/themes, roles: PUBLIC_ACCESS }
+        - { path: ^/api/bookings/me, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/bookings, roles: PUBLIC_ACCESS }
         - { path: ^/api/owners, roles: PUBLIC_ACCESS }
         - { path: ^/api/messages, roles: PUBLIC_ACCESS }
@@ -46,8 +47,11 @@ security:
         - { path: ^/api/clients, roles: PUBLIC_ACCESS }
         - { path: ^/api/health, roles: PUBLIC_ACCESS }
         - { path: ^/api/search, roles: PUBLIC_ACCESS }
+        - { path: ^/api/checkout/create-session, roles: PUBLIC_ACCESS }
+        - { path: ^/api/stripe/webhook, roles: PUBLIC_ACCESS }
         - { path: ^/api/tickets, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
 
 when@test:
     security:
