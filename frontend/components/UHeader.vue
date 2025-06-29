@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 
 const authStore = useAuthStore()
 const isMenuOpen = ref(false)
 const isProfileMenuOpen = ref(false)
+
+const canViewAccommodation = computed(() => {
+  if (!authStore.isAuthenticated || !authStore.user?.roles) {
+    return false
+  }
+
+  return authStore.user.roles.some(role =>
+      role === 'ROLE_OWNER' || role === 'ROLE_ADMIN'
+  )
+})
 
 const toggleProfileMenu = () => {
   isProfileMenuOpen.value = !isProfileMenuOpen.value
@@ -49,8 +59,19 @@ const closeProfileMenu = () => {
               <ULink to="/booking" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                 Mes Réservations
               </ULink>
-              <ULink to="/my-accommodation" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+              <ULink
+                  v-if="canViewAccommodation"
+                  to="/my-accommodation"
+                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
                 Mon Hébergement
+              </ULink>
+              <ULink
+                  v-if="!canViewAccommodation"
+                  to="/owner-request"
+                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Devenir propriétaire
               </ULink>
               <ULink
                   v-if="authStore.user?.roles?.includes('ROLE_OWNER')"
@@ -87,10 +108,18 @@ const closeProfileMenu = () => {
             Mes Réservations
           </ULink>
           <ULink
+              v-if="canViewAccommodation"
               to="/my-accommodation"
               class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
           >
             Mon Hébergement
+          </ULink>
+          <ULink
+              v-if="!canViewAccommodation"
+              to="/owner-request"
+              class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          >
+            Devenir propriétaire
           </ULink>
           <ULink
               v-if="authStore.user?.roles?.includes('ROLE_OWNER')"

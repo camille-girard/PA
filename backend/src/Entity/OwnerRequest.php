@@ -24,10 +24,9 @@ class OwnerRequest
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(options: ['default' => false])] // Valeur par défaut en DB
-    private ?bool $reviewed = false; // Valeur par défaut en PHP
+    #[ORM\Column(options: ['default' => false])]
+    private ?bool $reviewed = false;
 
-    // Constructeur pour initialiser les valeurs
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
