@@ -2,14 +2,33 @@
     import RentalCards from '~/components/RentalCards.vue';
     import PersonalInfoCard from '~/components/PersonalInfoCard.vue';
 
-    const rental = [
-        { title: 'Friends', image: '/friends.png' },
-        { title: 'Star Wars', image: '/StarWars.png' },
-        { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
-    ];
-
     const authStore = useAuthStore();
+    const recentlyViewedStore = useRecentlyViewedStore();
     const user = authStore.user;
+
+    const recentlyViewed = computed(() => {
+        return recentlyViewedStore.items.map((item) => ({
+            title: item.name,
+            image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
+            id: item.id,
+            slug: item.id.toString(),
+            price: item.price,
+        }));
+    });
+    console.log(user.accommodations);
+    const userAccommodations = computed(() => {
+        if (!user?.accommodations || !Array.isArray(user.accommodations)) {
+            return [];
+        }
+        return user.accommodations.map((item) => ({
+            title: item.name,
+            image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
+            id: item.id,
+            slug: item.id.toString(),
+            price: item.price,
+        }));
+    });
+    console.log(userAccommodations);
 </script>
 
 <template>
@@ -26,11 +45,11 @@
             </section>
             <section id="client-rentals" class="mb-20 mt-20">
                 <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
-                <RentalCards :items="rental" />
+                <RentalCards :items="recentlyViewed" />
             </section>
-            <section id="owner-rentals" class="mb-20">
+            <section v-if="user?.accommodationCount && user.accommodationCount > 0" id="owner-rentals" class="mb-20">
                 <h2 class="text-center text-h2 mb-10">Mes biens publiés</h2>
-                <RentalCards :items="rental" />
+                <RentalCards :items="userAccommodations" />
             </section>
         </div>
         <UFooter />

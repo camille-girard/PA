@@ -24,35 +24,37 @@ class StripeWebhookController extends AbstractController
         AccommodationRepository $accommodationRepo,
         LoggerInterface $logger,
     ): Response {
-        $payload   = $request->getContent();
+        $payload = $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
-        $secret    = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
+        $secret = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
 
         if (!$secret) {
             $logger->error('STRIPE_WEBHOOK_SECRET manquant dans .env');
+
             return new Response('Configuration error', 500);
         }
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
         } catch (\Throwable $e) {
-            $logger->error('Stripe Webhook Signature ERROR: ' . $e->getMessage());
+            $logger->error('Stripe Webhook Signature ERROR: '.$e->getMessage());
+
             return new Response('Invalid signature', 400);
         }
 
-        $logger->info('Stripe Webhook reçu : ' . $event->type);
+        $logger->info('Stripe Webhook reçu : '.$event->type);
 
-        if ($event->type === 'checkout.session.completed') {
+        if ('checkout.session.completed' === $event->type) {
             try {
                 $session = $event->data->object;
 
-                $logger->info('📦 Données session : ' . json_encode($session));
+                $logger->info('📦 Données session : '.json_encode($session));
 
-                $clientId        = $session->metadata->client_id        ?? null;
+                $clientId = $session->metadata->client_id ?? null;
                 $accommodationId = $session->metadata->accommodation_id ?? null;
-                $startDate       = $session->metadata->start_date       ?? null;
-                $endDate         = $session->metadata->end_date         ?? null;
-                $totalPrice      = (float) ($session->metadata->total_price ?? 0);
+                $startDate = $session->metadata->start_date ?? null;
+                $endDate = $session->metadata->end_date ?? null;
+                $totalPrice = (float) ($session->metadata->total_price ?? 0);
 
                 if ($clientId && $accommodationId && $startDate && $endDate) {
                     $client = $clientRepo->find($clientId);
@@ -77,10 +79,11 @@ class StripeWebhookController extends AbstractController
                         $logger->warning("Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
                     }
                 } else {
-                    $logger->warning("Données metadata manquantes dans la session.");
+                    $logger->warning('Données metadata manquantes dans la session.');
                 }
             } catch (\Throwable $e) {
-                $logger->error('Erreur traitement checkout.session.completed : ' . $e->getMessage());
+                $logger->error('Erreur traitement checkout.session.completed : '.$e->getMessage());
+
                 return new Response('Erreur serveur', 500);
             }
         }

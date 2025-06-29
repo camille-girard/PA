@@ -62,7 +62,6 @@ final class SearchController extends AbstractController
             return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Validation des dates
         if (isset($data['arrivalDate']) && isset($data['departureDate'])) {
             $arrivalDate = new \DateTime($data['arrivalDate']);
             $departureDate = new \DateTime($data['departureDate']);

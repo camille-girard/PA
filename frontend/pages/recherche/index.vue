@@ -20,7 +20,6 @@
     });
 
     const items = accommodationsForDisplay;
-    console.log('Items for display:', items);
 </script>
 
 <template>

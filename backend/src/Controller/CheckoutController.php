@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,12 +17,12 @@ class CheckoutController extends AbstractController
     {
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
-        $data            = json_decode($request->getContent(), true);
-        $price           = (float) $data['totalPrice'];      // euros
-        $clientId        = (int)   $data['clientId'];
-        $accommodationId = (int)   $data['accommodationId'];
-        $startDate       = $data['startDate'];
-        $endDate         = $data['endDate'];
+        $data = json_decode($request->getContent(), true);
+        $price = (float) $data['totalPrice'];      // euros
+        $clientId = (int) $data['clientId'];
+        $accommodationId = (int) $data['accommodationId'];
+        $startDate = $data['startDate'];
+        $endDate = $data['endDate'];
 
         $baseUrl = $_ENV['FRONT_BASE_URL'] ?? 'http://localhost:8085';
 
@@ -30,21 +30,21 @@ class CheckoutController extends AbstractController
             'payment_method_types' => ['card'],
             'line_items' => [[
                 'price_data' => [
-                    'currency'     => 'eur',
-                    'product_data' => [ 'name' => 'Réservation PopnBed' ],
-                    'unit_amount'  => (int) round($price * 100), // centimes
+                    'currency' => 'eur',
+                    'product_data' => ['name' => 'Réservation PopnBed'],
+                    'unit_amount' => (int) round($price * 100), // centimes
                 ],
                 'quantity' => 1,
             ]],
-            'mode'        => 'payment',
+            'mode' => 'payment',
             'success_url' => $baseUrl.'/booking/success?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url'  => $baseUrl.'/booking/cancel',
-            'metadata'    => [
-                'client_id'        => $clientId,
+            'cancel_url' => $baseUrl.'/booking/cancel',
+            'metadata' => [
+                'client_id' => $clientId,
                 'accommodation_id' => $accommodationId,
-                'start_date'       => $startDate,
-                'end_date'         => $endDate,
-                'total_price'      => $price,
+                'start_date' => $startDate,
+                'end_date' => $endDate,
+                'total_price' => $price,
             ],
         ]);
 

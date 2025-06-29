@@ -2,9 +2,9 @@
 import { ref, computed } from 'vue'
 import { useAuthStore } from '~/stores/auth'
 
-const authStore = useAuthStore()
-const isMenuOpen = ref(false)
-const isProfileMenuOpen = ref(false)
+const authStore = useAuthStore();
+const isMenuOpen = ref(false);
+const isProfileMenuOpen = ref(false);
 
 const canViewAccommodation = computed(() => {
   if (!authStore.isAuthenticated || !authStore.user?.roles) {
@@ -20,9 +20,10 @@ const toggleProfileMenu = () => {
   isProfileMenuOpen.value = !isProfileMenuOpen.value
 }
 
-const closeProfileMenu = () => {
-  isProfileMenuOpen.value = false
-}
+
+    const closeProfileMenu = () => {
+        isProfileMenuOpen.value = false;
+    };
 </script>
 
 <template>
@@ -83,20 +84,24 @@ const closeProfileMenu = () => {
               <div class="px-2 pt-2">
                 <LogoutButton variant="transparent" />
               </div>
+
             </div>
-          </transition>
+            <button class="md:hidden" @click="isMenuOpen = !isMenuOpen">
+                <svg
+                    class="w-6 h-6 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
         </div>
-      </div>
-      <button class="md:hidden" @click="isMenuOpen = !isMenuOpen">
-        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-    </div>
-    <transition name="fade">
-      <div v-if="isMenuOpen" class="md:hidden mt-4 px-4 space-y-4 pt-6">
-        <ULink to="/thematiques" class="block text-gray-700 font-medium">Thématiques</ULink>
-        <ULink to="/explorer" class="block text-gray-700 font-medium">Explorer</ULink>
+        <transition name="fade">
+            <div v-if="isMenuOpen" class="md:hidden mt-4 px-4 space-y-4 pt-6">
+                <ULink to="/thematiques" class="block text-gray-700 font-medium">Thématiques</ULink>
+                <ULink to="/explorer" class="block text-gray-700 font-medium">Explorer</ULink>
 
         <template v-if="authStore.isAuthenticated">
           <ULink to="/profile" class="block text-gray-700 font-medium">Mon Profil</ULink>
@@ -139,3 +144,4 @@ const closeProfileMenu = () => {
     </transition>
   </header>
 </template>
+

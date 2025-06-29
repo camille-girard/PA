@@ -38,8 +38,6 @@ export default defineNuxtConfig({
         },
     },
 
-
-
     build: {
         transpile: ['swagger-ui-dist'],
     },
