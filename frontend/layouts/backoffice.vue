@@ -1,6 +1,28 @@
 <script setup lang="ts">
-    const authStore = useAuthStore();
+const authStore = useAuthStore();
+const user = computed(() => authStore.user);
+
+const router = useRouter();
+
+const logout = async () => {
+  await authStore.logout();
+  router.push('/login');
+};
+
+const goToProfile = () => {
+  router.push('/backoffice/profile');
+};
+
+const formattedRole = computed(() => {
+  if (!user.value?.roles?.length) return 'User';
+  // Show first role nicely
+  return user.value.roles[0]
+      .replace('ROLE_', '')
+      .toLowerCase()
+      .replace(/^\w/, c => c.toUpperCase());
+});
 </script>
+
 
 <template>
   <div class="flex min-h-screen bg-gray-25  text-gray-800">
@@ -83,13 +105,34 @@
       </div>
 
       <!-- Footer -->
-      <div class="px-10 py-20 flex items-center gap-3">
-        <img src="/Patrick.jpg" alt="Avatar" class="w-10 h-10 rounded-full object-cover" />
-        <div class="text-sm">
-          <div class="font-semibold">caty</div>
-          <div class="text-xs text-gray-500">Admin</div>
+      <div class="px-7 py-6 border-t flex flex-col gap-3">
+        <!-- Profile Link -->
+        <div
+            class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg"
+            @click="goToProfile"
+        >
+          <img
+              :src="user?.avatar || '/default-avatar.jpg'"
+              alt="Avatar"
+              class="w-10 h-10 rounded-full object-cover"
+          />
+          <div class="flex-1 text-sm">
+            <div class="font-semibold">{{ user?.firstName }} {{ user?.lastName }}</div>
+            <div class="text-xs text-gray-500">{{ formattedRole }}</div>
+          </div>
         </div>
+
+        <!-- Logout Link -->
+        <button
+            @click="logout"
+            class="flex items-center px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0 w-full text-left"
+        >
+          <LogoutIcon class="w-7 h-7 mr-3" />
+          Déconnexion
+        </button>
       </div>
+
+
     </aside>
 
     <!-- Main Content Area -->

@@ -7,3 +7,4 @@ App\Entity\Admin:
     last_name: 'Doe'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
+    avatar: 'https://picsum.photos/200/300'

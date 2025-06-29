@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import UTable from '~/components/organisms/UTable.vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
@@ -13,12 +14,8 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: bookingData } = await useAuthFetch('/api/bookings', {
-  baseURL: apiUrl,
-})
-
-const bookings = computed(() => bookingData.value || [])
-
+const bookingData = ref<any[]>([])
+const pending = ref(false)
 const successMsg = ref('')
 const errorMsg = ref('')
 
@@ -34,6 +31,8 @@ const columns = [
   { key: 'actions', label: '' },
 ]
 
+const bookings = computed(() => bookingData.value || [])
+
 const bookingsData = computed(() =>
     bookings.value.map(b => ({
       id: b.id,
@@ -44,7 +43,7 @@ const bookingsData = computed(() =>
       startDate: new Date(b.startDate).toLocaleDateString(),
       endDate: new Date(b.endDate).toLocaleDateString(),
       totalPrice: `${b.totalPrice.toFixed(2)} €`,
-      status: b.status.toLowerCase(),
+      status: b.status?.toLowerCase() ?? '',
     }))
 )
 
@@ -57,15 +56,28 @@ function getStatusProps(status: string) {
   }
 }
 
+async function loadBookings() {
+  pending.value = true
+  errorMsg.value = ''
+  try {
+    const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl })
+    bookingData.value = data.value || []
+  } catch (error: any) {
+    errorMsg.value = error?.data?.message || 'Erreur lors du chargement des réservations.'
+    console.error(error)
+  } finally {
+    pending.value = false
+  }
+}
+
 async function refreshBookings() {
-  const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl })
-  bookingData.value = data.value
+  await loadBookings()
 }
 
 async function deleteBooking(id: number) {
   successMsg.value = ''
   errorMsg.value = ''
-
+  pending.value = true
   try {
     await $fetch(`/api/bookings/${id}`, {
       method: 'DELETE',
@@ -76,47 +88,52 @@ async function deleteBooking(id: number) {
   } catch (error: any) {
     errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.'
     console.error(error)
+  } finally {
+    pending.value = false
   }
 }
-</script>
 
+onMounted(() => {
+  loadBookings()
+})
+</script>
 
 <template>
   <div class="space-y-6">
     <p class="text-2xl font-semibold">Réservations</p>
 
-    <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-    <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
+    <div v-if="pending" class="text-gray-600">Chargement…</div>
 
-    <div class="w-full overflow-x-auto">
-      <div class="min-w-[800px]">
-        <UTable :columns="columns" :data="bookingsData">
-          <template #cell-status="{ value }">
-            <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-max">
-              {{ getStatusProps(value).label }}
-            </UBadge>
-          </template>
+    <div v-else>
+      <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
+      <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
 
-          <template #cell-actions="{ row }">
-            <div class="flex items-center gap-4">
+      <div class="w-full overflow-x-auto">
+        <div class="min-w-[800px]">
+          <UTable :columns="columns" :data="bookingsData">
+            <template #cell-status="{ value }">
+              <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-max">
+                {{ getStatusProps(value).label }}
+              </UBadge>
+            </template>
 
-              <ConfirmPopover
-                  :itemName="`la réservation de ${row.client}`"
-                  @confirm="deleteBooking(row.id)"
-              >
-                <template #trigger>
-                  <button class="text-red-500 hover:text-red-700">
-                    <TrashIcon class="w-6 h-6" />
-                  </button>
-                </template>
-              </ConfirmPopover>
-            </div>
-          </template>
-        </UTable>
+            <template #cell-actions="{ row }">
+              <div class="flex items-center gap-4">
+                <ConfirmPopover
+                    :itemName="`la réservation de ${row.client}`"
+                    @confirm="deleteBooking(row.id)"
+                >
+                  <template #trigger>
+                    <button class="text-red-500 hover:text-red-700">
+                      <TrashIcon class="w-6 h-6" />
+                    </button>
+                  </template>
+                </ConfirmPopover>
+              </div>
+            </template>
+          </UTable>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-
-

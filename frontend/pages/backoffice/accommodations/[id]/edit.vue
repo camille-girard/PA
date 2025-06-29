@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, reactive, watch, computed, onMounted } from 'vue'
 import Input from '~/components/atoms/UInput.vue'
 import UInputNumber from '~/components/atoms/UInputNumber.vue'
 import Textarea from '~/components/atoms/UTextarea.vue'
@@ -42,14 +42,15 @@ const route = useRoute()
 const id = route.params.id as string
 const { public: { apiUrl } } = useRuntimeConfig()
 
+const pending = ref(false)
+const saving = ref(false)
+const success = ref(false)
+const errorMsg = ref('')
+
+const themes = ref<Theme[]>([])
 const selectedThemeId = ref<number | null>(null)
 
-const { data: themes } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', { baseURL: apiUrl })
-const themeList = computed(() => themes.value?.themes ?? [])
-
-const { data: accommodation, refresh, pending } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
-  baseURL: apiUrl,
-})
+const accommodation = ref<Accommodation | null>(null)
 
 const form = reactive({
   name: '',
@@ -69,38 +70,72 @@ const form = reactive({
   longitude: '',
 })
 
-watch(accommodation, (newAccommodation) => {
-  if (newAccommodation) {
-    form.name = newAccommodation.name
-    form.description = newAccommodation.description ?? ''
-    form.address = newAccommodation.address
-    form.city = newAccommodation.city ?? ''
-    form.postalCode = newAccommodation.postalCode ?? ''
-    form.country = newAccommodation.country ?? ''
-    form.type = newAccommodation.type ?? ''
-    form.price = newAccommodation.price
-    form.capacity = newAccommodation.capacity
-    form.bedrooms = newAccommodation.bedrooms ?? 0
-    form.bathrooms = newAccommodation.bathrooms ?? 0
-    form.practicalInformations = newAccommodation.practicalInformations ?? ''
-    form.advantage = newAccommodation.advantage?.join('\n') ?? ''
-    form.latitude = newAccommodation.latitude?.toString() ?? ''
-    form.longitude = newAccommodation.longitude?.toString() ?? ''
-    selectedThemeId.value = newAccommodation.themeId ?? null
+async function loadThemes() {
+  try {
+    const { data, error } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', {
+      baseURL: apiUrl,
+    })
+    if (error.value) {
+      throw error.value
+    }
+    themes.value = data.value?.themes ?? []
+  } catch (err: any) {
+    console.error('Erreur chargement des thèmes:', err)
   }
-}, { immediate: true })
+}
 
-const saving = ref(false)
-const success = ref(false)
-const errorMsg = ref('')
+const themeList = computed(() => themes.value)
 
+async function loadAccommodation() {
+  pending.value = true
+  errorMsg.value = ''
+  try {
+    const { data, error } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
+      baseURL: apiUrl,
+    })
+    if (error.value) {
+      throw error.value
+    }
+
+    accommodation.value = data.value ?? null
+    if (accommodation.value) {
+      const acc = accommodation.value
+      form.name = acc.name
+      form.description = acc.description ?? ''
+      form.address = acc.address
+      form.city = acc.city ?? ''
+      form.postalCode = acc.postalCode ?? ''
+      form.country = acc.country ?? ''
+      form.type = acc.type ?? ''
+      form.price = acc.price
+      form.capacity = acc.capacity
+      form.bedrooms = acc.bedrooms ?? 0
+      form.bathrooms = acc.bathrooms ?? 0
+      form.practicalInformations = acc.practicalInformations ?? ''
+      form.advantage = acc.advantage?.join('\n') ?? ''
+      form.latitude = acc.latitude?.toString() ?? ''
+      form.longitude = acc.longitude?.toString() ?? ''
+      selectedThemeId.value = acc.themeId ?? null
+    }
+  } catch (err: any) {
+    errorMsg.value = err?.data?.message || 'Erreur lors du chargement.'
+    console.error(err)
+  } finally {
+    pending.value = false
+  }
+}
+
+async function refresh() {
+  await loadAccommodation()
+}
+
+// Save
 async function save() {
   saving.value = true
   success.value = false
   errorMsg.value = ''
-
   try {
-    await $fetch(`/api/accommodations/${id}`, {
+    await useAuthFetch(`/api/accommodations/${id}`, {
       method: 'PUT',
       baseURL: apiUrl,
       body: {
@@ -134,7 +169,13 @@ async function save() {
     saving.value = false
   }
 }
+
+onMounted(() => {
+  loadThemes()
+  loadAccommodation()
+})
 </script>
+
 
 <template>
   <div class="space-y-6">

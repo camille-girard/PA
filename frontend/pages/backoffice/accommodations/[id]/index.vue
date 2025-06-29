@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import UCard from '~/components/molecules/UCard.vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import UTable from '~/components/organisms/UTable.vue'
@@ -14,7 +14,11 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 const route = useRoute()
-const id = route.params.id
+const id = route.params.id as string
+
+const pending = ref(false)
+const errorMsg = ref('')
+const accommodation = ref<any>(null)
 
 const showImageModal = ref(false)
 const selectedImageUrl = ref('')
@@ -32,12 +36,32 @@ interface Booking {
   status: string
 }
 
-interface Accommodation {
-  bookings?: Booking[]
+async function loadAccommodation() {
+  if (!id) {
+    errorMsg.value = "ID manquant dans l'URL."
+    return
+  }
+
+  pending.value = true
+  errorMsg.value = ''
+  try {
+    const { data, error } = await useAuthFetch(`/api/accommodations/${id}`, {
+      baseURL: apiUrl,
+    })
+    if (error.value) {
+      throw error.value
+    }
+    accommodation.value = data.value ?? null
+  } catch (err: any) {
+    errorMsg.value = err?.data?.message || 'Erreur lors du chargement du logement.'
+    console.error(err)
+  } finally {
+    pending.value = false
+  }
 }
 
-const { data: accommodation } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
-  baseURL: apiUrl,
+onMounted(() => {
+  loadAccommodation()
 })
 
 const bookings = computed(() =>
@@ -81,6 +105,7 @@ function openImageModal(url: string) {
   showImageModal.value = true
 }
 </script>
+
 
 <template>
   <div>
