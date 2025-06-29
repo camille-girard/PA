@@ -1,14 +1,13 @@
 <?php
 
-
 namespace App\Controller;
 
-use App\Entity\Booking;
 use App\Repository\AccommodationRepository;
 use App\Repository\BookingRepository;
 use App\Repository\ClientRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use OpenApi\Attributes as OA;
 
 #[Route('/api/bookings', name: 'api_bookings_')]
 #[OA\Tag(name: 'Bookings')]
@@ -37,6 +35,7 @@ final class BookingController extends AbstractController
     {
         $bookings = $this->bookingRepository->findAll();
         $json = $serializer->serialize($bookings, 'json', ['groups' => 'booking:read']);
+
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
@@ -50,6 +49,7 @@ final class BookingController extends AbstractController
 
         $bookings = $this->bookingRepository->findBy(['client' => $user]);
         $json = $serializer->serialize($bookings, 'json', ['groups' => 'booking:read']);
+
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
@@ -63,6 +63,7 @@ final class BookingController extends AbstractController
 
         $bookings = $this->bookingRepository->findBookingsByOwner($user);
         $json = $serializer->serialize($bookings, 'json', ['groups' => 'booking:read']);
+
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 

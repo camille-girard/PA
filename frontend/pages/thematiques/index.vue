@@ -39,7 +39,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">{{ section.title }}</h2>
                 </div>
-                <locationCards :items="section.items" />
+                <LocationCards :items="section.items" />
                 <div class="flex justify-end hover:underline mt-5">
                     <NuxtLink
                         :to="`/thematiques/${section.slug}`"

@@ -90,7 +90,7 @@
         if (props.disabled) return;
 
         const target = event.target as HTMLInputElement;
-        let value = target.value.replace(',', '.');
+        const value = target.value.replace(',', '.');
 
         let number = parseFloat(value);
 

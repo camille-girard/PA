@@ -79,7 +79,7 @@
             city.value = data.city;
             postalCode.value = data.postalCode;
             country.value = data.country || 'France';
-            theme.value = data.theme || '';
+            theme.value = data.themeId ? Number(data.themeId) : '';
             type.value = data.type;
             practicalInformation.value = data.practicalInformation;
             capacity.value = data.capacity;
@@ -187,8 +187,6 @@
                 url: img.url,
             })),
         };
-
-        console.log('Payload:', payload);
 
         if (!isEditing.value) {
             payload.ownerId = auth.user?.id;

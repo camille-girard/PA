@@ -87,7 +87,6 @@ class Client extends User
     public function removeBooking(Booking $booking): static
     {
         if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
             if ($booking->getClient() === $this) {
                 $booking->setClient(null);
             }
@@ -117,7 +116,6 @@ class Client extends User
     public function removeComment(Comment $comment): static
     {
         if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
             if ($comment->getClient() === $this) {
                 $comment->setClient(null);
             }
@@ -147,7 +145,6 @@ class Client extends User
     public function removeMessage(Message $message): static
     {
         if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
             if ($message->getClient() === $this) {
                 $message->setClient(null);
             }
