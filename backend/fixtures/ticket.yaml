@@ -1,0 +1,16 @@
+App\Entity\Ticket:
+  ticket1:
+    title: 'Problème de réservation'
+    owner: '@owner_1'
+    createdAt: '<(new DateTimeImmutable())>'
+    updatedAt: '<(new DateTimeImmutable())>'
+    status: 'OPEN'
+    description: 'J’ai un problème avec ma réservation, je ne peux pas finaliser le paiement.'
+
+  ticket2:
+    title: 'Problème de paiement'
+    owner: '@owner_1'
+    createdAt: '<(new DateTimeImmutable())>'
+    updatedAt: '<(new DateTimeImmutable())>'
+    status: 'CLOSED'
+    description: 'J’ai un problème avec le paiement de ma réservation, je ne peux pas finaliser le paiement.'

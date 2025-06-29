@@ -1,0 +1,24 @@
+App\Entity\TicketMessage:
+  message1:
+    ticket: '@ticket1'
+    author: '@owner_1'
+    content: 'Bonjour, je rencontre un problème lors de la réservation.'
+    createdAt: '<(new DateTimeImmutable())>'
+
+  message2:
+    ticket: '@ticket1'
+    author: '@admin_1'
+    content: 'Bonjour, pouvez-vous préciser votre problème ?'
+    createdAt: '<(new DateTimeImmutable())>'
+
+  message3:
+    ticket: '@ticket2'
+    author: '@owner_1'
+    content: 'J’ai un problème avec le paiement.'
+    createdAt: '<(new DateTimeImmutable())>'
+
+  message4:
+    ticket: '@ticket2'
+    author: '@admin_1'
+    content: 'Problème résolu, ticket fermé.'
+    createdAt: '<(new DateTimeImmutable())>'
