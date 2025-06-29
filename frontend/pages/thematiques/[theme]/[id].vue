@@ -65,7 +65,12 @@
                 </div>
                 <div class="relative w-full md:w-1/3">
                     <div class="sticky top-24">
-                        <BookingCard :price-per-night="Location?.price" />
+                      <BookingCard
+                          v-if="Location"
+                          :price-per-night="Location.price"
+                          :accommodation-id="Location.id"
+                          :title="Location.name"
+                      />
                     </div>
                 </div>
             </div>
