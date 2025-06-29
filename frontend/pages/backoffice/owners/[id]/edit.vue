@@ -1,102 +1,101 @@
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import Input from '~/components/atoms/UInput.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { ref, reactive, watch, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import Input from '~/components/atoms/UInput.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const route = useRoute()
-const id = ref<string | undefined>(undefined)
-const owner = ref<any>(null)
-const pending = ref(false)
-const errorMsg = ref('')
-const success = ref(false)
-const saving = ref(false)
+  const route = useRoute()
+  const id = ref<string | undefined>(undefined)
+  const owner = ref<any>(null)
+  const pending = ref(false)
+  const errorMsg = ref('')
+  const success = ref(false)
+  const saving = ref(false)
 
-const { public: { apiUrl } } = useRuntimeConfig()
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  isVerified: false,
-})
+  const form = reactive({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    isVerified: false,
+  })
 
-async function loadOwner(ownerId: string) {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const response = await useAuthFetch(`/api/owners/${ownerId}`, {
-      baseURL: apiUrl,
-    })
-    owner.value = response.data.value
-    if (owner.value) {
-      form.firstName = owner.value.firstName
-      form.lastName = owner.value.lastName
-      form.email = owner.value.email
-      form.phone = owner.value.phone
-      form.isVerified = owner.value.isVerified
-    } else {
-      errorMsg.value = 'Aucun hôte trouvé.'
-    }
-  } catch (e: any) {
-    errorMsg.value = e?.data?.message || 'Erreur lors du chargement.'
-  } finally {
-    pending.value = false
-  }
-}
-
-async function refresh() {
-  if (id.value) {
-    await loadOwner(id.value)
-  }
-}
-
-async function save() {
-  if (!id.value) return
-
-  saving.value = true
-  success.value = false
-  errorMsg.value = ''
-
-  try {
-    await $fetch(`/api/owners/${id.value}`, {
-      method: 'PUT',
-      baseURL: apiUrl,
-      body: {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        phone: form.phone,
-        isVerified: form.isVerified,
-      },
-    })
-    success.value = true
-    await refresh()
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
-  } finally {
-    saving.value = false
-  }
-}
-
-// attendre le paramètre ID avant de loader
-watch(
-    () => route.params.id,
-    (newId) => {
-      if (typeof newId === 'string' && newId !== '') {
-        id.value = newId
-        loadOwner(newId)
+  async function loadOwner(ownerId: string) {
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const response = await useAuthFetch(`/api/owners/${ownerId}`, {
+        baseURL: apiUrl,
+      })
+      owner.value = response.data.value
+      if (owner.value) {
+        form.firstName = owner.value.firstName
+        form.lastName = owner.value.lastName
+        form.email = owner.value.email
+        form.phone = owner.value.phone
+        form.isVerified = owner.value.isVerified
+      } else {
+        errorMsg.value = 'Aucun hôte trouvé.'
       }
-    },
-    { immediate: true }
-)
+    } catch (e: any) {
+      errorMsg.value = e?.data?.message || 'Erreur lors du chargement.'
+    } finally {
+      pending.value = false
+    }
+  }
+
+  async function refresh() {
+    if (id.value) {
+      await loadOwner(id.value)
+    }
+  }
+
+  async function save() {
+    if (!id.value) return
+
+    saving.value = true
+    success.value = false
+    errorMsg.value = ''
+
+    try {
+      await $fetch(`/api/owners/${id.value}`, {
+        method: 'PUT',
+        baseURL: apiUrl,
+        body: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          isVerified: form.isVerified,
+        },
+      })
+      success.value = true
+      await refresh()
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
+    } finally {
+      saving.value = false
+    }
+  }
+
+  watch(
+      () => route.params.id,
+      (newId) => {
+        if (typeof newId === 'string' && newId !== '') {
+          id.value = newId
+          loadOwner(newId)
+        }
+      },
+      { immediate: true }
+  )
 </script>
 
 <template>

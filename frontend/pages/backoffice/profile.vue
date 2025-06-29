@@ -1,97 +1,97 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useAuthStore } from '~/stores/auth';
-import { useAuthFetch } from '~/composables/useAuthFetch';
+  import { ref } from 'vue';
+  import { useAuthStore } from '~/stores/auth';
+  import { useAuthFetch } from '~/composables/useAuthFetch';
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const authStore = useAuthStore();
+  const authStore = useAuthStore();
 
-const firstName = ref(authStore.user?.firstName || '');
-const lastName = ref(authStore.user?.lastName || '');
-const email = ref(authStore.user?.email || '');
-const phone = ref(authStore.user?.phone || '');
-const address = ref(authStore.user?.address || '');
+  const firstName = ref(authStore.user?.firstName || '');
+  const lastName = ref(authStore.user?.lastName || '');
+  const email = ref(authStore.user?.email || '');
+  const phone = ref(authStore.user?.phone || '');
+  const address = ref(authStore.user?.address || '');
 
-const savingProfile = ref(false);
-const successProfile = ref('');
-const errorProfile = ref('');
+  const savingProfile = ref(false);
+  const successProfile = ref('');
+  const errorProfile = ref('');
 
-async function saveProfile() {
-  successProfile.value = '';
-  errorProfile.value = '';
-  savingProfile.value = true;
+  async function saveProfile() {
+    successProfile.value = '';
+    errorProfile.value = '';
+    savingProfile.value = true;
 
-  try {
-    const { public: { apiUrl } } = useRuntimeConfig();
+    try {
+      const { public: { apiUrl } } = useRuntimeConfig();
 
-    const { data, error } = await useAuthFetch(`${apiUrl}/api/me`, {
-      method: 'PUT',
-      body: {
-        firstName: firstName.value,
-        lastName: lastName.value,
-        email: email.value,
-        phone: phone.value,
-        address: address.value,
-      },
-      credentials: 'include',
-    });
+      const { data, error } = await useAuthFetch(`${apiUrl}/api/me`, {
+        method: 'PUT',
+        body: {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          email: email.value,
+          phone: phone.value,
+          address: address.value,
+        },
+        credentials: 'include',
+      });
 
-    if (error.value) {
-      errorProfile.value = error.value?.data?.message || 'Erreur lors de la mise à jour';
-    } else if (data.value) {
-      authStore.user = data.value;
-      successProfile.value = 'Profil mis à jour avec succès !';
+      if (error.value) {
+        errorProfile.value = error.value?.data?.message || 'Erreur lors de la mise à jour';
+      } else if (data.value) {
+        authStore.user = data.value;
+        successProfile.value = 'Profil mis à jour avec succès !';
+      }
+    } catch (err) {
+      errorProfile.value = 'Erreur inattendue.';
+      console.error(err);
+    } finally {
+      savingProfile.value = false;
     }
-  } catch (err) {
-    errorProfile.value = 'Erreur inattendue.';
-    console.error(err);
-  } finally {
-    savingProfile.value = false;
   }
-}
 
-const oldPassword = ref('');
-const newPassword = ref('');
+  const oldPassword = ref('');
+  const newPassword = ref('');
 
-const savingPassword = ref(false);
-const successPassword = ref('');
-const errorPassword = ref('');
+  const savingPassword = ref(false);
+  const successPassword = ref('');
+  const errorPassword = ref('');
 
-async function changePassword() {
-  successPassword.value = '';
-  errorPassword.value = '';
-  savingPassword.value = true;
+  async function changePassword() {
+    successPassword.value = '';
+    errorPassword.value = '';
+    savingPassword.value = true;
 
-  try {
-    const { public: { apiUrl } } = useRuntimeConfig();
+    try {
+      const { public: { apiUrl } } = useRuntimeConfig();
 
-    const { data, error } = await useAuthFetch(`${apiUrl}/api/me/password`, {
-      method: 'PUT',
-      body: {
-        oldPassword: oldPassword.value,
-        newPassword: newPassword.value,
-      },
-      credentials: 'include',
-    });
+      const { data, error } = await useAuthFetch(`${apiUrl}/api/me/password`, {
+        method: 'PUT',
+        body: {
+          oldPassword: oldPassword.value,
+          newPassword: newPassword.value,
+        },
+        credentials: 'include',
+      });
 
-    if (error.value) {
-      errorPassword.value = error.value?.data?.message || 'Erreur lors du changement de mot de passe';
-    } else {
-      successPassword.value = 'Mot de passe mis à jour avec succès !';
-      oldPassword.value = '';
-      newPassword.value = '';
+      if (error.value) {
+        errorPassword.value = error.value?.data?.message || 'Erreur lors du changement de mot de passe';
+      } else {
+        successPassword.value = 'Mot de passe mis à jour avec succès !';
+        oldPassword.value = '';
+        newPassword.value = '';
+      }
+    } catch (err) {
+      errorPassword.value = 'Erreur inattendue.';
+      console.error(err);
+    } finally {
+      savingPassword.value = false;
     }
-  } catch (err) {
-    errorPassword.value = 'Erreur inattendue.';
-    console.error(err);
-  } finally {
-    savingPassword.value = false;
   }
-}
 </script>
 
 <template>

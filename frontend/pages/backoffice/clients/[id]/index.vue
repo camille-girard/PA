@@ -1,90 +1,90 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import UBadge from '~/components/atoms/UBadge.vue'
-import UCard from '~/components/molecules/UCard.vue'
-import UTable from '~/components/organisms/UTable.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { ref, computed, watch } from 'vue'
+  import { useRoute } from 'vue-router'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UTable from '~/components/organisms/UTable.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const route = useRoute()
-const id = ref<string | undefined>(undefined)
-const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
+  const id = ref<string | undefined>(undefined)
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-interface Booking {
-  id: number
-  accommodation?: {
-    name?: string
+  interface Booking {
+    id: number
+    accommodation?: {
+      name?: string
+    }
+    startDate: string
+    endDate: string
+    status: string
+    totalPrice: number
   }
-  startDate: string
-  endDate: string
-  status: string
-  totalPrice: number
-}
 
-interface Client {
-  id: number
-  firstName?: string
-  lastName?: string
-  email?: string
-  phone?: string
-  createdAt: string
-  verified: boolean
-  preferences?: string[]
-  bookings?: Booking[]
-}
-
-const client = ref<Client | null>(null)
-const pending = ref(false)
-const errorMsg = ref('')
-
-async function loadClient(clientId: string) {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
-      baseURL: apiUrl,
-    })
-    client.value = data.value?.client ?? null
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors du chargement du client.'
-    console.error(error)
-  } finally {
-    pending.value = false
+  interface Client {
+    id: number
+    firstName?: string
+    lastName?: string
+    email?: string
+    phone?: string
+    createdAt: string
+    verified: boolean
+    preferences?: string[]
+    bookings?: Booking[]
   }
-}
 
-watch(
-    () => route.params.id,
-    (newId) => {
-      if (typeof newId === 'string' && newId !== '') {
-        id.value = newId
-        loadClient(newId)
-      }
-    },
-    { immediate: true }
-)
+  const client = ref<Client | null>(null)
+  const pending = ref(false)
+  const errorMsg = ref('')
 
-const getStatusProps = (verified: boolean | undefined) =>
-    verified
-        ? { label: 'Vérifié', color: 'success' }
-        : { label: 'Non vérifié', color: 'error' }
+  async function loadClient(clientId: string) {
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
+        baseURL: apiUrl,
+      })
+      client.value = data.value?.client ?? null
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors du chargement du client.'
+      console.error(error)
+    } finally {
+      pending.value = false
+    }
+  }
 
-const bookings = computed(() =>
-    client.value?.bookings?.map((b: Booking) => ({
-      id: b.id,
-      accommodation: b.accommodation?.name ?? '—',
-      startDate: new Date(b.startDate).toLocaleDateString(),
-      endDate: new Date(b.endDate).toLocaleDateString(),
-      status: b.status,
-      totalPrice: `${b.totalPrice?.toFixed(2)} €`,
-    })) ?? []
-)
+  watch(
+      () => route.params.id,
+      (newId) => {
+        if (typeof newId === 'string' && newId !== '') {
+          id.value = newId
+          loadClient(newId)
+        }
+      },
+      { immediate: true }
+  )
+
+  const getStatusProps = (verified: boolean | undefined) =>
+      verified
+          ? { label: 'Vérifié', color: 'success' }
+          : { label: 'Non vérifié', color: 'error' }
+
+  const bookings = computed(() =>
+      client.value?.bookings?.map((b: Booking) => ({
+        id: b.id,
+        accommodation: b.accommodation?.name ?? '—',
+        startDate: new Date(b.startDate).toLocaleDateString(),
+        endDate: new Date(b.endDate).toLocaleDateString(),
+        status: b.status,
+        totalPrice: `${b.totalPrice?.toFixed(2)} €`,
+      })) ?? []
+  )
 </script>
 
 <template>

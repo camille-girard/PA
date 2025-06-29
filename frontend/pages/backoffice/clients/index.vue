@@ -1,103 +1,103 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import UTable from '~/components/organisms/UTable.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import TrashIcon from "~/components/atoms/icons/TrashIcon.vue"
-import EditIcon from "~/components/atoms/icons/EditIcon.vue"
-import ConfirmPopover from '~/components/ConfirmPopover.vue'
-import EyeView from '~/components/atoms/icons/EyeView.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { ref, computed, onMounted } from 'vue'
+  import UTable from '~/components/organisms/UTable.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import TrashIcon from "~/components/atoms/icons/TrashIcon.vue"
+  import EditIcon from "~/components/atoms/icons/EditIcon.vue"
+  import ConfirmPopover from '~/components/ConfirmPopover.vue'
+  import EyeView from '~/components/atoms/icons/EyeView.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const { public: { apiUrl } } = useRuntimeConfig()
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-const clientData = ref<any[]>([])
-const pending = ref(false)
-const errorMsg = ref('')
-const successMsg = ref('')
+  const clientData = ref<any[]>([])
+  const pending = ref(false)
+  const errorMsg = ref('')
+  const successMsg = ref('')
 
-const columns = [
-  { key: 'client', label: 'Client', sortable: true },
-  { key: 'phone', label: 'Téléphone' },
-  { key: 'email', label: 'Email' },
-  { key: 'bookingCount', label: 'Réservations' },
-  { key: 'status', label: 'Vérification' },
-  { key: 'actions', label: '' }
-]
+  const columns = [
+    { key: 'client', label: 'Client', sortable: true },
+    { key: 'phone', label: 'Téléphone' },
+    { key: 'email', label: 'Email' },
+    { key: 'bookingCount', label: 'Réservations' },
+    { key: 'status', label: 'Vérification' },
+    { key: 'actions', label: '' }
+  ]
 
-const clients = computed(() => clientData.value || [])
+  const clients = computed(() => clientData.value || [])
 
-const clientsData = computed(() =>
-    clients.value.map(client => ({
-      id: client.id,
-      client: `${client.firstName} ${client.lastName}`,
-      phone: client.phone || 'Non renseigné',
-      email: client.email,
-      bookingCount: client.bookingCount ?? 0,
-      status: client.isVerified ? 'verified' : 'unverified',
-      _original: client,
-    }))
-)
+  const clientsData = computed(() =>
+      clients.value.map(client => ({
+        id: client.id,
+        client: `${client.firstName} ${client.lastName}`,
+        phone: client.phone || 'Non renseigné',
+        email: client.email,
+        bookingCount: client.bookingCount ?? 0,
+        status: client.isVerified ? 'verified' : 'unverified',
+        _original: client,
+      }))
+  )
 
-function getStatusProps(status: string) {
-  switch (status.toLowerCase()) {
-    case 'verified':
-      return { label: 'Vérifié', color: 'success' }
-    case 'unverified':
-      return { label: 'Non vérifié', color: 'error' }
-    default:
-      return { label: status, color: 'brand' }
-  }
-}
-
-async function loadClients() {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data } = await useAuthFetch('/api/clients', { baseURL: apiUrl })
-    clientData.value = data.value || []
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors du chargement des clients.'
-  } finally {
-    pending.value = false
-  }
-}
-
-async function refreshClients() {
-  await loadClients()
-}
-
-async function deleteClient(id: string) {
-  successMsg.value = ''
-  errorMsg.value = ''
-  pending.value = true
-  try {
-    await $fetch(`/api/clients/${id}`, {
-      method: 'DELETE',
-      baseURL: apiUrl,
-    })
-    await refreshClients()
-    successMsg.value = 'Client supprimé avec succès.'
-  } catch (error: any) {
-    if (error?.data?.message) {
-      errorMsg.value = error.data.message
-    } else {
-      errorMsg.value = 'Erreur lors de la suppression.'
+  function getStatusProps(status: string) {
+    switch (status.toLowerCase()) {
+      case 'verified':
+        return { label: 'Vérifié', color: 'success' }
+      case 'unverified':
+        return { label: 'Non vérifié', color: 'error' }
+      default:
+        return { label: status, color: 'brand' }
     }
-    console.error(error)
-  } finally {
-    pending.value = false
   }
-}
 
-onMounted(() => {
-  loadClients()
-})
+  async function loadClients() {
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const { data } = await useAuthFetch('/api/clients', { baseURL: apiUrl })
+      clientData.value = data.value || []
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors du chargement des clients.'
+    } finally {
+      pending.value = false
+    }
+  }
+
+  async function refreshClients() {
+    await loadClients()
+  }
+
+  async function deleteClient(id: string) {
+    successMsg.value = ''
+    errorMsg.value = ''
+    pending.value = true
+    try {
+      await $fetch(`/api/clients/${id}`, {
+        method: 'DELETE',
+        baseURL: apiUrl,
+      })
+      await refreshClients()
+      successMsg.value = 'Client supprimé avec succès.'
+    } catch (error: any) {
+      if (error?.data?.message) {
+        errorMsg.value = error.data.message
+      } else {
+        errorMsg.value = 'Erreur lors de la suppression.'
+      }
+      console.error(error)
+    } finally {
+      pending.value = false
+    }
+  }
+
+  onMounted(() => {
+    loadClients()
+  })
 </script>
 
 <template>

@@ -89,7 +89,6 @@
   }
 </script>
 
-
 <template>
   <div class="space-y-6">
     <p class="text-2xl font-semibold">Hôtes</p>

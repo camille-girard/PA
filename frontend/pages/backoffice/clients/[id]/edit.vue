@@ -1,106 +1,105 @@
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import Input from '~/components/atoms/UInput.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { ref, reactive, watch } from 'vue'
+  import { useRoute } from 'vue-router'
+  import Input from '~/components/atoms/UInput.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const route = useRoute()
+  const route = useRoute()
 
-const { public: { apiUrl } } = useRuntimeConfig()
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-const id = ref<string | undefined>(undefined)
-const client = ref<any>(null)
-const pending = ref(false)
-const errorMsg = ref('')
-const saving = ref(false)
-const success = ref(false)
+  const id = ref<string | undefined>(undefined)
+  const client = ref<any>(null)
+  const pending = ref(false)
+  const errorMsg = ref('')
+  const saving = ref(false)
+  const success = ref(false)
 
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  isVerified: false,
-})
+  const form = reactive({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    isVerified: false,
+  })
 
-async function loadClient(clientId: string) {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data } = await useAuthFetch<{ client: any }>(`/api/clients/${clientId}`, {
-      baseURL: apiUrl,
-    })
-    client.value = data.value?.client ?? null
+  async function loadClient(clientId: string) {
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const { data } = await useAuthFetch<{ client: any }>(`/api/clients/${clientId}`, {
+        baseURL: apiUrl,
+      })
+      client.value = data.value?.client ?? null
 
-    if (client.value) {
-      form.firstName = client.value.firstName
-      form.lastName = client.value.lastName
-      form.email = client.value.email
-      form.phone = client.value.phone
-      form.isVerified = client.value.isVerified
-    } else {
-      errorMsg.value = 'Client introuvable.'
-    }
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors du chargement.'
-    console.error(error)
-  } finally {
-    pending.value = false
-  }
-}
-
-async function refresh() {
-  if (id.value) {
-    await loadClient(id.value)
-  }
-}
-
-async function save() {
-  if (!id.value) return
-
-  saving.value = true
-  success.value = false
-  errorMsg.value = ''
-
-  try {
-    await useAuthFetch(`/api/clients/${id.value}`, {
-      method: 'PUT',
-      baseURL: apiUrl,
-      body: {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        phone: form.phone,
-        isVerified: form.isVerified,
-      },
-    })
-
-    success.value = true
-    await refresh()
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
-  } finally {
-    saving.value = false
-  }
-}
-
-// Watch sur le paramètre id
-watch(
-    () => route.params.id,
-    (newId) => {
-      if (typeof newId === 'string' && newId !== '') {
-        id.value = newId
-        loadClient(newId)
+      if (client.value) {
+        form.firstName = client.value.firstName
+        form.lastName = client.value.lastName
+        form.email = client.value.email
+        form.phone = client.value.phone
+        form.isVerified = client.value.isVerified
+      } else {
+        errorMsg.value = 'Client introuvable.'
       }
-    },
-    { immediate: true }
-)
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors du chargement.'
+      console.error(error)
+    } finally {
+      pending.value = false
+    }
+  }
+
+  async function refresh() {
+    if (id.value) {
+      await loadClient(id.value)
+    }
+  }
+
+  async function save() {
+    if (!id.value) return
+
+    saving.value = true
+    success.value = false
+    errorMsg.value = ''
+
+    try {
+      await useAuthFetch(`/api/clients/${id.value}`, {
+        method: 'PUT',
+        baseURL: apiUrl,
+        body: {
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          isVerified: form.isVerified,
+        },
+      })
+
+      success.value = true
+      await refresh()
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
+    } finally {
+      saving.value = false
+    }
+  }
+
+  watch(
+      () => route.params.id,
+      (newId) => {
+        if (typeof newId === 'string' && newId !== '') {
+          id.value = newId
+          loadClient(newId)
+        }
+      },
+      { immediate: true }
+  )
 </script>
 
 <template>

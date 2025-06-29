@@ -1,108 +1,108 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, reactive, watchEffect } from 'vue'
-import UInputNumber from '~/components/atoms/UInputNumber.vue'
-import USelectBox from '~/components/atoms/USelectBox.vue'
-import UDatePicker from '~/components/molecules/UDatePicker.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { useRoute } from 'vue-router'
+  import { ref, reactive, watchEffect } from 'vue'
+  import UInputNumber from '~/components/atoms/UInputNumber.vue'
+  import USelectBox from '~/components/atoms/USelectBox.vue'
+  import UDatePicker from '~/components/molecules/UDatePicker.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const { public: { apiUrl } } = useRuntimeConfig()
-const route = useRoute()
-const id = route.params.id
+  const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
+  const id = route.params.id
 
-const { data: booking, refresh, pending } = await useAuthFetch(`/api/bookings/${id}`, {
-  baseURL: apiUrl,
-  transform: (res) => res.booking,
-})
+  const { data: booking, refresh, pending } = await useAuthFetch(`/api/bookings/${id}`, {
+    baseURL: apiUrl,
+    transform: (res) => res.booking,
+  })
 
-const { data: clients } = await useAuthFetch('/api/clients', {
-  baseURL: apiUrl,
-  transform: res => res.map((c: any) => ({
-    label: `${c.firstName} ${c.lastName}`,
-    value: c.id
-  }))
-})
+  const { data: clients } = await useAuthFetch('/api/clients', {
+    baseURL: apiUrl,
+    transform: res => res.map((c: any) => ({
+      label: `${c.firstName} ${c.lastName}`,
+      value: c.id
+    }))
+  })
 
-const { data: accommodations } = await useAuthFetch('/api/accommodations', {
-  baseURL: apiUrl,
-  transform: res => res.map((a: any) => ({
-    label: a.name,
-    value: a.id
-  }))
-})
+  const { data: accommodations } = await useAuthFetch('/api/accommodations', {
+    baseURL: apiUrl,
+    transform: res => res.map((a: any) => ({
+      label: a.name,
+      value: a.id
+    }))
+  })
 
-const statusOptions = [
-  { label: 'Acceptée', value: 'accepted' },
-  { label: 'En attente', value: 'pending' },
-  { label: 'Refusée', value: 'refused' },
-]
+  const statusOptions = [
+    { label: 'Acceptée', value: 'accepted' },
+    { label: 'En attente', value: 'pending' },
+    { label: 'Refusée', value: 'refused' },
+  ]
 
-const form = reactive({
-  startDate: null as Date | null,
-  endDate: null as Date | null,
-  clientId: null as number | null,
-  accommodationId: null as number | null,
-  totalPrice: 0 as number | null,
-  status: 'pending',
-})
+  const form = reactive({
+    startDate: null as Date | null,
+    endDate: null as Date | null,
+    clientId: null as number | null,
+    accommodationId: null as number | null,
+    totalPrice: 0 as number | null,
+    status: 'pending',
+  })
 
-watchEffect(() => {
-  if (booking.value) {
-    form.startDate = new Date(booking.value.startDate)
-    form.endDate = new Date(booking.value.endDate)
-    form.clientId = booking.value.client?.id
-    form.accommodationId = booking.value.accommodation?.id
-    form.totalPrice = booking.value.totalPrice
-    form.status = booking.value.status
-  }
-})
+  watchEffect(() => {
+    if (booking.value) {
+      form.startDate = new Date(booking.value.startDate)
+      form.endDate = new Date(booking.value.endDate)
+      form.clientId = booking.value.client?.id
+      form.accommodationId = booking.value.accommodation?.id
+      form.totalPrice = booking.value.totalPrice
+      form.status = booking.value.status
+    }
+  })
 
-const saving = ref(false)
-const success = ref(false)
-const errorMsg = ref('')
+  const saving = ref(false)
+  const success = ref(false)
+  const errorMsg = ref('')
 
-async function save() {
-  saving.value = true
-  success.value = false
-  errorMsg.value = ''
+  async function save() {
+    saving.value = true
+    success.value = false
+    errorMsg.value = ''
 
-  try {
-    console.log('Payload envoyé :', {
-      startDate: form.startDate?.toISOString(),
-      endDate: form.endDate?.toISOString(),
-      clientId: form.clientId,
-      accommodationId: form.accommodationId,
-      totalPrice: Number(form.totalPrice ?? 0),
-      status: form.status,
-    })
-    await $fetch(`/api/bookings/${id}`, {
-      method: 'PUT',
-      baseURL: apiUrl,
-      body: {
+    try {
+      console.log('Payload envoyé :', {
         startDate: form.startDate?.toISOString(),
         endDate: form.endDate?.toISOString(),
         clientId: form.clientId,
         accommodationId: form.accommodationId,
         totalPrice: Number(form.totalPrice ?? 0),
         status: form.status,
-      },
-    })
-    success.value = true
-    await refresh()
-  } catch (error: any) {
-    console.error('Erreur lors de la mise à jour :', error)
-    errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
-  } finally {
-    saving.value = false
+      })
+      await $fetch(`/api/bookings/${id}`, {
+        method: 'PUT',
+        baseURL: apiUrl,
+        body: {
+          startDate: form.startDate?.toISOString(),
+          endDate: form.endDate?.toISOString(),
+          clientId: form.clientId,
+          accommodationId: form.accommodationId,
+          totalPrice: Number(form.totalPrice ?? 0),
+          status: form.status,
+        },
+      })
+      success.value = true
+      await refresh()
+    } catch (error: any) {
+      console.error('Erreur lors de la mise à jour :', error)
+      errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
+    } finally {
+      saving.value = false
+    }
   }
-}
 </script>
 
 <template>

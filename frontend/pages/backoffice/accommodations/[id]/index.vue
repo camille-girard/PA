@@ -1,111 +1,110 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, computed, onMounted } from 'vue'
-import UCard from '~/components/molecules/UCard.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import UTable from '~/components/organisms/UTable.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { useRoute } from 'vue-router'
+  import { ref, computed, onMounted } from 'vue'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import UTable from '~/components/organisms/UTable.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
-
-const { public: { apiUrl } } = useRuntimeConfig()
-const route = useRoute()
-const id = route.params.id as string
-
-const pending = ref(false)
-const errorMsg = ref('')
-const accommodation = ref<any>(null)
-
-const showImageModal = ref(false)
-const selectedImageUrl = ref('')
-
-interface Client {
-  firstName?: string
-  lastName?: string
-}
-
-interface Booking {
-  id: number
-  client: Client
-  startDate: string
-  endDate: string
-  status: string
-}
-
-async function loadAccommodation() {
-  if (!id) {
-    errorMsg.value = "ID manquant dans l'URL."
-    return
-  }
-
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data, error } = await useAuthFetch(`/api/accommodations/${id}`, {
-      baseURL: apiUrl,
-    })
-    if (error.value) {
-      throw error.value
-    }
-    accommodation.value = data.value ?? null
-  } catch (err: any) {
-    errorMsg.value = err?.data?.message || 'Erreur lors du chargement du logement.'
-    console.error(err)
-  } finally {
-    pending.value = false
-  }
-}
-
-onMounted(() => {
-  loadAccommodation()
-})
-
-const bookings = computed(() =>
-    accommodation.value?.bookings?.map((b: Booking) => ({
-      id: b.id,
-      client: `${b.client?.firstName ?? ''} ${b.client?.lastName ?? ''}`,
-      startDate: new Date(b.startDate).toLocaleDateString(),
-      endDate: new Date(b.endDate).toLocaleDateString(),
-      status: b.status.toLowerCase(),
-    })) ?? []
-)
-
-const columns = [
-  { key: 'client', label: 'Client' },
-  { key: 'startDate', label: 'Début' },
-  { key: 'endDate', label: 'Fin' },
-  { key: 'status', label: 'Statut' },
-]
-
-function getStatusProps(status: string) {
-  switch (status) {
-    case 'accepted': return { label: 'Acceptée', color: 'success' }
-    case 'pending': return { label: 'En attente', color: 'warning' }
-    case 'refused': return { label: 'Refusée', color: 'error' }
-    default: return { label: status, color: 'gray' }
-  }
-}
-
-const isOccupiedNow = computed(() => {
-  if (!accommodation.value?.bookings) return false
-  const today = new Date()
-  return accommodation.value.bookings.some((b: Booking) => {
-    const start = new Date(b.startDate)
-    const end = new Date(b.endDate)
-    return start <= today && today <= end
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
   })
-})
 
-function openImageModal(url: string) {
-  selectedImageUrl.value = url
-  showImageModal.value = true
-}
+  const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
+  const id = route.params.id as string
+
+  const pending = ref(false)
+  const errorMsg = ref('')
+  const accommodation = ref<any>(null)
+
+  const showImageModal = ref(false)
+  const selectedImageUrl = ref('')
+
+  interface Client {
+    firstName?: string
+    lastName?: string
+  }
+
+  interface Booking {
+    id: number
+    client: Client
+    startDate: string
+    endDate: string
+    status: string
+  }
+
+  async function loadAccommodation() {
+    if (!id) {
+      errorMsg.value = "ID manquant dans l'URL."
+      return
+    }
+
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const { data, error } = await useAuthFetch(`/api/accommodations/${id}`, {
+        baseURL: apiUrl,
+      })
+      if (error.value) {
+        throw error.value
+      }
+      accommodation.value = data.value ?? null
+    } catch (err: any) {
+      errorMsg.value = err?.data?.message || 'Erreur lors du chargement du logement.'
+      console.error(err)
+    } finally {
+      pending.value = false
+    }
+  }
+
+  onMounted(() => {
+    loadAccommodation()
+  })
+
+  const bookings = computed(() =>
+      accommodation.value?.bookings?.map((b: Booking) => ({
+        id: b.id,
+        client: `${b.client?.firstName ?? ''} ${b.client?.lastName ?? ''}`,
+        startDate: new Date(b.startDate).toLocaleDateString(),
+        endDate: new Date(b.endDate).toLocaleDateString(),
+        status: b.status.toLowerCase(),
+      })) ?? []
+  )
+
+  const columns = [
+    { key: 'client', label: 'Client' },
+    { key: 'startDate', label: 'Début' },
+    { key: 'endDate', label: 'Fin' },
+    { key: 'status', label: 'Statut' },
+  ]
+
+  function getStatusProps(status: string) {
+    switch (status) {
+      case 'accepted': return { label: 'Acceptée', color: 'success' }
+      case 'pending': return { label: 'En attente', color: 'warning' }
+      case 'refused': return { label: 'Refusée', color: 'error' }
+      default: return { label: status, color: 'gray' }
+    }
+  }
+
+  const isOccupiedNow = computed(() => {
+    if (!accommodation.value?.bookings) return false
+    const today = new Date()
+    return accommodation.value.bookings.some((b: Booking) => {
+      const start = new Date(b.startDate)
+      const end = new Date(b.endDate)
+      return start <= today && today <= end
+    })
+  })
+
+  function openImageModal(url: string) {
+    selectedImageUrl.value = url
+    showImageModal.value = true
+  }
 </script>
-
 
 <template>
   <div>

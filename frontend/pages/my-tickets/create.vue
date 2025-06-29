@@ -1,57 +1,57 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthFetch } from '~/composables/useAuthFetch'
-import UHeader from '~/components/UHeader.vue'
-import UFooter from '~/components/UFooter.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import UTextarea from '~/components/atoms/UTextarea.vue'
-import { useRuntimeConfig } from '#app'
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+  import UHeader from '~/components/UHeader.vue'
+  import UFooter from '~/components/UFooter.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import UTextarea from '~/components/atoms/UTextarea.vue'
+  import { useRuntimeConfig } from '#app'
 
-definePageMeta({
-  middleware: 'owner'
-})
+  definePageMeta({
+    middleware: 'owner'
+  })
 
-const router = useRouter()
-const { public: { apiUrl } } = useRuntimeConfig()
+  const router = useRouter()
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-const title = ref('')
-const description = ref('')
-const message = ref('')
+  const title = ref('')
+  const description = ref('')
+  const message = ref('')
 
-const loading = ref(false)
-const success = ref('')
-const error = ref('')
+  const loading = ref(false)
+  const success = ref('')
+  const error = ref('')
 
-async function submitTicket() {
-  error.value = ''
-  success.value = ''
-  if (!title.value || !message.value) {
-    error.value = 'Le titre et le premier message sont obligatoires.'
-    return
+  async function submitTicket() {
+    error.value = ''
+    success.value = ''
+    if (!title.value || !message.value) {
+      error.value = 'Le titre et le premier message sont obligatoires.'
+      return
+    }
+
+    loading.value = true
+
+    try {
+      await useAuthFetch('/api/tickets', {
+        method: 'POST',
+        baseURL: apiUrl,
+        body: {
+          title: title.value,
+          description: description.value,
+          message: message.value
+        }
+      })
+
+      success.value = 'Ticket créé avec succès.'
+      router.push('/my-tickets')
+    } catch (e: any) {
+      error.value = e?.data?.message || 'Erreur lors de la création du ticket.'
+    } finally {
+      loading.value = false
+    }
   }
-
-  loading.value = true
-
-  try {
-    await useAuthFetch('/api/tickets', {
-      method: 'POST',
-      baseURL: apiUrl,
-      body: {
-        title: title.value,
-        description: description.value,
-        message: message.value
-      }
-    })
-
-    success.value = 'Ticket créé avec succès.'
-    router.push('/my-tickets')
-  } catch (e: any) {
-    error.value = e?.data?.message || 'Erreur lors de la création du ticket.'
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <template>
