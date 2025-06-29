@@ -7,6 +7,7 @@ import AllIcons from "~/components/AllIcons.vue";
 
 definePageMeta({
   layout: 'backoffice',
+  middleware: 'admin',
 })
 
 const stats = [

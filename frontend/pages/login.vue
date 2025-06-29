@@ -17,8 +17,12 @@
         const result = await authStore.login(email.value, password.value);
 
         if (result.success) {
-            router.push('/');
+          if (authStore.isAdmin) {
+            return router.push('/backoffice');
+          }
+          return router.push('/');
         }
+
     };
 </script>
 

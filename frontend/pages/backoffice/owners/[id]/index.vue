@@ -9,7 +9,10 @@ import BaseModal from '~/components/BaseModal.vue'
 import { useRuntimeConfig } from '#app'
 import { useAuthFetch } from '~/composables/useAuthFetch'
 
-definePageMeta({ layout: 'backoffice' })
+definePageMeta({
+  layout: 'backoffice',
+  middleware: 'admin',
+})
 
 const { public: { apiUrl } } = useRuntimeConfig()
 const route = useRoute()

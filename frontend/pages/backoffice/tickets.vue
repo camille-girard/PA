@@ -1,6 +1,7 @@
 <script setup>
     definePageMeta({
         layout: 'backoffice',
+        middleware: 'admin',
     });
 </script>
 

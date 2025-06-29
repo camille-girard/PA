@@ -26,48 +26,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['me:read'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['me:read'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['me:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['me:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?bool $isVerified = null;
 
     #[ORM\Column]

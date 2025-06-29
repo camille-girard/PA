@@ -10,7 +10,10 @@ import ConfirmPopover from '~/components/ConfirmPopover.vue'
 import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
 import EditIcon from '~/components/atoms/icons/EditIcon.vue'
 
-definePageMeta({ layout: 'backoffice' })
+definePageMeta({
+  layout: 'backoffice',
+  middleware: 'admin',
+})
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
