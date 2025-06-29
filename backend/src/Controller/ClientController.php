@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/clients', name: 'api_clients_')]
 #[OA\Tag(name: 'Clients')]
@@ -78,7 +78,7 @@ final class ClientController extends AbstractController
 
         $client = new Client();
         $client->setEmail($data['email']);
-        $client->setPassword($data['password']); // À hasher dans un service dédié
+        $client->setPassword($data['password']);
         $client->setFirstName($data['firstName']);
         $client->setLastName($data['lastName']);
         $client->setIsVerified(false);
@@ -131,7 +131,7 @@ final class ClientController extends AbstractController
         }
 
         if (isset($data['password'])) {
-            $client->setPassword($data['password']); // À hasher dans un service dédié
+            $client->setPassword($data['password']);
         }
 
         if (isset($data['firstName'])) {

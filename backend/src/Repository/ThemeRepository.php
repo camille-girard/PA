@@ -41,6 +41,9 @@ class ThemeRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    /**
+     * @return array<Theme>
+     */
     public function findAllWithAccommodations(): array
     {
         return $this->createQueryBuilder('t')

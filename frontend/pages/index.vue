@@ -1,22 +1,25 @@
 <script setup lang="ts">
-    import '~/types/theme';
+    import '~/types/accommodation';
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
     });
 
-    const trending = ref<Theme[]>([]);
+    const trending = ref<Accommodation[]>([]);
 
     onMounted(async () => {
         const { $api } = useNuxtApp();
-        const response = await useAuthFetch<Theme>($api('/api/themes/'));
+        const response = await useAuthFetch<any>($api('/api/accommodations/'));
 
-        trending.value = response.data.value.themes.map((theme) => ({
-            title: theme.name,
-            image: theme.image,
-            description: theme.description,
-            slug: theme.slug,
-        }));
+        if (response.data.value && Array.isArray(response.data.value)) {
+            trending.value = response.data.value.slice(0, 3).map((acc: any) => ({
+                ...acc,
+                id: acc.id,
+                title: acc.name,
+                slug: acc.theme?.slug || acc.theme?.name?.toLowerCase().replace(/\s+/g, '-') || 'accommodation',
+                image: acc.images?.[0]?.url || 'https://via.placeholder.com/400x250',
+            }));
+        }
     });
 </script>
 
@@ -37,7 +40,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">Les tendances du moment</h2>
                 </div>
-                <RentalCards :items="trending" link-prefix="thematiques" />
+                <LocationCards :items="trending" />
                 <div class="mt-10 text-center">
                     <NuxtLink to="/tendances">
                         <UButton class="mx-auto">Voir plus</UButton>

@@ -16,6 +16,9 @@ class AccommodationRepository extends ServiceEntityRepository
         parent::__construct($registry, Accommodation::class);
     }
 
+    /**
+     * @return array<Accommodation>
+     */
     public function findByOwnerId(int $ownerId): array
     {
         return $this->createQueryBuilder('a')
@@ -26,6 +29,10 @@ class AccommodationRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array<Accommodation>
+     *
      * @throws \Exception
      */
     public function searchAccommodations(array $criteria): array
@@ -127,6 +134,8 @@ class AccommodationRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<string, mixed> $criteria
+     *
      * @throws \Exception
      */
     public function countByCriteria(array $criteria): int
