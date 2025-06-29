@@ -23,9 +23,6 @@ final class TicketController extends AbstractController
         private SerializerInterface $serializer
     ) {}
 
-    /**
-     * Owner: lister SES tickets
-     */
     #[Route('/tickets', methods: ['GET'])]
     #[IsGranted('ROLE_OWNER')]
     public function listMyTickets(TicketRepository $repo): JsonResponse
@@ -37,9 +34,6 @@ final class TicketController extends AbstractController
         return JsonResponse::fromJsonString($json);
     }
 
-    /**
-     * Owner: créer un ticket avec premier message
-     */
     #[Route('/tickets', methods: ['POST'])]
     #[IsGranted('ROLE_OWNER')]
     public function createTicket(Request $request): JsonResponse
@@ -71,9 +65,6 @@ final class TicketController extends AbstractController
         return JsonResponse::fromJsonString($json, 201);
     }
 
-    /**
-     * Owner & Admin: voir le détail d'un ticket (messages inclus)
-     */
     #[Route('/tickets/{id}', methods: ['GET'])]
     public function showTicket(Ticket $ticket): JsonResponse
     {
@@ -87,10 +78,6 @@ final class TicketController extends AbstractController
         return JsonResponse::fromJsonString($json);
     }
 
-
-    /**
-     * Owner & Admin: poster un message
-     */
     #[Route('/tickets/{id}/messages', methods: ['POST'])]
     public function addMessage(Request $request, Ticket $ticket): JsonResponse
     {
@@ -121,9 +108,6 @@ final class TicketController extends AbstractController
         return JsonResponse::fromJsonString($json, 201);
     }
 
-    /**
-     * Admin: lister TOUS les tickets avec filtre
-     */
     #[Route('/admin/tickets', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function listAllTickets(Request $request, TicketRepository $repo): JsonResponse
@@ -140,10 +124,6 @@ final class TicketController extends AbstractController
         return $this->json(['tickets' => $tickets], 200, [], ['groups' => ['ticket:list']]);
     }
 
-
-    /**
-     * Admin: changer le statut du ticket
-     */
     #[Route('/admin/tickets/{id}/status', methods: ['PATCH'])]
     #[IsGranted('ROLE_ADMIN')]
     public function updateStatus(Request $request, Ticket $ticket): JsonResponse
