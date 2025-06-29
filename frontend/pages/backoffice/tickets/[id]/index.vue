@@ -1,107 +1,102 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useAuthFetch } from '~/composables/useAuthFetch'
-import UCard from '~/components/molecules/UCard.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import Textarea from '~/components/atoms/UTextarea.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import { useRuntimeConfig } from '#app'
+  import { ref, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import Textarea from '~/components/atoms/UTextarea.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import { useRuntimeConfig } from '#app'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const { public: { apiUrl } } = useRuntimeConfig()
-const route = useRoute()
+  const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
 
-// State
-const ticket = ref(null)
-const loading = ref(true)
-const error = ref<string | null>(null)
-const newMessage = ref('')
-const savingMessage = ref(false)
-const updatingStatus = ref(false)
-const successMsg = ref('')
-const errorMsg = ref('')
+  const ticket = ref(null)
+  const loading = ref(true)
+  const error = ref<string | null>(null)
+  const newMessage = ref('')
+  const savingMessage = ref(false)
+  const updatingStatus = ref(false)
+  const successMsg = ref('')
+  const errorMsg = ref('')
 
-// Load ticket
-async function fetchTicket() {
-  loading.value = true
-  error.value = null
-  try {
-    const { data } = await useAuthFetch(`/api/tickets/${route.params.id}`, {
-      baseURL: apiUrl,
-    })
-    ticket.value = data.value
-  } catch (e: any) {
-    error.value = e?.data?.message || 'Erreur de chargement'
-  } finally {
-    loading.value = false
+  async function fetchTicket() {
+    loading.value = true
+    error.value = null
+    try {
+      const { data } = await useAuthFetch(`/api/tickets/${route.params.id}`, {
+        baseURL: apiUrl,
+      })
+      ticket.value = data.value
+    } catch (e: any) {
+      error.value = e?.data?.message || 'Erreur de chargement'
+    } finally {
+      loading.value = false
+    }
   }
-}
 
-onMounted(fetchTicket)
+  onMounted(fetchTicket)
 
-// Send message
-async function sendMessage() {
-  if (!newMessage.value) return
-  savingMessage.value = true
-  errorMsg.value = ''
-  successMsg.value = ''
-  try {
-    await useAuthFetch(`/api/tickets/${ticket.value.id}/messages`, {
-      method: 'POST',
-      baseURL: apiUrl,
-      body: { content: newMessage.value },
-    })
-    newMessage.value = ''
-    successMsg.value = 'Message envoyé'
-    await fetchTicket()
-  } catch (e: any) {
-    errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.'
-  } finally {
-    savingMessage.value = false
+  async function sendMessage() {
+    if (!newMessage.value) return
+    savingMessage.value = true
+    errorMsg.value = ''
+    successMsg.value = ''
+    try {
+      await useAuthFetch(`/api/tickets/${ticket.value.id}/messages`, {
+        method: 'POST',
+        baseURL: apiUrl,
+        body: { content: newMessage.value },
+      })
+      newMessage.value = ''
+      successMsg.value = 'Message envoyé'
+      await fetchTicket()
+    } catch (e: any) {
+      errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.'
+    } finally {
+      savingMessage.value = false
+    }
   }
-}
 
-// Change status
-async function changeStatus(newStatus: string) {
-  if (ticket.value.status === newStatus) return
-  updatingStatus.value = true
-  try {
-    await useAuthFetch(`/api/admin/tickets/${ticket.value.id}/status`, {
-      method: 'PATCH',
-      baseURL: apiUrl,
-      body: { status: newStatus },
-    })
-    await fetchTicket()
-  } catch (e) {
-    console.error(e)
-  } finally {
-    updatingStatus.value = false
+  async function changeStatus(newStatus: string) {
+    if (ticket.value.status === newStatus) return
+    updatingStatus.value = true
+    try {
+      await useAuthFetch(`/api/admin/tickets/${ticket.value.id}/status`, {
+        method: 'PATCH',
+        baseURL: apiUrl,
+        body: { status: newStatus },
+      })
+      await fetchTicket()
+    } catch (e) {
+      console.error(e)
+    } finally {
+      updatingStatus.value = false
+    }
   }
-}
 
-// Helpers
-function statusLabel(status: string) {
-  switch (status) {
-    case 'OPEN': return 'Ouvert'
-    case 'IN_PROGRESS': return 'En cours'
-    case 'CLOSED': return 'Fermé'
-    default: return status
+  function statusLabel(status: string) {
+    switch (status) {
+      case 'OPEN': return 'Ouvert'
+      case 'IN_PROGRESS': return 'En cours'
+      case 'CLOSED': return 'Fermé'
+      default: return status
+    }
   }
-}
 
-function statusColor(status: string) {
-  switch (status) {
-    case 'OPEN': return 'error'
-    case 'IN_PROGRESS': return 'warning'
-    case 'CLOSED': return 'success'
-    default: return 'gray'
+  function statusColor(status: string) {
+    switch (status) {
+      case 'OPEN': return 'error'
+      case 'IN_PROGRESS': return 'warning'
+      case 'CLOSED': return 'success'
+      default: return 'gray'
+    }
   }
-}
 </script>
 
 <template>
@@ -110,8 +105,8 @@ function statusColor(status: string) {
 
     <div v-if="loading" class="text-gray-500">Chargement...</div>
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
+
     <div v-else-if="ticket">
-      <!-- Ticket Card -->
       <UCard>
         <template #header>
           <div class="flex justify-between items-center">
@@ -133,7 +128,6 @@ function statusColor(status: string) {
         </div>
       </UCard>
 
-      <!-- Change Status -->
       <div class="mt-4 space-y-2">
         <label class="text-sm font-medium">Changer le statut :</label>
         <div class="flex gap-2 flex-wrap">
@@ -149,7 +143,6 @@ function statusColor(status: string) {
         </div>
       </div>
 
-      <!-- Messages -->
       <div class="mt-8 space-y-4">
         <h2 class="text-xl font-semibold">Messages</h2>
         <div v-if="ticket.ticketMessages.length === 0" class="text-gray-500 italic">
@@ -168,7 +161,6 @@ function statusColor(status: string) {
         </div>
       </div>
 
-      <!-- New Message -->
       <div v-if="ticket.status !== 'CLOSED'" class="mt-8 space-y-2">
         <label class="block text-sm font-medium">Ajouter une réponse</label>
         <Textarea v-model="newMessage" placeholder="Écrire un message..." rows="3" />

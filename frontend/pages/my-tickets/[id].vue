@@ -1,86 +1,86 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAuthFetch } from '~/composables/useAuthFetch'
-import UHeader from '~/components/UHeader.vue'
-import UFooter from '~/components/UFooter.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import UTextarea from '~/components/atoms/UTextarea.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import UCard from '~/components/molecules/UCard.vue'
-import { useRuntimeConfig } from '#app'
+  import { ref, onMounted } from 'vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+  import UHeader from '~/components/UHeader.vue'
+  import UFooter from '~/components/UFooter.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import UTextarea from '~/components/atoms/UTextarea.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import UCard from '~/components/molecules/UCard.vue'
+  import { useRuntimeConfig } from '#app'
 
-definePageMeta({
-  middleware: 'owner'
-})
+  definePageMeta({
+    middleware: 'owner'
+  })
 
-const { public: { apiUrl } } = useRuntimeConfig()
-const route = useRoute()
-const router = useRouter()
+  const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
+  const router = useRouter()
 
-const ticket = ref<any>(null)
-const isLoading = ref(true)
-const error = ref<string | null>(null)
-const newMessage = ref('')
-const savingMessage = ref(false)
-const successMsg = ref('')
-const errorMsg = ref('')
+  const ticket = ref<any>(null)
+  const isLoading = ref(true)
+  const error = ref<string | null>(null)
+  const newMessage = ref('')
+  const savingMessage = ref(false)
+  const successMsg = ref('')
+  const errorMsg = ref('')
 
-async function fetchTicket() {
-  isLoading.value = true
-  error.value = null
-  try {
-    const { data } = await useAuthFetch(`/api/tickets/${route.params.id}`, {
-      baseURL: apiUrl,
-    })
-    ticket.value = data.value
-  } catch (e: any) {
-    error.value = e?.data?.message || 'Erreur de chargement'
-  } finally {
-    isLoading.value = false
+  async function fetchTicket() {
+    isLoading.value = true
+    error.value = null
+    try {
+      const { data } = await useAuthFetch(`/api/tickets/${route.params.id}`, {
+        baseURL: apiUrl,
+      })
+      ticket.value = data.value
+    } catch (e: any) {
+      error.value = e?.data?.message || 'Erreur de chargement'
+    } finally {
+      isLoading.value = false
+    }
   }
-}
 
-onMounted(fetchTicket)
+  onMounted(fetchTicket)
 
-async function sendMessage() {
-  if (!newMessage.value) return
-  savingMessage.value = true
-  errorMsg.value = ''
-  successMsg.value = ''
-  try {
-    await useAuthFetch(`/api/tickets/${ticket.value.id}/messages`, {
-      method: 'POST',
-      baseURL: apiUrl,
-      body: { content: newMessage.value },
-    })
-    newMessage.value = ''
-    successMsg.value = 'Message envoyé'
-    await fetchTicket()
-  } catch (e: any) {
-    errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.'
-  } finally {
-    savingMessage.value = false
+  async function sendMessage() {
+    if (!newMessage.value) return
+    savingMessage.value = true
+    errorMsg.value = ''
+    successMsg.value = ''
+    try {
+      await useAuthFetch(`/api/tickets/${ticket.value.id}/messages`, {
+        method: 'POST',
+        baseURL: apiUrl,
+        body: { content: newMessage.value },
+      })
+      newMessage.value = ''
+      successMsg.value = 'Message envoyé'
+      await fetchTicket()
+    } catch (e: any) {
+      errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.'
+    } finally {
+      savingMessage.value = false
+    }
   }
-}
 
-function statusLabel(status: string) {
-  switch (status) {
-    case 'OPEN': return 'Ouvert'
-    case 'IN_PROGRESS': return 'En cours'
-    case 'CLOSED': return 'Fermé'
-    default: return status
+  function statusLabel(status: string) {
+    switch (status) {
+      case 'OPEN': return 'Ouvert'
+      case 'IN_PROGRESS': return 'En cours'
+      case 'CLOSED': return 'Fermé'
+      default: return status
+    }
   }
-}
 
-function statusColor(status: string) {
-  switch (status) {
-    case 'OPEN': return 'error'
-    case 'IN_PROGRESS': return 'warning'
-    case 'CLOSED': return 'success'
-    default: return 'gray'
+  function statusColor(status: string) {
+    switch (status) {
+      case 'OPEN': return 'error'
+      case 'IN_PROGRESS': return 'warning'
+      case 'CLOSED': return 'success'
+      default: return 'gray'
+    }
   }
-}
 </script>
 
 <template>

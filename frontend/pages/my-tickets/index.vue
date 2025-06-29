@@ -1,58 +1,58 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRuntimeConfig } from '#app'
-import UHeader from '~/components/UHeader.vue'
-import UFooter from '~/components/UFooter.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import UCard from '~/components/molecules/UCard.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
+  import { ref, onMounted } from 'vue'
+  import { useRuntimeConfig } from '#app'
+  import UHeader from '~/components/UHeader.vue'
+  import UFooter from '~/components/UFooter.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
 
-const tickets = ref([])
-const isLoading = ref(true)
-const error = ref<string | null>(null)
+  const tickets = ref([])
+  const isLoading = ref(true)
+  const error = ref<string | null>(null)
 
-const config = useRuntimeConfig()
+  const config = useRuntimeConfig()
 
-definePageMeta({
-  middleware: 'owner'
-})
+  definePageMeta({
+    middleware: 'owner'
+  })
 
-onMounted(async () => {
-  try {
-    const res = await fetch(`${config.public.apiUrl}/api/tickets`, {
-      credentials: 'include',
-    })
+  onMounted(async () => {
+    try {
+      const res = await fetch(`${config.public.apiUrl}/api/tickets`, {
+        credentials: 'include',
+      })
 
-    if (!res.ok) {
-      throw new Error(`Erreur serveur: ${res.statusText}`)
+      if (!res.ok) {
+        throw new Error(`Erreur serveur: ${res.statusText}`)
+      }
+
+      const json = await res.json()
+      tickets.value = json
+    } catch (err: any) {
+      error.value = err.message
+    } finally {
+      isLoading.value = false
     }
+  })
 
-    const json = await res.json()
-    tickets.value = json
-  } catch (err: any) {
-    error.value = err.message
-  } finally {
-    isLoading.value = false
+  function statusLabel(status: string) {
+    switch (status) {
+      case 'OPEN': return 'Ouvert'
+      case 'IN_PROGRESS': return 'En cours'
+      case 'CLOSED': return 'Fermé'
+      default: return status
+    }
   }
-})
 
-function statusLabel(status: string) {
-  switch (status) {
-    case 'OPEN': return 'Ouvert'
-    case 'IN_PROGRESS': return 'En cours'
-    case 'CLOSED': return 'Fermé'
-    default: return status
+  function statusColor(status: string) {
+    switch (status) {
+      case 'OPEN': return 'error'
+      case 'IN_PROGRESS': return 'warning'
+      case 'CLOSED': return 'success'
+      default: return 'gray'
+    }
   }
-}
-
-function statusColor(status: string) {
-  switch (status) {
-    case 'OPEN': return 'error'
-    case 'IN_PROGRESS': return 'warning'
-    case 'CLOSED': return 'success'
-    default: return 'gray'
-  }
-}
 </script>
 
 <template>

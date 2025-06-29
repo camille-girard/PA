@@ -1,179 +1,178 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, reactive, watch, computed, onMounted } from 'vue'
-import Input from '~/components/atoms/UInput.vue'
-import UInputNumber from '~/components/atoms/UInputNumber.vue'
-import Textarea from '~/components/atoms/UTextarea.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { useRoute } from 'vue-router'
+  import { ref, reactive, watch, computed, onMounted } from 'vue'
+  import Input from '~/components/atoms/UInput.vue'
+  import UInputNumber from '~/components/atoms/UInputNumber.vue'
+  import Textarea from '~/components/atoms/UTextarea.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-interface Theme {
-  id: number
-  name: string
-}
-
-interface Accommodation {
-  id: number
-  name: string
-  description?: string
-  address: string
-  city?: string
-  postalCode?: string
-  country?: string
-  type?: string
-  price: number
-  capacity: number
-  bedrooms?: number
-  bathrooms?: number
-  advantage: string[]
-  practicalInformations?: string
-  latitude?: number
-  longitude?: number
-  themeId?: number
-}
-
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
-
-const route = useRoute()
-const id = route.params.id as string
-const { public: { apiUrl } } = useRuntimeConfig()
-
-const pending = ref(false)
-const saving = ref(false)
-const success = ref(false)
-const errorMsg = ref('')
-
-const themes = ref<Theme[]>([])
-const selectedThemeId = ref<number | null>(null)
-
-const accommodation = ref<Accommodation | null>(null)
-
-const form = reactive({
-  name: '',
-  description: '',
-  address: '',
-  city: '',
-  postalCode: '',
-  country: '',
-  type: '',
-  price: 0,
-  capacity: 1,
-  bedrooms: 0,
-  bathrooms: 0,
-  practicalInformations: '',
-  advantage: '',
-  latitude: '',
-  longitude: '',
-})
-
-async function loadThemes() {
-  try {
-    const { data, error } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', {
-      baseURL: apiUrl,
-    })
-    if (error.value) {
-      throw error.value
-    }
-    themes.value = data.value?.themes ?? []
-  } catch (err: any) {
-    console.error('Erreur chargement des thèmes:', err)
+  interface Theme {
+    id: number
+    name: string
   }
-}
 
-const themeList = computed(() => themes.value)
-
-async function loadAccommodation() {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data, error } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
-      baseURL: apiUrl,
-    })
-    if (error.value) {
-      throw error.value
-    }
-
-    accommodation.value = data.value ?? null
-    if (accommodation.value) {
-      const acc = accommodation.value
-      form.name = acc.name
-      form.description = acc.description ?? ''
-      form.address = acc.address
-      form.city = acc.city ?? ''
-      form.postalCode = acc.postalCode ?? ''
-      form.country = acc.country ?? ''
-      form.type = acc.type ?? ''
-      form.price = acc.price
-      form.capacity = acc.capacity
-      form.bedrooms = acc.bedrooms ?? 0
-      form.bathrooms = acc.bathrooms ?? 0
-      form.practicalInformations = acc.practicalInformations ?? ''
-      form.advantage = acc.advantage?.join('\n') ?? ''
-      form.latitude = acc.latitude?.toString() ?? ''
-      form.longitude = acc.longitude?.toString() ?? ''
-      selectedThemeId.value = acc.themeId ?? null
-    }
-  } catch (err: any) {
-    errorMsg.value = err?.data?.message || 'Erreur lors du chargement.'
-    console.error(err)
-  } finally {
-    pending.value = false
+  interface Accommodation {
+    id: number
+    name: string
+    description?: string
+    address: string
+    city?: string
+    postalCode?: string
+    country?: string
+    type?: string
+    price: number
+    capacity: number
+    bedrooms?: number
+    bathrooms?: number
+    advantage: string[]
+    practicalInformations?: string
+    latitude?: number
+    longitude?: number
+    themeId?: number
   }
-}
 
-async function refresh() {
-  await loadAccommodation()
-}
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-// Save
-async function save() {
-  saving.value = true
-  success.value = false
-  errorMsg.value = ''
-  try {
-    await useAuthFetch(`/api/accommodations/${id}`, {
-      method: 'PUT',
-      baseURL: apiUrl,
-      body: {
-        name: form.name,
-        description: form.description,
-        address: form.address,
-        city: form.city,
-        postalCode: form.postalCode,
-        country: form.country,
-        type: form.type,
-        price: form.price,
-        capacity: form.capacity,
-        bedrooms: form.bedrooms,
-        bathrooms: form.bathrooms,
-        practicalInformations: form.practicalInformations,
-        advantage: form.advantage
-            .split('\n')
-            .map(a => a.trim())
-            .filter(Boolean),
-        latitude: form.latitude ? parseFloat(form.latitude) : null,
-        longitude: form.longitude ? parseFloat(form.longitude) : null,
-        themeId: selectedThemeId.value,
-      },
-    })
+  const route = useRoute()
+  const id = route.params.id as string
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-    success.value = true
-    await refresh()
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
-  } finally {
-    saving.value = false
+  const pending = ref(false)
+  const saving = ref(false)
+  const success = ref(false)
+  const errorMsg = ref('')
+
+  const themes = ref<Theme[]>([])
+  const selectedThemeId = ref<number | null>(null)
+
+  const accommodation = ref<Accommodation | null>(null)
+
+  const form = reactive({
+    name: '',
+    description: '',
+    address: '',
+    city: '',
+    postalCode: '',
+    country: '',
+    type: '',
+    price: 0,
+    capacity: 1,
+    bedrooms: 0,
+    bathrooms: 0,
+    practicalInformations: '',
+    advantage: '',
+    latitude: '',
+    longitude: '',
+  })
+
+  async function loadThemes() {
+    try {
+      const { data, error } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', {
+        baseURL: apiUrl,
+      })
+      if (error.value) {
+        throw error.value
+      }
+      themes.value = data.value?.themes ?? []
+    } catch (err: any) {
+      console.error('Erreur chargement des thèmes:', err)
+    }
   }
-}
 
-onMounted(() => {
-  loadThemes()
-  loadAccommodation()
-})
+  const themeList = computed(() => themes.value)
+
+  async function loadAccommodation() {
+    pending.value = true
+    errorMsg.value = ''
+    try {
+      const { data, error } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
+        baseURL: apiUrl,
+      })
+      if (error.value) {
+        throw error.value
+      }
+
+      accommodation.value = data.value ?? null
+      if (accommodation.value) {
+        const acc = accommodation.value
+        form.name = acc.name
+        form.description = acc.description ?? ''
+        form.address = acc.address
+        form.city = acc.city ?? ''
+        form.postalCode = acc.postalCode ?? ''
+        form.country = acc.country ?? ''
+        form.type = acc.type ?? ''
+        form.price = acc.price
+        form.capacity = acc.capacity
+        form.bedrooms = acc.bedrooms ?? 0
+        form.bathrooms = acc.bathrooms ?? 0
+        form.practicalInformations = acc.practicalInformations ?? ''
+        form.advantage = acc.advantage?.join('\n') ?? ''
+        form.latitude = acc.latitude?.toString() ?? ''
+        form.longitude = acc.longitude?.toString() ?? ''
+        selectedThemeId.value = acc.themeId ?? null
+      }
+    } catch (err: any) {
+      errorMsg.value = err?.data?.message || 'Erreur lors du chargement.'
+      console.error(err)
+    } finally {
+      pending.value = false
+    }
+  }
+
+  async function refresh() {
+    await loadAccommodation()
+  }
+
+  async function save() {
+    saving.value = true
+    success.value = false
+    errorMsg.value = ''
+    try {
+      await useAuthFetch(`/api/accommodations/${id}`, {
+        method: 'PUT',
+        baseURL: apiUrl,
+        body: {
+          name: form.name,
+          description: form.description,
+          address: form.address,
+          city: form.city,
+          postalCode: form.postalCode,
+          country: form.country,
+          type: form.type,
+          price: form.price,
+          capacity: form.capacity,
+          bedrooms: form.bedrooms,
+          bathrooms: form.bathrooms,
+          practicalInformations: form.practicalInformations,
+          advantage: form.advantage
+              .split('\n')
+              .map(a => a.trim())
+              .filter(Boolean),
+          latitude: form.latitude ? parseFloat(form.latitude) : null,
+          longitude: form.longitude ? parseFloat(form.longitude) : null,
+          themeId: selectedThemeId.value,
+        },
+      })
+
+      success.value = true
+      await refresh()
+    } catch (error: any) {
+      errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
+    } finally {
+      saving.value = false
+    }
+  }
+
+  onMounted(() => {
+    loadThemes()
+    loadAccommodation()
+  })
 </script>
 
 

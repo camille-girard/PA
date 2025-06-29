@@ -1,83 +1,77 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthFetch } from '~/composables/useAuthFetch'
-import UCard from '~/components/molecules/UCard.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import { useRuntimeConfig } from '#app'
+  import { ref, computed, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import { useRuntimeConfig } from '#app'
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  })
 
-const router = useRouter()
-const { public: { apiUrl } } = useRuntimeConfig()
+  const router = useRouter()
+  const { public: { apiUrl } } = useRuntimeConfig()
 
-// State
-const selectedStatus = ref<'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED'>('ALL')
-const ticketsData = ref<any[]>([])
-const pending = ref(true)
-const error = ref<Error | null>(null)
+  const selectedStatus = ref<'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED'>('ALL')
+  const ticketsData = ref<any[]>([])
+  const pending = ref(true)
+  const error = ref<Error | null>(null)
 
-async function fetchTickets() {
-  pending.value = true
-  error.value = null
-  try {
-    const { data } = await useAuthFetch('/api/admin/tickets', {
-      baseURL: apiUrl,
-    })
-    ticketsData.value = data.value?.tickets ?? []
-  } catch (e) {
-    error.value = e
-  } finally {
-    pending.value = false
+  async function fetchTickets() {
+    pending.value = true
+    error.value = null
+    try {
+      const { data } = await useAuthFetch('/api/admin/tickets', {
+        baseURL: apiUrl,
+      })
+      ticketsData.value = data.value?.tickets ?? []
+    } catch (e) {
+      error.value = e
+    } finally {
+      pending.value = false
+    }
   }
-}
 
-// Fetch on mount
-onMounted(() => {
-  fetchTickets()
-})
+  onMounted(() => {
+    fetchTickets()
+  })
 
-// Filter tickets
-const filteredTickets = computed(() => {
-  if (!ticketsData.value) return []
-  if (selectedStatus.value === 'ALL') return ticketsData.value
-  return ticketsData.value.filter(t => t.status === selectedStatus.value)
-})
+  const filteredTickets = computed(() => {
+    if (!ticketsData.value) return []
+    if (selectedStatus.value === 'ALL') return ticketsData.value
+    return ticketsData.value.filter(t => t.status === selectedStatus.value)
+  })
 
-// Click = go to details page
-function openTicket(ticket) {
-  router.push(`/backoffice/tickets/${ticket.id}`)
-}
-
-function statusColor(status) {
-  switch (status) {
-    case 'OPEN': return 'error'
-    case 'IN_PROGRESS': return 'warning'
-    case 'CLOSED': return 'success'
-    default: return 'gray'
+  function openTicket(ticket) {
+    router.push(`/backoffice/tickets/${ticket.id}`)
   }
-}
 
-function statusLabel(status: string) {
-  switch (status) {
-    case 'OPEN': return 'Ouvert'
-    case 'IN_PROGRESS': return 'En cours'
-    case 'CLOSED': return 'Fermé'
-    default: return status
+  function statusColor(status) {
+    switch (status) {
+      case 'OPEN': return 'error'
+      case 'IN_PROGRESS': return 'warning'
+      case 'CLOSED': return 'success'
+      default: return 'gray'
+    }
   }
-}
+
+  function statusLabel(status: string) {
+    switch (status) {
+      case 'OPEN': return 'Ouvert'
+      case 'IN_PROGRESS': return 'En cours'
+      case 'CLOSED': return 'Fermé'
+      default: return status
+    }
+  }
 </script>
-
 
 <template>
   <div class="space-y-8">
     <h1 class="text-2xl font-semibold">Tickets Support</h1>
 
-    <!-- Filters -->
     <div class="flex gap-3">
       <UButton :variant="selectedStatus === 'ALL' ? 'primary' : 'ghost'" @click="selectedStatus = 'ALL'">Tous</UButton>
       <UButton :variant="selectedStatus === 'OPEN' ? 'primary' : 'ghost'" @click="selectedStatus = 'OPEN'">Open</UButton>
@@ -85,7 +79,6 @@ function statusLabel(status: string) {
       <UButton :variant="selectedStatus === 'CLOSED' ? 'primary' : 'ghost'" @click="selectedStatus = 'CLOSED'">Closed</UButton>
     </div>
 
-    <!-- Tickets List -->
     <div v-if="pending" class="text-gray-500">Chargement des tickets...</div>
     <div v-else-if="error" class="text-red-600">Erreur lors du chargement des tickets</div>
     <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

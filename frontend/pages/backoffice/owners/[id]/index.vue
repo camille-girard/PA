@@ -1,109 +1,109 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
-import UCard from '~/components/molecules/UCard.vue'
-import UBadge from '~/components/atoms/UBadge.vue'
-import UTable from '~/components/organisms/UTable.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import BaseModal from '~/components/BaseModal.vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
+  import { useRoute } from 'vue-router'
+  import { ref, computed } from 'vue'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UBadge from '~/components/atoms/UBadge.vue'
+  import UTable from '~/components/organisms/UTable.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import BaseModal from '~/components/BaseModal.vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
 
-interface Booking {
-  id: string
-  startDate: string
-  endDate: string
-  status: string
-}
+  interface Booking {
+    id: string
+    startDate: string
+    endDate: string
+    status: string
+  }
 
-interface Accommodation {
-  id: string
-  name: string
-  address: string
-  capacity: number
-  price: number
-  bookings: Booking[]
-}
+  interface Accommodation {
+    id: string
+    name: string
+    address: string
+    capacity: number
+    price: number
+    bookings: Booking[]
+  }
 
-interface Owner {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  phone?: string
-  isVerified: boolean
-  accommodationCount?: number
-  notation?: number
-  accommodations?: Accommodation[]
-}
+  interface Owner {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+    phone?: string
+    isVerified: boolean
+    accommodationCount?: number
+    notation?: number
+    accommodations?: Accommodation[]
+  }
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
-
-const { public: { apiUrl } } = useRuntimeConfig()
-const route = useRoute()
-const id = route.params.id
-
-const owner = ref<Owner | null>(null)
-const pending = ref(true)
-
-onMounted(async () => {
-  pending.value = true
-  const { data } = await useAuthFetch<Owner>(`/api/owners/${id}`, {
-    baseURL: apiUrl,
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
   })
-  owner.value = data.value ?? null
-  pending.value = false
-})
 
-const selectedAccommodation = ref<Accommodation | null>(null)
-const showModal = ref(false)
+  const { public: { apiUrl } } = useRuntimeConfig()
+  const route = useRoute()
+  const id = route.params.id
 
-function openAvailability(accommodation: any) {
-  selectedAccommodation.value = accommodation
-  showModal.value = true
-}
+  const owner = ref<Owner | null>(null)
+  const pending = ref(true)
 
-interface AccommodationTableRow {
-  id: string
-  name: string
-  address: string
-  capacity: number
-  price: string
-  status: 'Occupé' | 'Disponible'
-  bookings: Booking[]
-}
+  onMounted(async () => {
+    pending.value = true
+    const { data } = await useAuthFetch<Owner>(`/api/owners/${id}`, {
+      baseURL: apiUrl,
+    })
+    owner.value = data.value ?? null
+    pending.value = false
+  })
 
-const accommodations = computed(() =>
-    owner.value?.accommodations?.map((a): AccommodationTableRow => ({
-      id: a.id,
-      name: a.name,
-      address: a.address,
-      capacity: a.capacity,
-      price: `${a.price.toFixed(2)} €`,
-      status: a.bookings?.some((b) => {
-        const now = new Date()
-        return new Date(b.startDate) <= now && new Date(b.endDate) >= now
-      }) ? 'Occupé' : 'Disponible',
-      bookings: a.bookings,
-    })) ?? []
-)
+  const selectedAccommodation = ref<Accommodation | null>(null)
+  const showModal = ref(false)
 
-const columns = [
-  { key: 'name', label: 'Nom du logement' },
-  { key: 'address', label: 'Adresse' },
-  { key: 'capacity', label: 'Capacité' },
-  { key: 'price', label: 'Prix' },
-  { key: 'status', label: 'Disponibilité' },
-  { key: 'actions', label: '' },
-]
+  function openAvailability(accommodation: any) {
+    selectedAccommodation.value = accommodation
+    showModal.value = true
+  }
 
-const getStatusProps = (status: string) =>
-  status === 'Occupé'
-    ? { label: 'Occupé', color: 'warning' }
-    : { label: 'Disponible', color: 'success' }
+  interface AccommodationTableRow {
+    id: string
+    name: string
+    address: string
+    capacity: number
+    price: string
+    status: 'Occupé' | 'Disponible'
+    bookings: Booking[]
+  }
+
+  const accommodations = computed(() =>
+      owner.value?.accommodations?.map((a): AccommodationTableRow => ({
+        id: a.id,
+        name: a.name,
+        address: a.address,
+        capacity: a.capacity,
+        price: `${a.price.toFixed(2)} €`,
+        status: a.bookings?.some((b) => {
+          const now = new Date()
+          return new Date(b.startDate) <= now && new Date(b.endDate) >= now
+        }) ? 'Occupé' : 'Disponible',
+        bookings: a.bookings,
+      })) ?? []
+  )
+
+  const columns = [
+    { key: 'name', label: 'Nom du logement' },
+    { key: 'address', label: 'Adresse' },
+    { key: 'capacity', label: 'Capacité' },
+    { key: 'price', label: 'Prix' },
+    { key: 'status', label: 'Disponibilité' },
+    { key: 'actions', label: '' },
+  ]
+
+  const getStatusProps = (status: string) =>
+    status === 'Occupé'
+      ? { label: 'Occupé', color: 'warning' }
+      : { label: 'Disponible', color: 'success' }
 
 </script>
 
