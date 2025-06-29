@@ -8,20 +8,23 @@
   import EditIcon from '~/components/atoms/icons/EditIcon.vue'
   import ConfirmPopover from '~/components/ConfirmPopover.vue'
   import EyeView from '~/components/atoms/icons/EyeView.vue'
-  import { useRouter } from 'vue-router'
   import { useRuntimeConfig } from '#app'
   import { useAuthFetch } from '~/composables/useAuthFetch'
-
 
   definePageMeta({
     layout: 'backoffice',
     middleware: 'admin',
   })
 
-  const router = useRouter()
   const { public: { apiUrl } } = useRuntimeConfig()
 
-  const { data: ownerData } = await useAuthFetch('/api/owners', { baseURL: apiUrl })
+  const ownerData = ref<any[]>([])
+
+  onMounted(async () => {
+    const { data } = await useAuthFetch('/api/owners', { baseURL: apiUrl })
+    ownerData.value = data.value
+  })
+
   const owners = computed(() => ownerData.value || [])
 
   const successMsg = ref('')

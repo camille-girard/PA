@@ -9,6 +9,34 @@ import BaseModal from '~/components/BaseModal.vue'
 import { useRuntimeConfig } from '#app'
 import { useAuthFetch } from '~/composables/useAuthFetch'
 
+interface Booking {
+  id: string
+  startDate: string
+  endDate: string
+  status: string
+}
+
+interface Accommodation {
+  id: string
+  name: string
+  address: string
+  capacity: number
+  price: number
+  bookings: Booking[]
+}
+
+interface Owner {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  isVerified: boolean
+  accommodationCount?: number
+  notation?: number
+  accommodations?: Accommodation[]
+}
+
 definePageMeta({
   layout: 'backoffice',
   middleware: 'admin',
@@ -18,12 +46,19 @@ const { public: { apiUrl } } = useRuntimeConfig()
 const route = useRoute()
 const id = route.params.id
 
-const { data: owner, pending } = await useAuthFetch(`/api/owners/${id}`, {
-  baseURL: apiUrl,
+const owner = ref<Owner | null>(null)
+const pending = ref(true)
 
+onMounted(async () => {
+  pending.value = true
+  const { data } = await useAuthFetch<Owner>(`/api/owners/${id}`, {
+    baseURL: apiUrl,
+  })
+  owner.value = data.value ?? null
+  pending.value = false
 })
 
-const selectedAccommodation = ref(null)
+const selectedAccommodation = ref<Accommodation | null>(null)
 const showModal = ref(false)
 
 function openAvailability(accommodation: any) {
@@ -31,19 +66,29 @@ function openAvailability(accommodation: any) {
   showModal.value = true
 }
 
+interface AccommodationTableRow {
+  id: string
+  name: string
+  address: string
+  capacity: number
+  price: string
+  status: 'Occupé' | 'Disponible'
+  bookings: Booking[]
+}
+
 const accommodations = computed(() =>
-  owner.value?.accommodations?.map((a: any) => ({
-    id: a.id,
-    name: a.name,
-    address: a.address,
-    capacity: a.capacity,
-    price: `${a.price.toFixed(2)} €`,
-    status: a.bookings?.some((b: any) => {
-      const now = new Date()
-      return new Date(b.startDate) <= now && new Date(b.endDate) >= now
-    }) ? 'Occupé' : 'Disponible',
-    bookings: a.bookings
-  })) ?? []
+    owner.value?.accommodations?.map((a): AccommodationTableRow => ({
+      id: a.id,
+      name: a.name,
+      address: a.address,
+      capacity: a.capacity,
+      price: `${a.price.toFixed(2)} €`,
+      status: a.bookings?.some((b) => {
+        const now = new Date()
+        return new Date(b.startDate) <= now && new Date(b.endDate) >= now
+      }) ? 'Occupé' : 'Disponible',
+      bookings: a.bookings,
+    })) ?? []
 )
 
 const columns = [

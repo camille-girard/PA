@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRuntimeConfig } from '#app'
 import { useAuthFetch } from '~/composables/useAuthFetch'
 
@@ -17,20 +17,10 @@ definePageMeta({
 
 const { public: { apiUrl } } = useRuntimeConfig()
 
-const { data: accommodationsData } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl })
-
-const accommodations = computed(() => accommodationsData.value || [])
-
-const columns = [
-  { key: 'name', label: 'Nom', sortable: true },
-  { key: 'owner', label: 'Hôte' },
-  { key: 'address', label: 'Adresse' },
-  { key: 'price', label: 'Prix (€) / nuit' },
-  { key: 'capacity', label: 'Capacité' },
-  { key: 'theme', label: 'Thème' },
-  { key: 'availability', label: 'Disponibilité' },
-  { key: 'actions', label: '' },
-]
+const accommodationsData = ref<any[]>([])
+const pending = ref(false)
+const successMsg = ref('')
+const errorMsg = ref('')
 
 interface Booking {
   startDate: string
@@ -56,6 +46,8 @@ function isAvailableNow(acc: AccommodationRow) {
   return !(acc.bookings?.some(b => b.startDate <= today && b.endDate >= today))
 }
 
+const accommodations = computed(() => accommodationsData.value || [])
+
 const accommodationsTableData = computed(() =>
     accommodations.value.map(acc => ({
       id: acc.id,
@@ -70,81 +62,112 @@ const accommodationsTableData = computed(() =>
     }))
 )
 
-const successMsg = ref('')
-const errorMsg = ref('')
+const columns = [
+  { key: 'name', label: 'Nom', sortable: true },
+  { key: 'owner', label: 'Hôte' },
+  { key: 'address', label: 'Adresse' },
+  { key: 'price', label: 'Prix (€) / nuit' },
+  { key: 'capacity', label: 'Capacité' },
+  { key: 'theme', label: 'Thème' },
+  { key: 'availability', label: 'Disponibilité' },
+  { key: 'actions', label: '' },
+]
+
+async function loadAccommodations() {
+  pending.value = true
+  errorMsg.value = ''
+  try {
+    const { data, error } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl })
+    if (error.value) {
+      throw error.value
+    }
+    accommodationsData.value = data.value || []
+  } catch (err: any) {
+    errorMsg.value = err?.data?.message || 'Erreur lors du chargement des hébergements.'
+    console.error(err)
+  } finally {
+    pending.value = false
+  }
+}
 
 async function refreshAccommodations() {
-  const { data } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl })
-  accommodationsData.value = data.value
+  await loadAccommodations()
 }
 
 async function deleteAccommodation(id: number) {
   successMsg.value = ''
   errorMsg.value = ''
+  pending.value = true
   try {
-    await $fetch(`/api/accommodations/${id}`, {
+    await useAuthFetch(`/api/accommodations/${id}`, {
       method: 'DELETE',
       baseURL: apiUrl,
     })
     await refreshAccommodations()
     successMsg.value = 'Hébergement supprimé avec succès.'
-  } catch (err: unknown) {
-    if (typeof err === 'object' && err && 'data' in err) {
-      errorMsg.value = (err as { data?: { message?: string } }).data?.message || 'Erreur lors de la suppression.'
-    } else {
-      errorMsg.value = 'Erreur lors de la suppression.'
-    }
+  } catch (err: any) {
+    errorMsg.value = err?.data?.message || 'Erreur lors de la suppression.'
     console.error(err)
+  } finally {
+    pending.value = false
   }
 }
+
+onMounted(() => {
+  loadAccommodations()
+})
 </script>
 
 <template>
   <div class="space-y-6">
     <p class="text-2xl font-semibold">Hébergements</p>
 
-    <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-    <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
+    <div v-if="pending" class="text-gray-600">Chargement…</div>
 
-    <UTable :columns="columns" :data="accommodationsTableData">
-      <template #cell-availability="{ row }">
-        <UBadge
-            :color="row.availability === 'Disponible' ? 'success' : 'error'"
-            variant="pill"
-            size="sm"
-        >
-          {{ row.availability }}
-        </UBadge>
-      </template>
+    <div v-else>
+      <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
+      <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
 
-      <template #cell-actions="{ row }">
-        <div class="flex items-center gap-4">
-          <NuxtLink
-              :to="`/backoffice/accommodations/${row.id}`"
-              class="text-brand-600 hover:text-brand-700"
+      <UTable :columns="columns" :data="accommodationsTableData">
+        <template #cell-availability="{ row }">
+          <UBadge
+              :color="row.availability === 'Disponible' ? 'success' : 'error'"
+              variant="pill"
+              size="sm"
           >
-            <EyeView class="w-6 h-6" />
-          </NuxtLink>
+            {{ row.availability }}
+          </UBadge>
+        </template>
 
-          <NuxtLink
-              :to="`/backoffice/accommodations/${row.id}/edit`"
-              class="text-blue-500 hover:text-blue-800"
-          >
-            <EditIcon class="w-6 h-6" />
-          </NuxtLink>
+        <template #cell-actions="{ row }">
+          <div class="flex items-center gap-4">
+            <NuxtLink
+                :to="`/backoffice/accommodations/${row.id}`"
+                class="text-brand-600 hover:text-brand-700"
+            >
+              <EyeView class="w-6 h-6" />
+            </NuxtLink>
 
-          <ConfirmPopover
-              :item-name="row.name"
-              @confirm="deleteAccommodation(row.id)"
-          >
-            <template #trigger>
-              <button class="text-red-500 hover:text-red-700">
-                <TrashIcon class="w-6 h-6" />
-              </button>
-            </template>
-          </ConfirmPopover>
-        </div>
-      </template>
-    </UTable>
+            <NuxtLink
+                :to="`/backoffice/accommodations/${row.id}/edit`"
+                class="text-blue-500 hover:text-blue-800"
+            >
+              <EditIcon class="w-6 h-6" />
+            </NuxtLink>
+
+            <ConfirmPopover
+                :item-name="row.name"
+                @confirm="deleteAccommodation(row.id)"
+            >
+              <template #trigger>
+                <button class="text-red-500 hover:text-red-700">
+                  <TrashIcon class="w-6 h-6" />
+                </button>
+              </template>
+            </ConfirmPopover>
+          </div>
+        </template>
+      </UTable>
+    </div>
   </div>
 </template>

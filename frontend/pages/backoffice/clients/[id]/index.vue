@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
 import UBadge from '~/components/atoms/UBadge.vue'
 import UCard from '~/components/molecules/UCard.vue'
 import UTable from '~/components/organisms/UTable.vue'
@@ -13,7 +13,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const id = route.params.id
+const id = ref<string | undefined>(undefined)
 const { public: { apiUrl } } = useRuntimeConfig()
 
 interface Booking {
@@ -34,19 +34,46 @@ interface Client {
   email?: string
   phone?: string
   createdAt: string
-  isVerified: boolean
+  verified: boolean
   preferences?: string[]
   bookings?: Booking[]
 }
 
-const { data: client, pending } = await useAuthFetch<Client>(`/api/clients/${id}`, {
-  baseURL: apiUrl,
-  transform: (res) => res.client,
-})
+const client = ref<Client | null>(null)
+const pending = ref(false)
+const errorMsg = ref('')
 
-const getStatusProps = (verified: boolean | undefined) => verified
-    ? { label: 'Vérifié', color: 'success' }
-    : { label: 'Non vérifié', color: 'error' }
+async function loadClient(clientId: string) {
+  pending.value = true
+  errorMsg.value = ''
+  try {
+    const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
+      baseURL: apiUrl,
+    })
+    client.value = data.value?.client ?? null
+  } catch (error: any) {
+    errorMsg.value = error?.data?.message || 'Erreur lors du chargement du client.'
+    console.error(error)
+  } finally {
+    pending.value = false
+  }
+}
+
+watch(
+    () => route.params.id,
+    (newId) => {
+      if (typeof newId === 'string' && newId !== '') {
+        id.value = newId
+        loadClient(newId)
+      }
+    },
+    { immediate: true }
+)
+
+const getStatusProps = (verified: boolean | undefined) =>
+    verified
+        ? { label: 'Vérifié', color: 'success' }
+        : { label: 'Non vérifié', color: 'error' }
 
 const bookings = computed(() =>
     client.value?.bookings?.map((b: Booking) => ({
@@ -60,47 +87,51 @@ const bookings = computed(() =>
 )
 </script>
 
-
 <template>
   <div class="space-y-6">
     <h1 class="text-2xl font-semibold">Fiche client</h1>
 
-    <UCard>
-      <template #header>
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-          <div class="text-lg font-medium">
-            {{ client?.firstName }} {{ client?.lastName }}
+    <div v-if="pending" class="text-gray-600">Chargement…</div>
+    <div v-else-if="errorMsg" class="text-red-600">{{ errorMsg }}</div>
+    <div v-else-if="!client" class="text-gray-600">Aucun client trouvé.</div>
+    <div v-else class="space-y-6">
+      <UCard>
+        <template #header>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+            <div class="text-lg font-medium">
+              {{ client.firstName }} {{ client.lastName }}
+            </div>
+            <UBadge
+                :color="getStatusProps(client.verified).color"
+                variant="pill"
+            >
+              {{ getStatusProps(client.verified).label }}
+            </UBadge>
           </div>
-          <UBadge
-              :color="getStatusProps(client?.verified).color"
-              variant="pill"
-          >
-            {{ getStatusProps(client?.verified).label }}
-          </UBadge>
+        </template>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div><strong>Email :</strong> {{ client.email }}</div>
+          <div><strong>Téléphone :</strong> {{ client.phone || 'Non renseigné' }}</div>
+          <div><strong>Date de création :</strong> {{ new Date(client.createdAt).toLocaleDateString() }}</div>
+          <div><strong>Préférences :</strong> {{ client.preferences?.join(', ') || '—' }}</div>
         </div>
-      </template>
+      </UCard>
 
-      <div class="grid md:grid-cols-2 gap-6">
-        <div><strong>Email :</strong> {{ client?.email }}</div>
-        <div><strong>Téléphone :</strong> {{ client?.phone || 'Non renseigné' }}</div>
-        <div><strong>Date de création :</strong> {{ new Date(client?.createdAt).toLocaleDateString() }}</div>
-        <div><strong>Préférences :</strong> {{ client?.preferences?.join(', ') || '—' }}</div>
+      <div>
+        <h2 class="text-lg font-semibold mb-4">Réservations</h2>
+        <UTable
+            :columns="[
+            { key: 'accommodation', label: 'Hébergement' },
+            { key: 'startDate', label: 'Début' },
+            { key: 'endDate', label: 'Fin' },
+            { key: 'status', label: 'Statut' },
+            { key: 'totalPrice', label: 'Prix total' },
+          ]"
+            :data="bookings"
+            :loading="pending"
+        />
       </div>
-    </UCard>
-
-    <div>
-      <h2 class="text-lg font-semibold mb-4">Réservations</h2>
-      <UTable
-          :columns="[
-          { key: 'accommodation', label: 'Hébergement' },
-          { key: 'startDate', label: 'Début' },
-          { key: 'endDate', label: 'Fin' },
-          { key: 'status', label: 'Statut' },
-          { key: 'totalPrice', label: 'Prix total' },
-        ]"
-          :data="bookings"
-          :loading="pending"
-      />
     </div>
   </div>
 </template>
