@@ -242,26 +242,16 @@
         >
             <slot></slot>
         </div>
-        
+
         <Transition v-if="!teleport" name="popover">
-            <div
-                v-if="isOpen"
-                ref="contentRef"
-                class="absolute z-50 bg-transparent"
-                :style="positionStyles"
-            >
+            <div v-if="isOpen" ref="contentRef" class="absolute z-50 bg-transparent" :style="positionStyles">
                 <slot name="content"></slot>
             </div>
         </Transition>
-        
+
         <Teleport v-else :to="teleportTo">
             <Transition name="popover">
-                <div
-                    v-if="isOpen"
-                    ref="contentRef"
-                    class="bg-transparent"
-                    :style="positionStyles"
-                >
+                <div v-if="isOpen" ref="contentRef" class="bg-transparent" :style="positionStyles">
                     <slot name="content"></slot>
                 </div>
             </Transition>
@@ -290,4 +280,3 @@
         opacity: 1;
     }
 </style>
-

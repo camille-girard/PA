@@ -22,7 +22,7 @@
         if (props.collapsible) {
             isOpen.value = !isOpen.value;
         } else {
-            navigateTo(props.to)
+            navigateTo(props.to);
         }
     };
 
@@ -91,4 +91,3 @@
         transform: translateY(-10px);
     }
 </style>
-

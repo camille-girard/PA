@@ -53,7 +53,7 @@
             });
         } catch (error) {
             console.error('Erreur lors de la recherche:', error);
-            
+
             // Ajouter un toast d'erreur
             const toast = useToast();
             toast.error('Erreur de recherche', 'Une erreur est survenue lors de la recherche');

@@ -279,8 +279,8 @@ class AccommodationController extends AbstractController
             $accommodation->setOwner($owner);
         }
 
-        if (isset($data['themeId'])) {
-            $theme = $this->themeRepository->find($data['themeId']);
+        if (isset($data['theme'])) {
+            $theme = $this->themeRepository->find($data['theme']);
             if (!$theme) {
                 return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
             }
