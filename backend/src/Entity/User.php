@@ -26,65 +26,72 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['me:read'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['me:read'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['me:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['me:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read'])]
     private ?bool $isVerified = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    /**
-     * @var Collection<int, SupportTicket>
-     */
-    #[ORM\OneToMany(targetEntity: SupportTicket::class, mappedBy: 'user')]
-    private Collection $supportTickets;
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]
+    private Collection $tickets;
 
     #[ORM\Column(type: 'boolean')]
     private bool $isDeleted = false;
 
+    /**
+     * @var Collection<int, TicketMessage>
+     */
+    #[ORM\OneToMany(targetEntity: TicketMessage::class, mappedBy: 'author')]
+    private Collection $ticketMessages;
+
     public function __construct()
     {
-        $this->supportTickets = new ArrayCollection();
+        $this->ticketMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,35 +251,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, SupportTicket>
-     */
-    public function getSupportTickets(): Collection
-    {
-        return $this->supportTickets;
-    }
-
-    public function addSupportTicket(SupportTicket $supportTicket): static
-    {
-        if (!$this->supportTickets->contains($supportTicket)) {
-            $this->supportTickets->add($supportTicket);
-            $supportTicket->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSupportTicket(SupportTicket $supportTicket): static
-    {
-        if ($this->supportTickets->removeElement($supportTicket)) {
-            if ($supportTicket->getUser() === $this) {
-                $supportTicket->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isDeleted(): bool
     {
         return $this->isDeleted;
@@ -284,4 +262,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, TicketMessage>
+     */
+    public function getTicketMessages(): Collection
+    {
+        return $this->ticketMessages;
+    }
+
+    public function addTicketMessage(TicketMessage $ticketMessage): static
+    {
+        if (!$this->ticketMessages->contains($ticketMessage)) {
+            $this->ticketMessages->add($ticketMessage);
+            $ticketMessage->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketMessage(TicketMessage $ticketMessage): static
+    {
+        if ($this->ticketMessages->removeElement($ticketMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($ticketMessage->getAuthor() === $this) {
+                $ticketMessage->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setOwner($this);
+        }
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            if ($ticket->getOwner() === $this) {
+                $ticket->setOwner(null);
+            }
+        }
+        return $this;
+    }
+
 }

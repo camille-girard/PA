@@ -10,6 +10,7 @@ type User = {
     roles: string[];
 };
 
+
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null as User | null,
@@ -218,6 +219,12 @@ export const useAuthStore = defineStore('auth', {
             } catch {
                 return false;
             }
+        },
+    },
+
+    getters: {
+        isAdmin(state) {
+            return state.user?.roles?.includes('ROLE_ADMIN') ?? false;
         },
     },
 
