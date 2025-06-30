@@ -101,6 +101,17 @@ class AccommodationController extends AbstractController
                 'bio' => $accommodation->getOwner()?->getBio(),
                 'email' => $accommodation->getOwner()?->getEmail(),
             ],
+            'bookings' => array_map(fn ($booking) => [
+                'id' => $booking->getId(),
+                'startDate' => $booking->getStartDate()?->format('Y-m-d'),
+                'endDate' => $booking->getEndDate()?->format('Y-m-d'),
+                'status' => $booking->getStatus(),
+                'client' => [
+                    'id' => $booking->getClient()?->getId(),
+                    'firstName' => $booking->getClient()?->getFirstName(),
+                    'lastName' => $booking->getClient()?->getLastName(),
+                ],
+            ], $accommodation->getBookings()->toArray()),
         ]);
     }
 
@@ -250,6 +261,14 @@ class AccommodationController extends AbstractController
         }
         if (isset($data['longitude'])) {
             $accommodation->setLongitude($data['longitude']);
+        }
+
+        if (array_key_exists('practicalInformations', $data)) {
+            $accommodation->setPracticalInformations($data['practicalInformations'] ?? '');
+        }
+
+        if (array_key_exists('advantage', $data)) {
+            $accommodation->setAdvantage($data['advantage'] ?? []);
         }
 
         if (isset($data['ownerId'])) {

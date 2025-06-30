@@ -13,6 +13,7 @@ App\Entity\Client:
     is_verified: true
     phone: '+33612345678'
     created_at: '<(new DateTimeImmutable())>'
+    avatar: 'https://picsum.photos/200/300'
 
   client_2:
     email: 'client2@example.com'
@@ -24,3 +25,4 @@ App\Entity\Client:
     is_verified: true
     phone: '+33687654321'
     created_at: '<(new DateTimeImmutable())>'
+    avatar: 'https://picsum.photos/200/300'
