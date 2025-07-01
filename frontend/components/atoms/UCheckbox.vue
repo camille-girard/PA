@@ -35,8 +35,9 @@
         emit('update:modelValue', target.checked);
         emit('change', event);
     };
-
-    const inputId = computed(() => props.id || `checkbox-${Math.random().toString(36).substring(2, 9)}`);
+    
+    const generatedId = useId()
+    const inputId = computed(() => props.id || generatedId);
 
     const sizeClasses = {
         sm: 'w-4 h-4',
