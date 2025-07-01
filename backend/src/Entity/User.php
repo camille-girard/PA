@@ -284,7 +284,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTicketMessage(TicketMessage $ticketMessage): static
     {
         if ($this->ticketMessages->removeElement($ticketMessage)) {
-            // set the owning side to null (unless already changed)
             if ($ticketMessage->getAuthor() === $this) {
                 $ticketMessage->setAuthor(null);
             }

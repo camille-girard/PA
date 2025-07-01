@@ -15,7 +15,15 @@
     });
 
     function saveField(field: string, value: string) {
-        auth.updateUser({ [field]: value });
+        if (field === 'preferences') {
+            const preferencesArray = value
+                .split(',')
+                .map((pref) => pref.trim())
+                .filter((pref) => pref.length > 0);
+            auth.updateUser({ [field]: preferencesArray });
+        } else {
+            auth.updateUser({ [field]: value });
+        }
     }
 
     function handleDelete() {
@@ -42,6 +50,29 @@
     const isClientOnly = computed(
         () => auth.user?.roles.includes('ROLE_CLIENT') && !auth.user?.roles.includes('ROLE_OWNER')
     );
+
+    const preferencesString = computed(() => {
+        if (!auth.user?.preferences) {
+            return '';
+        }
+
+        if (!Array.isArray(auth.user.preferences)) {
+            if (typeof auth.user.preferences === 'string') {
+                try {
+                    const parsed = JSON.parse(auth.user.preferences);
+                    if (Array.isArray(parsed)) {
+                        return parsed.join(', ');
+                    }
+                } catch (e) {
+                    return auth.user.preferences; // Retourner tel quel si c'est déjà une string
+                }
+            }
+            return '';
+        }
+
+        const result = auth.user.preferences.join(', ');
+        return result;
+    });
 </script>
 
 <template>
@@ -75,6 +106,13 @@
                     label="Adresse"
                     :model-value="auth.user.address ?? ''"
                     field="address"
+                    @save="saveField"
+                />
+
+                <EditableField
+                    label="Préférences"
+                    :model-value="preferencesString"
+                    field="preferences"
                     @save="saveField"
                 />
             </div>
