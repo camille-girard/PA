@@ -47,7 +47,7 @@
 <template>
     <div class="relative h-fit w-fit">
         <div :class="[baseClasses, sizeClasses[size]]">
-            <img v-if="imageSrc" :src="imageSrc" />
+            <NuxtImg v-if="imageSrc" :src="imageSrc" />
             <p v-else-if="text" :class="[textSizeClasses[size], 'text-quaternary font-semibold']">
                 {{ text }}
             </p>
@@ -56,3 +56,4 @@
         <VerifiedTickIcon v-if="statusIcon === 'verified'" :size="size" class="absolute bottom-0 right-0 z-10" />
     </div>
 </template>
+
