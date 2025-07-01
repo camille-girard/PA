@@ -5,11 +5,7 @@ App\Entity\Client:
     password: 'password123'
     first_name: 'Cyril'
     last_name: 'MAMAN'
-    preferences: [
-      'pets_allowed',
-      'wifi',
-      'pool'
-    ]
+    preferences: ['pets_allowed','wifi','pool']
     is_verified: true
     phone: '+33612345678'
     created_at: '<(new DateTimeImmutable())>'

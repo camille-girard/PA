@@ -13,4 +13,3 @@
         />
     </svg>
 </template>
-

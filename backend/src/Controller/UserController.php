@@ -9,9 +9,9 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/api')]
 #[OA\Tag(name: 'Users')]
@@ -21,11 +21,11 @@ final class UserController extends AbstractController
     public function index(UserRepository $userRepository, SerializerInterface $serializerInterface): JsonResponse
     {
         $current_user = $this->getUser();
-        $user = $userRepository->findOneBy(['email' => $current_user->getUserIdentifier()]);
+        $user = $userRepository->find($current_user->getId());
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
             'ignored_attributes' => ['password', 'userIdentifier'],
-            'groups' => ['me:read']
+            'groups' => ['me:read'],
         ]);
 
         return JsonResponse::fromJsonString($userSerialized);
@@ -59,6 +59,10 @@ final class UserController extends AbstractController
 
         if (isset($data['address'])) {
             $user->setAddress($data['address']);
+        }
+
+        if (isset($data['preferences'])) {
+            $user->setPreferences($data['preferences']);
         }
 
         $em->flush();

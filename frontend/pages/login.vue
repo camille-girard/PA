@@ -28,14 +28,17 @@
                 }
                 return router.push('/');
             } else {
-                toast.error('Échec de connexion', result.error || 'Identifiants incorrects. Veuillez vérifier votre email et mot de passe.');
+                toast.error(
+                    'Échec de connexion',
+                    result.error || 'Identifiants incorrects. Veuillez vérifier votre email et mot de passe.'
+                );
             }
         } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'Une erreur inattendue s\'est produite. Veuillez réessayer ultérieurement.';
-            toast.error(
-                'Problème de connexion',
-                errorMessage
-            );
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "Une erreur inattendue s'est produite. Veuillez réessayer ultérieurement.";
+            toast.error('Problème de connexion', errorMessage);
         } finally {
             isLoading.value = false;
         }
@@ -79,4 +82,3 @@
         <UFooter />
     </main>
 </template>
-
