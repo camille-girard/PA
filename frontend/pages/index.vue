@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { useAccomodations } from '~/composables/useAccomodations';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
     
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
@@ -30,7 +31,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">Les tendances du moment</h2>
                 </div>
-                <LocationCards :items="trending" />
+                <AccommodationCards :items="trending" />
                 <div class="mt-10 text-center">
                     <NuxtLink to="/tendances">
                         <UButton class="mx-auto">Voir plus</UButton>

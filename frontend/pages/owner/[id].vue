@@ -1,34 +1,36 @@
 <script setup lang="ts">
-    import '~/types/owner';
-    import '~/types/comment';
-
-    type Rental = {
-        id: string;
-        title: string;
-        description: string;
-    };
+    import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
+    
+    interface OwnerDto {
+        id: number;
+        firstName: string;
+        lastName: string;
+        accommodations: any[];
+        ratings?: any[];
+    }
 
     const route = useRoute();
-    const owner = ref<Owner | null>(null);
-    const comments = ref<Comment[]>([]);
-    const rentals = ref<Rental[]>([]);
+    const owner = ref<OwnerDto | null>(null);
+    const comments = ref<any[]>([]);
+    const rentals = ref<AccommodationItemDto[]>([]);
 
     onMounted(async () => {
         const { $api } = useNuxtApp();
         try {
-            const response = await useAuthFetch<Owner>($api('/api/owners/' + route.params.id));
+            const response = await useAuthFetch<OwnerDto>($api('/api/owners/' + route.params.id));
 
             if (response.data.value) {
                 owner.value = response.data.value;
                 comments.value = response.data.value.comments || [];
 
                 if (response.data.value.accommodations) {
-                    rentals.value = response.data.value.accommodations.map((accommodation) => ({
+                    rentals.value = response.data.value.accommodations.map((accommodation: any) => ({
+                        id: accommodation.id,
                         title: accommodation.name,
                         image: accommodation.images?.[0]?.url || 'https://via.placeholder.com/400x250',
-                        description: accommodation.description,
-                        id: accommodation.id,
                         slug: accommodation.theme?.slug || 'default-slug',
+                        price: accommodation.price
                     }));
                 }
             }
@@ -93,7 +95,7 @@
                     </section>
                     <section id="owner-rentals" class="space-y-6">
                         <h2 class="text-3xl font-bold mb-10">Annonces publiées par {{ owner.firstName }}</h2>
-                        <LocationCards :items="rentals" />
+                        <AccommodationCards :items="rentals" />
                         <p v-if="!rentals.length" class="text-gray-500">Aucun hébergement disponible</p>
                     </section>
                 </section>

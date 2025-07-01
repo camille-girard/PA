@@ -1,29 +1,23 @@
 <script setup lang="ts">
-    import '~/types/logement';
-    import '~/types/themeSection';
+    import { useThemes } from '~/composables/useThemes';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
+    
+    useSeoMeta({
+        title: "PopnBed - Explorez nos thématiques d'hébergements inspirés de films",
+        description: "Découvrez des logements thématiques uniques inspirés de films et séries iconiques",
+    });
 
-    const ThemeSections = ref<ThemeSection[]>([]);
+    const { themeSections: ThemeSections, fetchThemesWithAccommodations } = useThemes();
 
     onMounted(async () => {
-        const { $api } = useNuxtApp();
-        const response = await useAuthFetch<ThemeSection>($api('/api/themes/accommodation'));
-        ThemeSections.value = response.data.value.themes.map((theme) => ({
-            title: theme.name,
-            items: theme.accommodations.map((accommodation) => ({
-                title: accommodation.name,
-                image: accommodation.images[0]?.url,
-                id: accommodation.id,
-                slug: theme.slug,
-            })),
-            slug: theme.slug,
-        }));
+        await fetchThemesWithAccommodations();
     });
 </script>
 
 <template>
-    <main>
+    <main class="w-full h-full flex-grow flex flex-col">
         <UHeader />
-        <div class="max-w-7xl w-full mx-auto pt-8 px-4">
+        <div class="max-w-7xl w-full mx-auto pt-8 px-4 flex-grow">
             <section class="w-full pt-8">
                 <div class="py-20 rounded-2xl flex items-center justify-center relative">
                     <div class="text-center z-10">
@@ -39,7 +33,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">{{ section.title }}</h2>
                 </div>
-                <LocationCards :items="section.items" />
+                <AccommodationCards :items="section.items" />
                 <div class="flex justify-end hover:underline mt-5">
                     <NuxtLink
                         :to="`/thematiques/${section.slug}`"

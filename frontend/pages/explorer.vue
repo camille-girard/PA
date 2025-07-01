@@ -1,6 +1,5 @@
-<script setup lang="ts"></script>
 <template>
-    <main>
+    <main class="w-full flex-grow">
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
@@ -23,3 +22,4 @@
         <UFooter />
     </main>
 </template>
+
