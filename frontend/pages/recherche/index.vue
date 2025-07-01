@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { useSearchResultsStore } from '~/stores/searchResults';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
 
     const searchResultsStore = useSearchResultsStore();
 
@@ -41,7 +42,7 @@
         <section class="w-full pt-12">
             <div class="text-center mb-10 max-w-7xl w-full mx-auto px-4">
                 <h2 class="text-h2 pb-8">Recherche</h2>
-                <LocationCards :items="items" />
+                <AccommodationCards :items="items" />
             </div>
         </section>
         <UFooter />

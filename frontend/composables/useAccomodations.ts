@@ -1,18 +1,11 @@
 import type { AccommodationDto } from '~/types/dtos/accommodation.dto'
 import { useAccomodationService } from '~/services/accomodation.service'
-
-export interface TrendingItem {
-    id: number;
-    title: string;
-    image: string;
-    price?: number;
-    slug: string;
-}
+import type { TrendingItemDto } from '~/types/dtos/trending_item.dto'
 
 export const useAccomodations = () => {
     const accomodationService = useAccomodationService()
     const accomodations = ref<AccommodationDto[]>([])
-    const trendingItems = ref<TrendingItem[]>([])
+    const trendingItems = ref<TrendingItemDto[]>([])
     const isLoading = ref<boolean>(false)
     const error = ref<Error | null>(null)
 
@@ -42,7 +35,7 @@ export const useAccomodations = () => {
      * @param limit Limite optionnelle du nombre d'items à retourner
      * @returns Une liste d'éléments de tendance formatés
      */
-    const getTrendingItems = (limit?: number): TrendingItem[] => {
+    const getTrendingItems = (limit?: number): TrendingItemDto[] => {
         const items = accomodations.value.map((acc) => ({
             id: acc.id,
             title: acc.name,
