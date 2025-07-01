@@ -1,25 +1,15 @@
 <script setup lang="ts">
-    import '~/types/accommodation';
+    import { useAccomodations } from '~/composables/useAccomodations';
+    
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
     });
 
-    const trending = ref<Accommodation[]>([]);
+    const { trendingItems: trending, loadTrendingItems } = useAccomodations();
 
     onMounted(async () => {
-        const { $api } = useNuxtApp();
-        const response = await useAuthFetch<any>($api('/api/accommodations/'));
-
-        if (response.data.value && Array.isArray(response.data.value)) {
-            trending.value = response.data.value.slice(0, 3).map((acc: any) => ({
-                ...acc,
-                id: acc.id,
-                title: acc.name,
-                slug: acc.theme?.slug || acc.theme?.name?.toLowerCase().replace(/\s+/g, '-') || 'accommodation',
-                image: acc.images?.[0]?.url || 'https://via.placeholder.com/400x250',
-            }));
-        }
+        await loadTrendingItems(3);
     });
 </script>
 
@@ -64,3 +54,4 @@
         <UFooter />
     </main>
 </template>
+
