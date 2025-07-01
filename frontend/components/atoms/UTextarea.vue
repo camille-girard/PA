@@ -1,55 +1,60 @@
 <script setup lang="ts">
-    interface TextareaProps {
+    interface TextAreaProps {
+        id?: string
+        modelValue?: string;
         label?: string;
-        name?: string;
         placeholder?: string;
-        required?: boolean;
         hintText?: string;
         destructive?: boolean;
-        modelValue?: string;
+        disabled?: boolean;
+        type?: 'default' | 'tags';
+        name?: string;
+        required?: boolean;
         rows?: number;
     }
 
-    const _props = withDefaults(defineProps<TextareaProps>(), {
+    const _props = withDefaults(defineProps<TextAreaProps>(), {
+        id: '',
         label: '',
-        name: '',
         placeholder: '',
-        required: false,
         hintText: '',
+        disabled: false,
         destructive: false,
+        type: 'default',
+        name: '',
+        required: false,
+        rows: 3,
         modelValue: '',
-        rows: 4,
     });
 
     const _emit = defineEmits<{
         'update:modelValue': [value: string];
     }>();
 
-const baseClasses =
-    'w-full border rounded-lg shadow-xs text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 px-3 py-2';
-
-    const variantClasses = {
-        default: 'border-gray-300 focus:border-orange-500 focus:ring-orange-500',
-        destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
-    };
+    const wrapperClasses = 'flex items-center relative w-full';
+    const baseClasses =
+        'flex gap-2 border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full px-3.5 py-3';
 </script>
 
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" class="text-body-sm" :for="name">
+        <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
             {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
         </label>
-        <textarea
-            :id="name"
-            :name="name"
-            :rows="rows"
-            :placeholder="placeholder"
-            :class="[baseClasses, variantClasses[destructive ? 'destructive' : 'default']]"
-            :value="modelValue"
-            @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
-        />
-        <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-md']">
+        <div :class="wrapperClasses">
+            <textarea
+                :id="id"
+                :name="name"
+                :rows="rows"
+                :class="[baseClasses]"
+                :required="required"
+                :placeholder="placeholder"
+                @change="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+            />
+        </div>
+        <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
             {{ hintText }}
         </p>
     </div>
 </template>
+
