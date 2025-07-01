@@ -3,6 +3,8 @@
     import CloseButton from '~/components/atoms/icons/XIcon.vue';
 
     import { useSearchResultsStore } from '~/stores/searchResults';
+    import { useSearchService } from '~/services/search.service';
+    import { useToast } from '~/composables/useToast';
 
     const destination = ref('');
     const amountTravelers = ref<number | undefined>(undefined);
@@ -32,11 +34,8 @@
         try {
             isLoading.value = true;
 
-            const { $api } = useNuxtApp();
-            const response = await useAuthFetch($api('/api/search'), {
-                method: 'POST',
-                body: searchData,
-            });
+            const searchService = useSearchService();
+            const response = await searchService.submitSearch(searchData);
 
             const searchResultsStore = useSearchResultsStore();
 
@@ -54,6 +53,10 @@
             });
         } catch (error) {
             console.error('Erreur lors de la recherche:', error);
+            
+            // Ajouter un toast d'erreur
+            const toast = useToast();
+            toast.error('Erreur de recherche', 'Une erreur est survenue lors de la recherche');
         } finally {
             isLoading.value = false;
         }
