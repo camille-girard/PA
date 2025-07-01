@@ -39,6 +39,13 @@ final class SecurityController extends AbstractController
             ->withSecure(true)
             ->withSameSite('strict');
 
+        $bearerCookie = Cookie::create('BEARER')
+            ->withValue('')
+            ->withExpires(new \DateTime('-1 hour'))
+            ->withHttpOnly(true)
+            ->withSecure(true)
+            ->withSameSite('strict');
+
         return new JsonResponse(['message' => 'Logged out'], 200, [
             'Set-Cookie' => (string) $cookie,
         ]);
@@ -81,8 +88,10 @@ final class SecurityController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['email']) || !isset($data['password'])
-            || !isset($data['firstName']) || !isset($data['lastName'])) {
+        if (
+            !isset($data['email']) || !isset($data['password'])
+            || !isset($data['firstName']) || !isset($data['lastName'])
+        ) {
             return new JsonResponse(['error' => 'Tous les champs requis doivent être remplis'], 400);
         }
 
