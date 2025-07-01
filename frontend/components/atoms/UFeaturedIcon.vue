@@ -21,10 +21,10 @@
     };
 
     const sizeClasses = {
-        sm: 'size-8',
-        md: 'size-10',
-        lg: 'size-12',
-        xl: 'size-14',
+        sm: 'min-w-8 size-8',
+        md: 'min-w-10 size-10',
+        lg: 'min-w-12 size-12',
+        xl: 'min-w-14 size-14',
     };
 
     const iconSizeClasses = {
