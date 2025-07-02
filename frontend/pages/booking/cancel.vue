@@ -23,7 +23,7 @@
                     </p>
                 </div>
                 <div class="flex justify-center">
-                    <UButton size="lg" variant="primary" @click="goToAccount"> Accéder à mon espace </UButton>
+                    <UButton size="lg" variant="primary" @click="goToAccount"> Accéder à mes réservations</UButton>
                 </div>
             </section>
         </div>

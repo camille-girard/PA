@@ -28,27 +28,32 @@ class StripeWebhookController extends AbstractController
         $sigHeader = $request->headers->get('stripe-signature');
         $secret = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
 
+        // 🔍 Logs de debug
+        $logger->info('🔑 Secret configuré : ' . ($secret ? 'OUI (' . substr($secret, 0, 15) . '...)' : 'NON'));
+        $logger->info('📝 Signature reçue : ' . ($sigHeader ? substr($sigHeader, 0, 30) . '...' : 'MANQUANTE'));
+        $logger->info('📦 Payload length : ' . strlen($payload));
+
         if (!$secret) {
             $logger->error('STRIPE_WEBHOOK_SECRET manquant dans .env');
-
             return new Response('Configuration error', 500);
         }
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+            $logger->info('✅ Signature validée avec succès pour événement : ' . $event->type);
         } catch (\Throwable $e) {
-            $logger->error('Stripe Webhook Signature ERROR: '.$e->getMessage());
-
+            $logger->error('❌ Stripe Webhook Signature ERROR: ' . $e->getMessage());
+            $logger->error('❌ Secret utilisé : ' . substr($secret, 0, 15) . '...');
             return new Response('Invalid signature', 400);
         }
 
-        $logger->info('Stripe Webhook reçu : '.$event->type);
+        $logger->info('Stripe Webhook reçu : ' . $event->type);
 
         if ('checkout.session.completed' === $event->type) {
             try {
                 $session = $event->data->object;
 
-                $logger->info('📦 Données session : '.json_encode($session));
+                $logger->info('📦 Données session : ' . json_encode($session));
 
                 $clientId = $session->metadata->client_id ?? null;
                 $accommodationId = $session->metadata->accommodation_id ?? null;
@@ -82,8 +87,7 @@ class StripeWebhookController extends AbstractController
                     $logger->warning('Données metadata manquantes dans la session.');
                 }
             } catch (\Throwable $e) {
-                $logger->error('Erreur traitement checkout.session.completed : '.$e->getMessage());
-
+                $logger->error('Erreur traitement checkout.session.completed : ' . $e->getMessage());
                 return new Response('Erreur serveur', 500);
             }
         }
