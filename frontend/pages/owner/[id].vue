@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
     import AccommodationCards from '~/components/AccommodationCards.vue';
-    
+
     interface OwnerDto {
         id: number;
         firstName: string;
@@ -30,7 +30,7 @@
                         title: accommodation.name,
                         image: accommodation.images?.[0]?.url || 'https://via.placeholder.com/400x250',
                         slug: accommodation.theme?.slug || 'default-slug',
-                        price: accommodation.price
+                        price: accommodation.price,
                     }));
                 }
             }
