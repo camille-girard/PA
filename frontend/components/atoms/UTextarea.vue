@@ -1,6 +1,6 @@
 <script setup lang="ts">
     interface TextAreaProps {
-        id?: string
+        id?: string;
         modelValue?: string;
         label?: string;
         placeholder?: string;
@@ -57,4 +57,3 @@
         </p>
     </div>
 </template>
-

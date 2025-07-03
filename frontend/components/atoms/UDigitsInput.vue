@@ -171,8 +171,8 @@
                     'rounded-[10px] size-16 px-2 py-0.5 shadow-xs bg-primary border border-primary text-center focus:ring focus:ring-primary focus:ring-offset-2 focus:outline-none text-3xl text-primary transition-all duration-200 ease-in-out',
                     {
                         '!border-error-subtle !border-2 !focus:ring-error': destructive,
-                        '!border-2 !border-brand': digit && !destructive
-                    }
+                        '!border-2 !border-brand': digit && !destructive,
+                    },
                 ]"
                 @input="handleInput(index, $event)"
                 @keydown="handleKeydown(index, $event)"
@@ -186,4 +186,3 @@
         </p>
     </div>
 </template>
-

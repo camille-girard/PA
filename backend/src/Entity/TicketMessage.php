@@ -4,8 +4,6 @@ namespace App\Entity;
 
 use App\Repository\TicketMessageRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Ticket;
-use App\Entity\User;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TicketMessageRepository::class)]

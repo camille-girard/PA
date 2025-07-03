@@ -9,9 +9,9 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/api')]
 #[OA\Tag(name: 'Users')]
@@ -25,7 +25,7 @@ final class UserController extends AbstractController
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
             'ignored_attributes' => ['password', 'userIdentifier'],
-            'groups' => ['me:read']
+            'groups' => ['me:read'],
         ]);
 
         return JsonResponse::fromJsonString($userSerialized);

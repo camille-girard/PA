@@ -2,15 +2,12 @@
 
 namespace App\Entity;
 
+use App\Enum\TicketStatus;
 use App\Repository\TicketRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\User;
-use App\Enum\TicketStatus;
-use App\Entity\TicketMessage;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
@@ -53,13 +50,11 @@ class Ticket
     #[Groups(['ticket:list', 'ticket:detail'])]
     private ?string $description = null;
 
-
     public function __construct()
     {
         $this->ticketMessages = new ArrayCollection();
         $this->status = TicketStatus::OPEN;
     }
-
 
     public function getId(): ?int
     {
@@ -151,6 +146,7 @@ class Ticket
     public function setStatus(TicketStatus $status): static
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -162,7 +158,7 @@ class Ticket
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
-
 }

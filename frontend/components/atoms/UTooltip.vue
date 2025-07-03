@@ -38,7 +38,7 @@
 
         const trigger = triggerElement.value.getBoundingClientRect();
         const tooltip = tooltipElement.value.getBoundingClientRect();
-        
+
         // Using window.scrollX and window.scrollY for more consistent cross-browser behavior
         const scrollTop = window.scrollY;
         const scrollLeft = window.scrollX;
@@ -51,18 +51,18 @@
         switch (props.position) {
             case 'top':
                 top = trigger.top + scrollTop - tooltip.height - 10;
-                left = trigger.left + scrollLeft + (trigger.width / 2) - (tooltip.width / 2);
+                left = trigger.left + scrollLeft + trigger.width / 2 - tooltip.width / 2;
                 break;
             case 'right':
-                top = trigger.top + scrollTop + (trigger.height / 2) - (tooltip.height / 2);
+                top = trigger.top + scrollTop + trigger.height / 2 - tooltip.height / 2;
                 left = trigger.left + scrollLeft + trigger.width + 10;
                 break;
             case 'bottom':
                 top = trigger.top + scrollTop + trigger.height + 10;
-                left = trigger.left + scrollLeft + (trigger.width / 2) - (tooltip.width / 2);
+                left = trigger.left + scrollLeft + trigger.width / 2 - tooltip.width / 2;
                 break;
             case 'left':
-                top = trigger.top + scrollTop + (trigger.height / 2) - (tooltip.height / 2);
+                top = trigger.top + scrollTop + trigger.height / 2 - tooltip.height / 2;
                 left = trigger.left + scrollLeft - tooltip.width - 10;
                 break;
         }
@@ -85,28 +85,32 @@
         }
 
         if (left < scrollLeft + 10) left = scrollLeft + 10;
-        if (left + tooltip.width > scrollLeft + viewportWidth - 10) 
+        if (left + tooltip.width > scrollLeft + viewportWidth - 10)
             left = scrollLeft + viewportWidth - tooltip.width - 10;
-        
+
         if (top < scrollTop + 10) top = scrollTop + 10;
         if (top + tooltip.height > scrollTop + viewportHeight - 10)
             top = scrollTop + viewportHeight - tooltip.height - 10;
 
         tooltipElement.value.style.top = `${Math.round(top)}px`;
         tooltipElement.value.style.left = `${Math.round(left)}px`;
-        
+
         if (originalPosition !== actualPosition) {
             tooltipElement.value.dataset.position = actualPosition;
-            
+
             const arrowElement = tooltipElement.value.querySelector('div');
             if (arrowElement) {
                 arrowElement.classList.remove(
-                    'bottom-[-4px]', 'left-1/2', '-ml-1',
-                    'left-[-4px]', 'top-1/2', '-mt-1',
+                    'bottom-[-4px]',
+                    'left-1/2',
+                    '-ml-1',
+                    'left-[-4px]',
+                    'top-1/2',
+                    '-mt-1',
                     'top-[-4px]',
                     'right-[-4px]'
                 );
-                
+
                 // Add the correct position classes based on actual position
                 switch (actualPosition) {
                     case 'top':
@@ -157,9 +161,7 @@
     >
         <slot />
 
-        <Transition
-            name="tooltip"
-        >
+        <Transition name="tooltip">
             <div
                 v-if="tooltipVisible"
                 ref="tooltipElement"
@@ -184,28 +186,28 @@
 </template>
 
 <style scoped>
-.tooltip-container {
-    transform-origin: center;
-    will-change: transform, opacity;
-}
+    .tooltip-container {
+        transform-origin: center;
+        will-change: transform, opacity;
+    }
 
-.tooltip-enter-active {
-    transition: all 0.2s ease-out;
-}
+    .tooltip-enter-active {
+        transition: all 0.2s ease-out;
+    }
 
-.tooltip-leave-active {
-    transition: all 0.15s ease-in;
-}
+    .tooltip-leave-active {
+        transition: all 0.15s ease-in;
+    }
 
-.tooltip-enter-from,
-.tooltip-leave-to {
-    opacity: 0;
-    transform: scale(0.95);
-}
+    .tooltip-enter-from,
+    .tooltip-leave-to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
 
-.tooltip-enter-to,
-.tooltip-leave-from {
-    opacity: 1;
-    transform: scale(1);
-}
+    .tooltip-enter-to,
+    .tooltip-leave-from {
+        opacity: 1;
+        transform: scale(1);
+    }
 </style>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
     import { useThemes } from '~/composables/useThemes';
     import AccommodationCards from '~/components/AccommodationCards.vue';
-    
+
     useSeoMeta({
         title: "PopnBed - Explorez nos thématiques d'hébergements inspirés de films",
-        description: "Découvrez des logements thématiques uniques inspirés de films et séries iconiques",
+        description: 'Découvrez des logements thématiques uniques inspirés de films et séries iconiques',
     });
 
     const { themeSections: ThemeSections, fetchThemesWithAccommodations } = useThemes();
