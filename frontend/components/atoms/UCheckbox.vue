@@ -35,8 +35,8 @@
         emit('update:modelValue', target.checked);
         emit('change', event);
     };
-    
-    const generatedId = useId()
+
+    const generatedId = useId();
     const inputId = computed(() => props.id || generatedId);
 
     const sizeClasses = {

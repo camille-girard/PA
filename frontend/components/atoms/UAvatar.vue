@@ -56,4 +56,3 @@
         <VerifiedTickIcon v-if="statusIcon === 'verified'" :size="size" class="absolute bottom-0 right-0 z-10" />
     </div>
 </template>
-

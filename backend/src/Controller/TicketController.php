@@ -6,22 +6,22 @@ use App\Entity\Ticket;
 use App\Entity\TicketMessage;
 use App\Enum\TicketStatus;
 use App\Repository\TicketRepository;
-use App\Repository\TicketMessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 #[Route('/api')]
 final class TicketController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private SerializerInterface $serializer
-    ) {}
+        private SerializerInterface $serializer,
+    ) {
+    }
 
     #[Route('/tickets', methods: ['GET'])]
     #[IsGranted('ROLE_OWNER')]
@@ -31,6 +31,7 @@ final class TicketController extends AbstractController
         $tickets = $repo->findBy(['owner' => $user]);
 
         $json = $this->serializer->serialize($tickets, 'json', ['groups' => ['ticket:list']]);
+
         return JsonResponse::fromJsonString($json);
     }
 
@@ -62,6 +63,7 @@ final class TicketController extends AbstractController
         $this->em->flush();
 
         $json = $this->serializer->serialize($ticket, 'json', ['groups' => ['ticket:detail']]);
+
         return JsonResponse::fromJsonString($json, 201);
     }
 
@@ -75,6 +77,7 @@ final class TicketController extends AbstractController
         }
 
         $json = $this->serializer->serialize($ticket, 'json', ['groups' => ['ticket:detail']]);
+
         return JsonResponse::fromJsonString($json);
     }
 
@@ -105,6 +108,7 @@ final class TicketController extends AbstractController
         $this->em->flush();
 
         $json = $this->serializer->serialize($message, 'json', ['groups' => ['ticket:message']]);
+
         return JsonResponse::fromJsonString($json, 201);
     }
 

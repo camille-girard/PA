@@ -307,6 +307,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->tickets->add($ticket);
             $ticket->setOwner($this);
         }
+
         return $this;
     }
 
@@ -317,7 +318,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ticket->setOwner(null);
             }
         }
+
         return $this;
     }
-
 }

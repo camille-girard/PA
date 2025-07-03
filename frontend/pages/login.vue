@@ -28,14 +28,17 @@
                 }
                 return router.push('/');
             } else {
-                toast.error('Échec de connexion', result.error || 'Identifiants incorrects. Veuillez vérifier votre email et mot de passe.');
+                toast.error(
+                    'Échec de connexion',
+                    result.error || 'Identifiants incorrects. Veuillez vérifier votre email et mot de passe.'
+                );
             }
         } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'Une erreur inattendue s\'est produite. Veuillez réessayer ultérieurement.';
-            toast.error(
-                'Problème de connexion',
-                errorMessage
-            );
+            const errorMessage =
+                error instanceof Error
+                    ? error.message
+                    : "Une erreur inattendue s'est produite. Veuillez réessayer ultérieurement.";
+            toast.error('Problème de connexion', errorMessage);
         } finally {
             isLoading.value = false;
         }
@@ -64,6 +67,9 @@
                             required
                         />
                     </div>
+                    <div class="flex justify-end mt-2">
+                        <ULink to="/forgot-password"> Mot de passe oublié ? </ULink>
+                    </div>
                     <UButton class="mt-6 w-full justify-center" type="submit" :loading="isLoading">
                         {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
                     </UButton>
@@ -79,4 +85,3 @@
         <UFooter />
     </main>
 </template>
-

@@ -46,6 +46,7 @@ class OwnerRequest
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -57,6 +58,7 @@ class OwnerRequest
     public function setMessage(string $message): static
     {
         $this->message = $message;
+
         return $this;
     }
 
@@ -68,6 +70,7 @@ class OwnerRequest
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -79,6 +82,7 @@ class OwnerRequest
     public function setReviewed(bool $reviewed): static
     {
         $this->reviewed = $reviewed;
+
         return $this;
     }
 }
