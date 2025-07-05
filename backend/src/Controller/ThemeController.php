@@ -90,7 +90,7 @@ final class ThemeController extends AbstractController
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
-            if (!isset($data[$field])) {
+            if (!isset($data[$field]) || empty(trim($data[$field]))) {
                 $missingFields[] = $field;
             }
         }
@@ -102,14 +102,32 @@ final class ThemeController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $theme = new Theme();
-        $theme->setName($data['name']);
-        $theme->setDescription($data['description']);
+        // Validation supplémentaire des données
+        $name = trim($data['name']);
+        $description = trim($data['description']);
 
-        if (isset($data['slug'])) {
-            $theme->setSlug($data['slug']);
+        if (strlen($name) < 2) {
+            return $this->json([
+                'message' => 'Le nom doit contenir au moins 2 caractères',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (strlen($description) < 10) {
+            return $this->json([
+                'message' => 'La description doit contenir au moins 10 caractères',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $theme = new Theme();
+        $theme->setName($name);
+        $theme->setDescription($description);
+
+        if (isset($data['slug']) && !empty(trim($data['slug']))) {
+            $theme->setSlug(trim($data['slug']));
         } else {
-            $theme->setSlug(strtolower(str_replace(' ', '-', $data['name'])));
+            $slug = strtolower(str_replace(' ', '-', $name));
+            $slug = preg_replace('/[^a-z0-9\-]/', '', $slug); // Nettoyer le slug
+            $theme->setSlug($slug);
         }
 
         $errors = $this->validator->validate($theme);
@@ -117,8 +135,18 @@ final class ThemeController extends AbstractController
             return $this->errorFormatter->createValidationErrorResponse($errors);
         }
 
-        $this->entityManager->persist($theme);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($theme);
+            $this->entityManager->flush();
+
+            // Rafraîchir l'entité pour s'assurer qu'elle a un ID
+            $this->entityManager->refresh($theme);
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la sauvegarde',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully created',
@@ -142,11 +170,32 @@ final class ThemeController extends AbstractController
         }
 
         if (isset($data['name'])) {
-            $theme->setName($data['name']);
+            $name = trim($data['name']);
+            if (strlen($name) < 2) {
+                return $this->json([
+                    'message' => 'Le nom doit contenir au moins 2 caractères',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            $theme->setName($name);
         }
 
         if (isset($data['description'])) {
-            $theme->setDescription($data['description']);
+            $description = trim($data['description']);
+            if (strlen($description) < 10) {
+                return $this->json([
+                    'message' => 'La description doit contenir au moins 10 caractères',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            $theme->setDescription($description);
+        }
+
+        if (isset($data['slug'])) {
+            $slug = trim($data['slug']);
+            if (!empty($slug)) {
+                $slug = strtolower(str_replace(' ', '-', $slug));
+                $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+                $theme->setSlug($slug);
+            }
         }
 
         $errors = $this->validator->validate($theme);
@@ -154,7 +203,14 @@ final class ThemeController extends AbstractController
             return $this->errorFormatter->createValidationErrorResponse($errors);
         }
 
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la mise à jour',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully updated',
@@ -171,8 +227,15 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($theme);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->remove($theme);
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la suppression',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully deleted',
