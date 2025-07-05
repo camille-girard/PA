@@ -10,38 +10,28 @@
     import type { MapSuggestion } from '~/composables/useAddressSuggestions';
     import { useToast } from '~/composables/useToast';
     import UBaseModal from '~/components/molecules/UBaseModal.vue';
-    
-    // Récupération des paramètres de la route
+
     const route = useRoute();
     const accommodationId = route.params.id;
-    
-    // Référence pour l'input file caché
-    const fileInputRef = ref<HTMLInputElement | null>(null);
 
-    // Référence pour gérer l'état de la modal de suppression
+    const fileInputRef = ref<HTMLInputElement | null>(null);
     const isDeleteModalOpen = ref(false);
-    
-    // Utilisation du composable pour la gestion du formulaire d'hébergement
-    const { 
-        formState, 
-        isEditing, 
-        isLoading, 
-        error, 
+
+    const {
+        formState,
+        isEditing,
+        isLoading,
+        error,
         themeOptions,
         fetchAccommodationData,
         fetchThemes,
         handleSubmit,
         deleteAccommodation,
         addImages,
-        removeImage
+        removeImage,
     } = useAccommodationForm({ accommodationId });
 
-    // Utilisation du composable pour la gestion des suggestions d'adresse
-    const { 
-        suggestions, 
-        fetchSuggestions, 
-        selectSuggestion 
-    } = useAddressSuggestions();
+    const { suggestions, fetchSuggestions, selectSuggestion } = useAddressSuggestions();
 
     /**
      * Initialisation des données au montage du composant
@@ -50,16 +40,10 @@
 
     onMounted(async () => {
         try {
-            await Promise.all([
-                fetchThemes(),
-                fetchAccommodationData()
-            ]);
+            await Promise.all([fetchThemes(), fetchAccommodationData()]);
         } catch (err) {
             console.error('Erreur lors du chargement des données:', err);
-            toast.error(
-                'Erreur de chargement', 
-                'Impossible de charger les données de l\'hébergement.'
-            );
+            toast.error('Erreur de chargement', "Impossible de charger les données de l'hébergement.");
         }
     });
 
@@ -77,10 +61,13 @@
     /**
      * Observer les changements d'adresse pour mettre à jour les suggestions
      */
-    watch(() => formState.value.address, async (newVal) => {
-        if (!newVal) return;
-        await fetchSuggestions(newVal);
-    });
+    watch(
+        () => formState.value.address,
+        async (newVal) => {
+            if (!newVal) return;
+            await fetchSuggestions(newVal);
+        }
+    );
 
     /**
      * Sélectionne une suggestion d'adresse et met à jour le formulaire
@@ -91,11 +78,8 @@
         formState.value.latitude = latitude;
         formState.value.longitude = longitude;
         formState.value.country = 'France';
-        
-        toast.info(
-            'Adresse sélectionnée',
-            'Les coordonnées géographiques ont été mises à jour.'
-        );
+
+        toast.info('Adresse sélectionnée', 'Les coordonnées géographiques ont été mises à jour.');
     }
 
     /**
@@ -112,9 +96,9 @@
         if (fileInputRef.value) {
             fileInputRef.value.value = '';
         }
-        
+
         toast.success(
-            'Images ajoutées', 
+            'Images ajoutées',
             `${fileArray.length} image${fileArray.length > 1 ? 's' : ''} ajoutée${fileArray.length > 1 ? 's' : ''} avec succès.`
         );
     }
@@ -133,7 +117,7 @@
         isDeleteModalOpen.value = false;
         deleteAccommodation();
     }
-    
+
     /**
      * Ferme la modal de suppression
      */
@@ -143,13 +127,7 @@
 </script>
 
 <template>
-    <!-- Modal de confirmation de suppression -->
-    <UBaseModal 
-        :is-open="isDeleteModalOpen"
-        background="grid" 
-        background-size="sm"
-        @close="closeDeleteModal"
-    >
+    <UBaseModal :is-open="isDeleteModalOpen" @close="closeDeleteModal">
         <div class="p-6">
             <h3 class="text-lg font-semibold mb-4">Confirmer la suppression</h3>
             <p class="mb-6">Êtes-vous sûr de vouloir supprimer ce logement ?</p>
@@ -160,28 +138,25 @@
         </div>
     </UBaseModal>
 
-    <!-- Affichage des erreurs -->
     <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 max-w-4xl mx-auto">
         <strong class="font-bold">Erreur:</strong>
         <span class="block sm:inline">{{ error }}</span>
     </div>
-    
-    <!-- Indicateur de chargement -->
+
     <div v-if="isLoading" class="flex justify-center items-center py-12">
-        <UIcon name="i-heroicons-arrow-path" class="animate-spin w-8 h-8 text-orange-500" />
+        <ULoading />
         <span class="ml-2">Chargement...</span>
     </div>
-    
-    <!-- Formulaire principal -->
+
     <form v-else class="space-y-16 max-w-4xl mx-auto" @submit.prevent="handleSubmit">
         <section>
             <h2 class="text-h2 font-bold mb-6">Informations du logement</h2>
-            <UInput 
-                v-model="formState.title" 
-                label="Titre de l'annonce" 
-                placeholder="Titre de l'annonce" 
+            <UInput
+                v-model="formState.title"
+                label="Titre de l'annonce"
+                placeholder="Titre de l'annonce"
                 type="text"
-                required 
+                required
             />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
@@ -237,12 +212,12 @@
 
         <section>
             <h2 class="text-h2 mb-6">Adresse</h2>
-            <UInput 
-                v-model="formState.address" 
-                label="Adresse complète" 
-                placeholder="Adresse complète" 
+            <UInput
+                v-model="formState.address"
+                label="Adresse complète"
+                placeholder="Adresse complète"
                 type="text"
-                required 
+                required
             />
             <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow relative">
                 <li
@@ -256,29 +231,16 @@
             </ul>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <UInput 
-                    v-model="formState.city" 
-                    label="Ville" 
-                    placeholder="Ville" 
+                <UInput v-model="formState.city" label="Ville" placeholder="Ville" type="text" required />
+                <UInput
+                    v-model="formState.postalCode"
+                    label="Code postal"
+                    placeholder="Code postal"
                     type="text"
-                    required 
-                />
-                <UInput 
-                    v-model="formState.postalCode" 
-                    label="Code postal" 
-                    placeholder="Code postal" 
-                    type="text"
-                    required 
+                    required
                 />
             </div>
-            <UInput 
-                v-model="formState.country" 
-                label="Pays" 
-                placeholder="Pays" 
-                type="text"
-                class="mt-4" 
-                required 
-            />
+            <UInput v-model="formState.country" label="Pays" placeholder="Pays" type="text" class="mt-4" required />
         </section>
 
         <section>
@@ -308,10 +270,12 @@
                     <button
                         type="button"
                         class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm opacity-0 group-hover:opacity-100 transition"
-                        @click="() => {
-                            removeImage(img.id);
-                            toast.info('Image supprimée', 'L\'image a été supprimée de votre hébergement.');
-                        }"
+                        @click="
+                            () => {
+                                removeImage(img.id);
+                                toast.info('Image supprimée', 'L\'image a été supprimée de votre hébergement.');
+                            }
+                        "
                     >
                         ×
                     </button>
@@ -329,19 +293,11 @@
         </section>
 
         <div class="flex justify-between pt-10 gap-6">
-            <UButton type="submit" variant="primary" class="w-full">
-                Enregistrer et continuer
-            </UButton>
-            <UButton 
-                v-if="isEditing" 
-                type="button" 
-                variant="primary" 
-                color="red" 
-                class="w-full" 
-                @click="confirmDelete"
-            >
+            <UButton type="submit" variant="primary" class="w-full"> Enregistrer et continuer </UButton>
+            <UButton v-if="isEditing" type="button" variant="primary" color="red" class="w-full" @click="confirmDelete">
                 Supprimer
             </UButton>
         </div>
     </form>
 </template>
+

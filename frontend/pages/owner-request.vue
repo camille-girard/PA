@@ -2,7 +2,7 @@
     import { ref } from 'vue';
     import { useAuthStore } from '@/stores/auth';
 
-    const auth = useAuthStore();
+    const _auth = useAuthStore();
 
     const form = ref({
         message: '',

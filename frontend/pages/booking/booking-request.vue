@@ -1,6 +1,4 @@
-<script setup lang="ts">
-    import { ref, computed, onMounted } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
+<script setup lang="ts"> 
     import { loadStripe } from '@stripe/stripe-js';
     import { useAuthStore } from '~/stores/auth';
 
@@ -46,7 +44,7 @@
         try {
             isLoading.value = true;
 
-            const res = await $fetch('/api/checkout/create-session', {
+            const res = await $fetch<{ id: string }>('/api/checkout/create-session', {
                 method: 'POST',
                 body: {
                     totalPrice: Number(totalPrice),
