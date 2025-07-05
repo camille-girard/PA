@@ -18,9 +18,9 @@
 </script>
 
 <template>
-    <p class="text-2xl font-semibold">Tableau de Board</p>
-
+  <div>
+      <p class="text-2xl font-semibold">Tableau de Board</p>
     <StatsCard :stats="stats" />
-
     <AllIcons />
+  </div>
 </template>

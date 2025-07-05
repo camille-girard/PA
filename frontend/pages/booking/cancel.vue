@@ -3,8 +3,12 @@
 
     const router = useRouter();
 
-    const goBack = () => {
+    const _goBack = () => {
         router.push('/profile/booking');
+    };
+
+    const goToAccount = () => {
+        router.push('/profile');
     };
 </script>
 
