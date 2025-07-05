@@ -7,6 +7,7 @@
     import HomeIcon from '~/components/atoms/icons/HomeIcon.vue';
     import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
     import SettingsIcon from '~/components/atoms/icons/SettingsIcon.vue';
+    import TicketIcon from '~/components/atoms/icons/TicketIcon.vue';
     
     const authStore = useAuthStore();
     const isMenuOpen = ref(false);
@@ -88,6 +89,13 @@
                     icon: ClipboardCheckIcon,
                     action: async () => {
                         await navigateTo('/booking');
+                    },
+                },
+                {
+                    label: 'Support',
+                    icon: TicketIcon,
+                    action: async () => {
+                        await navigateTo('/my-tickets');
                     },
                 }
             );
