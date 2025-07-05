@@ -1,12 +1,5 @@
 <script setup lang="ts">
-  import { ref, reactive, onMounted } from 'vue'
-  import { useRuntimeConfig } from '#app'
   import { useAuthFetch } from '~/composables/useAuthFetch'
-  import UCard from '~/components/molecules/UCard.vue'
-  import UInput from '~/components/atoms/UInput.vue'
-  import UTextarea from '~/components/atoms/UTextarea.vue'
-  import UButton from '~/components/atoms/UButton.vue'
-  import ConfirmPopover from '~/components/ConfirmPopover.vue'
   import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
   import EditIcon from '~/components/atoms/icons/EditIcon.vue'
 
@@ -90,7 +83,7 @@
     }
   }
 
-  function cancelEdit(themeId: number) {
+  function cancelEdit(_themeId: number) {
     editingTheme.value = null
   }
 

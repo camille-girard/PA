@@ -28,7 +28,7 @@
     try {
       const { public: { apiUrl } } = useRuntimeConfig();
 
-      const { data, error } = await useAuthFetch(`${apiUrl}/api/me`, {
+      const { data, error } = await useAuthFetch<typeof authStore.user>(`${apiUrl}/api/me`, {
         method: 'PUT',
         body: {
           firstName: firstName.value,
@@ -69,7 +69,7 @@
     try {
       const { public: { apiUrl } } = useRuntimeConfig();
 
-      const { data, error } = await useAuthFetch(`${apiUrl}/api/me/password`, {
+      const { error } = await useAuthFetch(`${apiUrl}/api/me/password`, {
         method: 'PUT',
         body: {
           oldPassword: oldPassword.value,
