@@ -85,8 +85,8 @@
       <UCard
           v-for="ticket in filteredTickets"
           :key="ticket.id"
-          @click="openTicket(ticket)"
           class="cursor-pointer hover:shadow-md transition"
+          @click="openTicket(ticket)"
       >
         <template #header>
           <div class="flex justify-between items-center">

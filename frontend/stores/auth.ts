@@ -8,6 +8,7 @@ type User = {
     phone?: string;
     address?: string;
     roles: string[];
+    avatar: string;
 };
 
 

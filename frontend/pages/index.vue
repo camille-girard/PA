@@ -20,7 +20,7 @@
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
                 <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                    <div class="text-center">
                         <h1 class="text-h1">Séjourner dans un lieu inspiré de films</h1>
                         <p class="mt-4">Trouver et réservez des hébergements uniques à thème cinématographique</p>
                         <SearchBar />

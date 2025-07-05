@@ -85,8 +85,8 @@
 
         <div class="flex space-x-2 pt-2">
             <button
-                @click="handleBooking"
                 class="w-1/2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md"
+                @click="handleBooking"
             >
                 Réserver
             </button>

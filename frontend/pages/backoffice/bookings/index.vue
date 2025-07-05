@@ -120,7 +120,7 @@
             <template #cell-actions="{ row }">
               <div class="flex items-center gap-4">
                 <ConfirmPopover
-                    :itemName="`la réservation de ${row.client}`"
+                    :item-name="`la réservation de ${row.client}`"
                     @confirm="deleteBooking(row.id)"
                 >
                   <template #trigger>
