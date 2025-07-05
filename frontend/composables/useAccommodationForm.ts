@@ -60,7 +60,6 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
   const isEditing = computed(() => Boolean(options.accommodationId));
   const isLoading = ref(true);
   const error = ref<string | null>(null);
-  const showDeletePopup = ref(false);
   
   // Theme options
   const themeOptions = ref<{ value: number; label: string }[]>([]);
@@ -200,8 +199,6 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
 
   // Handle accommodation deletion
   async function deleteAccommodation() {
-    showDeletePopup.value = false;
-    
     try {
       const res = await fetch(`${config.public.apiUrl}/api/accommodations/${options.accommodationId}`, {
         method: 'DELETE',
@@ -260,13 +257,11 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
     isLoading,
     error,
     themeOptions,
-    showDeletePopup,
     fetchAccommodationData,
     fetchThemes,
     handleSubmit,
     deleteAccommodation,
     addImages,
     removeImage,
-    setShowDeletePopup: (value: boolean) => { showDeletePopup.value = value },
   };
 }
