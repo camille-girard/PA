@@ -141,7 +141,7 @@
 </script>
 
 <template>
-      <header class="bg-white py-5 w-full fixed top-0 z-50 px-4">
+      <header class="bg-white py-5 w-full fixed top-0 z-10 px-4">
             <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
                   <NuxtLink to="/" class="flex items-center gap-2">
                         <ULogo />
