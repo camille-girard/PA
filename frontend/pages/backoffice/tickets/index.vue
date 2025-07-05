@@ -106,8 +106,8 @@
                 v-for="ticket in filteredTickets"
                 :key="ticket.id"
                 class="cursor-pointer hover:shadow-md transition"
-                @click="openTicket(ticket)"
-            >
+                      @click="openTicket(ticket)"
+      >
                 <template #header>
                     <div class="flex justify-between items-center">
                         <div class="font-semibold">{{ ticket.title }}</div>

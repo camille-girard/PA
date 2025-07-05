@@ -123,23 +123,23 @@
                             </UBadge>
                         </template>
 
-                        <template #cell-actions="{ row }">
-                            <div class="flex items-center gap-4">
-                                <ConfirmPopover
-                                    :itemName="`la réservation de ${row.client}`"
-                                    @confirm="deleteBooking(row.id)"
-                                >
-                                    <template #trigger>
-                                        <button class="text-red-500 hover:text-red-700">
-                                            <TrashIcon class="w-6 h-6" />
-                                        </button>
-                                    </template>
-                                </ConfirmPopover>
-                            </div>
-                        </template>
-                    </UTable>
-                </div>
-            </div>
+            <template #cell-actions="{ row }">
+              <div class="flex items-center gap-4">
+                <ConfirmPopover
+                    :item-name="`la réservation de ${row.client}`"
+                    @confirm="deleteBooking(row.id)"
+                >
+                  <template #trigger>
+                    <button class="text-red-500 hover:text-red-700">
+                      <TrashIcon class="w-6 h-6" />
+                    </button>
+                  </template>
+                </ConfirmPopover>
+              </div>
+            </template>
+          </UTable>
         </div>
+      </div>
     </div>
+  </div>
 </template>

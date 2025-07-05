@@ -106,14 +106,14 @@
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else-if="errorMsg" class="text-red-600">{{ errorMsg }}</div>
-        <form v-else @submit.prevent="save" class="grid gap-6 pt-6 md:grid-cols-2" :aria-busy="saving || pending">
+        <form v-else class="grid gap-6 pt-6 md:grid-cols-2" :aria-busy="saving || pending" @submit.prevent="save">
             <Input v-model="form.firstName" label="Prénom" name="firstName" type="text" required />
             <Input v-model="form.lastName" label="Nom" name="lastName" type="text" required />
-            <Input class="md:col-span-2" v-model="form.email" label="Email" name="email" type="email" required />
-            <Input class="md:col-span-2" v-model="form.phone" label="Téléphone" name="phone" type="tel" />
+            <Input v-model="form.email" class="md:col-span-2" label="Email" name="email" type="email" required />
+            <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
 
             <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-                <UButton :disabled="saving" :isLoading="saving" size="lg" variant="primary" type="submit">
+                <UButton :disabled="saving" :is-loading="saving" size="lg" variant="primary" type="submit">
                     {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
                 </UButton>
 

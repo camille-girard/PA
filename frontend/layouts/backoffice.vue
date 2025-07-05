@@ -132,8 +132,8 @@
                 </div>
 
                 <button
-                    @click="logout"
                     class="flex items-center px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0 w-full text-left"
+                    @click="logout"
                 >
                     <LogoutIcon class="w-7 h-7 mr-3" />
                     Déconnexion
@@ -148,3 +148,4 @@
         </div>
     </div>
 </template>
+
