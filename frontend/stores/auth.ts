@@ -9,6 +9,7 @@ type User = {
     address?: string;
     preferences?: string[];
     roles: string[];
+    avatar: string;
 };
 
 export const useAuthStore = defineStore('auth', {
