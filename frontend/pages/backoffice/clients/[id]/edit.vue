@@ -110,9 +110,9 @@
     <div v-else>
       <form
           v-if="client"
-          @submit.prevent="save"
           class="grid pt-6 gap-6 md:grid-cols-2"
           :aria-busy="saving || pending"
+          @submit.prevent="save"
       >
         <Input
             v-model="form.firstName"
@@ -129,16 +129,16 @@
             required
         />
         <Input
-            class="md:col-span-2"
             v-model="form.email"
+            class="md:col-span-2"
             label="Email"
             name="email"
             type="email"
             required
         />
         <Input
-            class="md:col-span-2"
             v-model="form.phone"
+            class="md:col-span-2"
             label="Téléphone"
             name="phone"
             type="tel"
@@ -147,7 +147,7 @@
         <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
           <UButton
               :disabled="saving"
-              :isLoading="saving"
+              :is-loading="saving"
               size="lg"
               variant="primary"
               type="submit"

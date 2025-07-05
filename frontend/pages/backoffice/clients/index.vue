@@ -133,7 +133,7 @@
             </NuxtLink>
 
             <ConfirmPopover
-                :itemName="row.client"
+                :item-name="row.client"
                 @confirm="deleteClient(row.id)"
             >
               <template #trigger>

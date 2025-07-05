@@ -36,7 +36,8 @@ const formattedRole = computed(() => {
 
         <nav class="px-7 mt-4">
           <ul class="space-y-2">
-            <ULink to="/backoffice"
+            <ULink
+to="/backoffice"
                 class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                 exact-active-class="bg-brand-600 text-white">
               <HomeIcon class="w-7 h-7 mr-3" />
@@ -44,7 +45,8 @@ const formattedRole = computed(() => {
             </ULink>
 
             <li>
-              <ULink to="/backoffice/owners"
+              <ULink
+to="/backoffice/owners"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <BuildingIcon class="w-7 h-7 mr-3" />
@@ -53,7 +55,8 @@ const formattedRole = computed(() => {
             </li>
 
             <li>
-              <ULink to="/backoffice/clients"
+              <ULink
+to="/backoffice/clients"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <UserIcon class="w-7 h-7 mr-3"/>
@@ -62,7 +65,8 @@ const formattedRole = computed(() => {
             </li>
 
             <li>
-              <ULink to="/backoffice/bookings"
+              <ULink
+to="/backoffice/bookings"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <CoinsHandIcon class="w-7 h-7 mr-3" />
@@ -71,7 +75,8 @@ const formattedRole = computed(() => {
             </li>
 
             <li>
-              <ULink to="/backoffice/themes"
+              <ULink
+to="/backoffice/themes"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <LightningIcon class="w-7 h-7 mr-3" />
@@ -80,7 +85,8 @@ const formattedRole = computed(() => {
             </li>
 
             <li>
-              <ULink to="/backoffice/accommodations"
+              <ULink
+to="/backoffice/accommodations"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <PinIcon class="w-7 h-7 mr-3" />
@@ -89,7 +95,8 @@ const formattedRole = computed(() => {
             </li>
 
             <li>
-              <ULink to="/backoffice/tickets"
+              <ULink
+to="/backoffice/tickets"
                      class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                      exact-active-class="bg-brand-600 text-white">
                 <MessageIcon class="w-7 h-7 mr-3" />
@@ -118,8 +125,8 @@ const formattedRole = computed(() => {
         </div>
 
         <button
-            @click="logout"
             class="flex items-center px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0 w-full text-left"
+            @click="logout"
         >
           <LogoutIcon class="w-7 h-7 mr-3" />
           Déconnexion

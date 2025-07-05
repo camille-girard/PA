@@ -140,7 +140,7 @@
           <UInput v-model="newTheme.name" label="Nom" type="text" required />
           <UTextarea v-model="newTheme.description" label="Description" required />
           <UButton
-              :isLoading="isSaving"
+              :is-loading="isSaving"
               :disabled="!newTheme.name || !newTheme.description"
               class="w-fit justify-self-start"
               @click="saveNewTheme"
@@ -161,7 +161,7 @@
                   <button @click="editingTheme = theme.id">
                     <EditIcon class="w-5 h-5 text-blue-500 hover:text-blue-700" />
                   </button>
-                  <ConfirmPopover :itemName="theme.name" @confirm="deleteTheme(theme.id)">
+                  <ConfirmPopover :item-name="theme.name" @confirm="deleteTheme(theme.id)">
                     <template #trigger>
                       <button class="text-red-500 hover:text-red-700">
                         <TrashIcon class="w-5 h-5" />
