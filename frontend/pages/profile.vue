@@ -48,7 +48,7 @@
 </script>
 
 <template>
-    <main>
+    <main class="w-full">
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section id="information-profile" class="w-full pt-8 mb-10">
