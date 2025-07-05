@@ -68,9 +68,9 @@
     });
 </script>
 <template>
-    <main class="w-full h-full">
+    <main class="w-full h-full flex-grow flex flex-col">
         <UHeader />
-        <div class="max-w-7xl mx-auto w-full pt-8 px-4">
+        <div class="max-w-7xl mx-auto w-full pt-8 px-4 flex-grow">
             <section class="w-full pt-8">
                 <div class="py-20 rounded-2xl flex items-center justify-center relative">
                     <div class="text-center z-10">
