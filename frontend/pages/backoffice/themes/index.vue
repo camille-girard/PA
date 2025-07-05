@@ -24,7 +24,6 @@ const editingTheme = ref<number | null>(null)
 const successMsg = ref('')
 const errorMsg = ref('')
 
-// Stockage des valeurs originales pour l'édition
 const originalThemeData = ref<any>({})
 const editingThemeData = ref<any>({})
 
@@ -42,7 +41,6 @@ async function loadThemes() {
       transform: res => res.themes,
     })
 
-    // Filtrer les thèmes valides uniquement
     themes.value = (data.value || []).filter(theme =>
         theme && theme.id && theme.name && theme.description
     )
@@ -59,7 +57,6 @@ async function refreshThemes() {
 }
 
 async function saveNewTheme() {
-  // Empêcher la double soumission
   if (isSaving.value) return
 
   isSaving.value = true
@@ -67,7 +64,6 @@ async function saveNewTheme() {
   errorMsg.value = ''
 
   try {
-    // Validation côté client avant envoi
     if (!newTheme.name.trim() || !newTheme.description.trim()) {
       errorMsg.value = 'Le nom et la description sont requis.'
       return
@@ -82,16 +78,13 @@ async function saveNewTheme() {
       },
     })
 
-    // Vérifier s'il y a une erreur
     if (response.error.value) {
       errorMsg.value = response.error.value.data?.message || 'Erreur lors de l\'ajout du thème.'
       return
     }
 
-    // Réinitialiser le formulaire
     Object.assign(newTheme, { name: '', description: '' })
 
-    // Recharger les thèmes
     await refreshThemes()
     successMsg.value = 'Thème ajouté avec succès.'
 
@@ -105,12 +98,10 @@ async function saveNewTheme() {
 
 function startEdit(theme: any) {
   editingTheme.value = theme.id
-  // Sauvegarder les valeurs originales
   originalThemeData.value = {
     name: theme.name,
     description: theme.description
   }
-  // Créer une copie pour l'édition
   editingThemeData.value = {
     name: theme.name,
     description: theme.description
@@ -168,7 +159,6 @@ async function deleteTheme(id: number) {
       return
     }
 
-    // Mise à jour locale de la liste
     themes.value = themes.value.filter(theme => theme.id !== id)
     successMsg.value = 'Thème supprimé avec succès.'
 
@@ -186,12 +176,10 @@ onMounted(() => {
 <template>
   <div class="space-y-6">
     <h1 class="text-2xl font-semibold">Gestion des thèmes</h1>
-
     <div v-if="pending" class="text-gray-600">Chargement…</div>
     <div v-else>
       <div v-if="successMsg" class="text-green-600 text-sm mb-4">{{ successMsg }}</div>
       <div v-if="errorMsg" class="text-red-600 text-sm mb-4">{{ errorMsg }}</div>
-
       <UCard>
         <template #header>
           <span class="text-lg font-medium">Ajouter un nouveau thème</span>
@@ -209,7 +197,6 @@ onMounted(() => {
           </UButton>
         </div>
       </UCard>
-
       <div>
         <h2 class="text-lg font-semibold my-4">Tous les thèmes</h2>
         <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -231,7 +218,6 @@ onMounted(() => {
                 </div>
               </div>
             </template>
-
             <template v-if="editingTheme === theme.id">
               <div class="space-y-3">
                 <UInput v-model="editingThemeData.name" label="Nom" type="text" />
@@ -242,7 +228,6 @@ onMounted(() => {
                 </div>
               </div>
             </template>
-
             <template v-else>
               <div class="space-y-2">
                 <p><strong>Nom :</strong> {{ theme.name }}</p>

@@ -102,7 +102,6 @@ final class ThemeController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // Validation supplémentaire des données
         $name = trim($data['name']);
         $description = trim($data['description']);
 
@@ -139,7 +138,6 @@ final class ThemeController extends AbstractController
             $this->entityManager->persist($theme);
             $this->entityManager->flush();
 
-            // Rafraîchir l'entité pour s'assurer qu'elle a un ID
             $this->entityManager->refresh($theme);
         } catch (\Exception $e) {
             return $this->json([
