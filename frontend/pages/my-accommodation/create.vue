@@ -1,17 +1,12 @@
 <script setup lang="ts">
-    import { ref } from 'vue';
-    import UHeader from '~/components/UHeader.vue';
-    import UFooter from '~/components/UFooter.vue';
-    import HomeInformation from '~/components/HomeInformation.vue';
-    import { useAuthStore } from '~/stores/auth';
-
-    const auth = useAuthStore();
-
-    const newAccommodationId = ref(null);
+    definePageMeta({
+        middleware: 'owner',
+        layout: 'default'
+    })
 </script>
 
 <template>
-    <main>
+    <main class="w-full">
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
