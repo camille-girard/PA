@@ -26,14 +26,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $email = null;
 
     /**
@@ -51,11 +51,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
