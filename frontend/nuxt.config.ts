@@ -35,6 +35,7 @@ export default defineNuxtConfig({
         public: {
             apiUrl: process.env.NUXT_PUBLIC_API_URL,
             mapboxToken: process.env.MAPBOX_TOKEN,
+            mercureUrl: process.env.MERCURE_PUBLIC_URL || 'http://localhost:1337/.well-known/mercure',
         },
     },
 
