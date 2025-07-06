@@ -81,7 +81,7 @@
                     label: 'Messages',
                     icon: MessageChatCircleIcon,
                     action: async () => {
-                        await navigateTo('/message');
+                        await navigateTo('/messages');
                     },
                 },
                 {
