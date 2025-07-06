@@ -21,7 +21,7 @@ export interface Message {
   content: string;
   createdAt: string;
   isRead: boolean;
-  sender: User | number;
+  sender: User;
   client: Client;
   owner: Owner;
   conversation: Conversation | number;
