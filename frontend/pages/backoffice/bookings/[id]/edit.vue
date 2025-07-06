@@ -117,19 +117,9 @@
     <div class="max-w-3xl p-6 md:p-10 dark:bg-gray-900 space-y-8">
         <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">Modifier la réservation</h1>
 
-    <form @submit.prevent="save" class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending">
-      <UDatePicker
-          v-model="form.startDate"
-          label="Date de début"
-          name="startDate"
-          required
-      />
-      <UDatePicker
-          v-model="form.endDate"
-          label="Date de fin"
-          name="endDate"
-          required
-      />
+        <form @submit.prevent="save" class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending">
+            <UDatePicker v-model="form.startDate" label="Date de début" name="startDate" required />
+            <UDatePicker v-model="form.endDate" label="Date de fin" name="endDate" required />
 
             <USelectBox
                 v-model="form.clientId"
@@ -168,16 +158,10 @@
                 class="md:col-span-2"
             />
 
-      <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-        <UButton
-            :disabled="saving"
-            :isLoading="saving"
-            size="lg"
-            variant="primary"
-            type="submit"
-        >
-          {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
-        </UButton>
+            <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+                <UButton :disabled="saving" :isLoading="saving" size="lg" variant="primary" type="submit">
+                    {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
+                </UButton>
 
                 <span v-if="success" class="text-green-600 text-sm">Modifications enregistrées</span>
                 <span v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</span>
