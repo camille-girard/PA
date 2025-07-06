@@ -1,0 +1,20 @@
+<h1>Réinitialisation de votre mot de passe PopnBed</h1>
+
+<p>Bonjour,</p>
+
+<p>Vous avez demandé la réinitialisation de votre mot de passe sur PopnBed.</p>
+
+<p>Pour définir un nouveau mot de passe, cliquez sur le lien suivant :</p>
+
+<a href="{{ frontendUrl }}/reset-password?token={{ resetToken.token }}" style="display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: white; text-decoration: none; border-radius: 6px; margin: 16px 0;">
+    Réinitialiser mon mot de passe
+</a>
+
+<p>Ou copiez et collez cette URL dans votre navigateur :</p>
+<p>{{ frontendUrl }}/reset-password?token={{ resetToken.token }}</p>
+
+<p>Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+<p>Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.</p>
+
+<p>Cordialement,<br>L'équipe PopnBed</p>

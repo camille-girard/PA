@@ -37,7 +37,7 @@ class OwnerRequestController extends AbstractController
 
             $existing = $em->getRepository(OwnerRequest::class)->findOneBy([
                 'user' => $user,
-                'reviewed' => false
+                'reviewed' => false,
             ]);
 
             if ($existing) {
@@ -53,14 +53,13 @@ class OwnerRequestController extends AbstractController
 
             return $this->json([
                 'success' => true,
-                'message' => 'Votre demande a été envoyée avec succès.'
+                'message' => 'Votre demande a été envoyée avec succès.',
             ]);
-
         } catch (\Exception $e) {
-            error_log('Erreur owner request: ' . $e->getMessage());
+            error_log('Erreur owner request: '.$e->getMessage());
 
             return $this->json([
-                'error' => 'Une erreur est survenue. Veuillez réessayer.'
+                'error' => 'Une erreur est survenue. Veuillez réessayer.',
             ], 500);
         }
     }

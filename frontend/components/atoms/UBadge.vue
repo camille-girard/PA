@@ -64,7 +64,7 @@
         error: 'text-fg-error-secondary',
         warning: 'text-fg-warning-secondary',
         success: 'text-fg-success-secondary',
-    }
+    };
 </script>
 
 <template>

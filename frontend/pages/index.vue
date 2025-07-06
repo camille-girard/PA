@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { useAccomodations } from '~/composables/useAccomodations';
     import AccommodationCards from '~/components/AccommodationCards.vue';
-    
+
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
@@ -55,4 +55,3 @@
         <UFooter />
     </main>
 </template>
-

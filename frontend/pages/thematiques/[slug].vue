@@ -3,37 +3,38 @@
     import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
     import type { ThemeWithAccommodationsDto } from '~/types/dtos/theme_with_accommodations.dto';
     import AccommodationCards from '~/components/AccommodationCards.vue';
-    
+
     useSeoMeta({
-        title: "PopnBed - Thématique",
-        description: "Découvrez nos hébergements par thématique",
+        title: 'PopnBed - Thématique',
+        description: 'Découvrez nos hébergements par thématique',
     });
 
     const route = useRoute();
     const { getThemeBySlug } = useThemes();
-    
+
     const theme = ref<ThemeWithAccommodationsDto | null>(null);
     const accommodations = ref<AccommodationItemDto[]>([]);
 
     onMounted(async () => {
         if (typeof route.params.slug === 'string') {
             const themeData = await getThemeBySlug(route.params.slug);
-            
+
             if (themeData) {
                 theme.value = themeData;
-                
+
                 // Mise à jour des métadonnées SEO avec le nom du thème
                 useSeoMeta({
                     title: `PopnBed - ${themeData.name}`,
                     description: `Découvrez nos hébergements inspirés de ${themeData.name}`,
                 });
-                
-                accommodations.value = themeData.accommodations?.map((accommodation) => ({
-                    id: accommodation.id,
-                    title: accommodation.name,
-                    image: accommodation.images[0]?.url || 'https://via.placeholder.com/400x250',
-                    slug: themeData.slug,
-                })) || [];
+
+                accommodations.value =
+                    themeData.accommodations?.map((accommodation) => ({
+                        id: accommodation.id,
+                        title: accommodation.name,
+                        image: accommodation.images[0]?.url || 'https://via.placeholder.com/400x250',
+                        slug: themeData.slug,
+                    })) || [];
             }
         }
     });
