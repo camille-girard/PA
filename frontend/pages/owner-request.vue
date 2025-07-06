@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <form @submit.prevent="submitRequest" class="max-w-2xl mx-auto space-y-6 mt-12">
+                <form class="max-w-2xl mx-auto space-y-6 mt-12" @submit.prevent="submitRequest">
                     <div>
                         <label class="block mb-2">Parlez-nous de vous et de votre hébergement</label>
                         <textarea

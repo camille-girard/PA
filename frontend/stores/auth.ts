@@ -7,6 +7,7 @@ type User = {
     email: string;
     phone?: string;
     address?: string;
+    preferences?: string[];
     roles: string[];
 };
 

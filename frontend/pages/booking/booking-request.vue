@@ -38,10 +38,6 @@
     const totalPrice = (pricePerNight * nights + 12 + 5).toFixed(2);
 
     const createCheckout = async () => {
-        console.log('user:', user.value);
-        console.log('clientId:', clientId.value);
-        console.log('accommodationId:', accommodationId);
-
         if (!clientId.value || !accommodationId) {
             alert('Informations manquantes pour créer la réservation.');
             return;

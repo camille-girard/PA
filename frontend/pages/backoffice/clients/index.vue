@@ -128,7 +128,7 @@
                             <EditIcon class="w-6 h-6" />
                         </NuxtLink>
 
-                        <ConfirmPopover :itemName="row.client" @confirm="deleteClient(row.id)">
+                        <ConfirmPopover :item-name="row.client" @confirm="deleteClient(row.id)">
                             <template #trigger>
                                 <button class="text-red-500 hover:text-red-700">
                                     <TrashIcon class="w-6 h-6" />

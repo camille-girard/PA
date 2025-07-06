@@ -108,9 +108,9 @@
             <template #cell-notation="{ value }">
                 <div class="flex items-center gap-0.5">
                     <component
+                        :is="value >= i ? FullStarIcon : value >= i - 0.5 ? HalfStarIcon : EmptyStarIcon"
                         v-for="i in 5"
                         :key="i"
-                        :is="value >= i ? FullStarIcon : value >= i - 0.5 ? HalfStarIcon : EmptyStarIcon"
                     />
                 </div>
             </template>
@@ -125,7 +125,7 @@
                         <EditIcon class="w-6 h-6" />
                     </NuxtLink>
 
-                    <ConfirmPopover :itemName="row.owner" @confirm="deleteOwner(row.id)">
+                    <ConfirmPopover :item-name="row.owner" @confirm="deleteOwner(row.id)">
                         <template #trigger>
                             <button class="text-red-500 hover:text-red-700">
                                 <TrashIcon class="w-6 h-6" />

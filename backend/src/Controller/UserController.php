@@ -21,7 +21,7 @@ final class UserController extends AbstractController
     public function index(UserRepository $userRepository, SerializerInterface $serializerInterface): JsonResponse
     {
         $current_user = $this->getUser();
-        $user = $userRepository->findOneBy(['email' => $current_user->getUserIdentifier()]);
+        $user = $userRepository->find($current_user->getId());
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
             'ignored_attributes' => ['password', 'userIdentifier'],
@@ -59,6 +59,10 @@ final class UserController extends AbstractController
 
         if (isset($data['address'])) {
             $user->setAddress($data['address']);
+        }
+
+        if (isset($data['preferences'])) {
+            $user->setPreferences($data['preferences']);
         }
 
         $em->flush();
