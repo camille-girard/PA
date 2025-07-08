@@ -24,7 +24,7 @@ export interface Message {
   sender: User;
   client: Client;
   owner: Owner;
-  conversation: Conversation | number;
+  conversation: Conversation;
 }
 
 export interface Conversation {
