@@ -88,7 +88,6 @@ export const useConversationStore = defineStore('conversation', {
           if (!this.currentConversation.messages) {
             this.currentConversation.messages = [];
           }
-          this.currentConversation.messages.push(message);
           this.currentConversation.lastMessagePreview = content.length > 50 
             ? `${content.substring(0, 47)}...` 
             : content;
@@ -136,9 +135,9 @@ export const useConversationStore = defineStore('conversation', {
         }
         
         // Check if message already exists to avoid duplicates
-        if (!this.currentConversation.messages.some(m => m.id === message.id)) {
-          this.currentConversation.messages.push(message);
-        }
+        // if (!this.currentConversation.messages.some(m => m.id === message.id)) {
+        // //   this.currentConversation.messages.push(message);
+        // }
       } else {
         console.log('Message is for conversation', conversationId, 'but current conversation is', 
                     this.currentConversation ? this.currentConversation.id : 'none');

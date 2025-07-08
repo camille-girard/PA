@@ -83,7 +83,7 @@ export function useMercure() {
       
       eventSource.onmessage = (event) => {
         try {
-          console.log(`Received message event for conversation ${conversationId}:`, event.data);
+          console.log(`Received message event for conversation ${conversationId}:`);
           const message = JSON.parse(event.data) as Message;
           console.log('Parsed message:', message);
           conversationStore.addMessage(message);

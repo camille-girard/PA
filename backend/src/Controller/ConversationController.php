@@ -330,11 +330,6 @@ class ConversationController extends AbstractController
                     'ignored_attributes' => ['password', 'bookings', 'comments', 'tickets', 'ticketMessages']
                 ]
             );
-
-            // Log pour déboguer
-            error_log("Publishing to Mercure hub: {$topicUrl}");
-            error_log("Recipient topic: {$recipientTopicUrl}");
-            error_log("Message data: {$messageData}");
             
             try {
                 // Publier sur le topic de la conversation
