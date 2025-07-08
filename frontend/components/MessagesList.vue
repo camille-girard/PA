@@ -3,7 +3,7 @@
     import type { Conversation, Message } from '~/types/conversation';
     import { useAuthStore } from '~/stores/auth';
     import UButton from './atoms/UButton.vue';
-import UInput from './atoms/UInput.vue';
+    import UInput from './atoms/UInput.vue';
 
     const props = defineProps<{
         conversation: Conversation;
