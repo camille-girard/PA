@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\OwnerRequest;
+use App\Entity\Owner;
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +37,10 @@ class OwnerRequestController extends AbstractController
                 return $this->json(['error' => 'Le message doit contenir au moins 10 caractères.'], 400);
             }
 
+            if (in_array('ROLE_OWNER', $user->getRoles())) {
+                return $this->json(['error' => 'Vous êtes déjà propriétaire.'], 400);
+            }
+
             $existing = $em->getRepository(OwnerRequest::class)->findOneBy([
                 'user' => $user,
                 'reviewed' => false
@@ -62,6 +68,176 @@ class OwnerRequestController extends AbstractController
             return $this->json([
                 'error' => 'Une erreur est survenue. Veuillez réessayer.'
             ], 500);
+        }
+    }
+
+    #[Route('/api/owner-requests', name: 'api_owner_requests_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function index(EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $ownerRequests = $em->getRepository(OwnerRequest::class)->findBy([], ['createdAt' => 'DESC']);
+
+            $data = [];
+            foreach ($ownerRequests as $request) {
+                $data[] = [
+                    'id' => $request->getId(),
+                    'message' => $request->getMessage(),
+                    'createdAt' => $request->getCreatedAt()->format('Y-m-d H:i:s'),
+                    'reviewed' => $request->isReviewed(),
+                    'user' => [
+                        'id' => $request->getUser()->getId(),
+                        'firstName' => $request->getUser()->getFirstName(),
+                        'lastName' => $request->getUser()->getLastName(),
+                        'email' => $request->getUser()->getEmail()
+                    ]
+                ];
+            }
+
+            return $this->json($data);
+        } catch (\Exception $e) {
+            error_log('Erreur owner requests index: ' . $e->getMessage());
+            return $this->json(['error' => 'Erreur lors du chargement des demandes.'], 500);
+        }
+    }
+
+    #[Route('/api/owner-requests/{id}/accept', name: 'api_owner_requests_accept', methods: ['PATCH'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function accept(int $id, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $ownerRequest = $em->getRepository(OwnerRequest::class)->find($id);
+
+            if (!$ownerRequest) {
+                return $this->json(['error' => 'Demande non trouvée.'], 404);
+            }
+
+            if ($ownerRequest->isReviewed()) {
+                return $this->json(['error' => 'Cette demande a déjà été traitée.'], 400);
+            }
+
+            $user = $ownerRequest->getUser();
+
+            $existingOwner = $em->getRepository(Owner::class)->findOneBy(['email' => $user->getEmail()]);
+            if ($existingOwner) {
+                return $this->json(['error' => 'Cet utilisateur est déjà propriétaire.'], 400);
+            }
+
+            $existingClient = $em->getRepository(Client::class)->find($user->getId());
+            if (!$existingClient) {
+                return $this->json(['error' => 'L\'utilisateur doit être un client pour devenir propriétaire.'], 400);
+            }
+
+            $em->getConnection()->beginTransaction();
+
+            try {
+                $userId = $user->getId();
+
+                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+
+                $em->getConnection()->executeStatement(
+                    'INSERT INTO owner (id, bio, notation) VALUES (?, NULL, 0.0)',
+                    [$userId]
+                );
+
+                $em->getConnection()->executeStatement(
+                    'UPDATE user SET discr = ?, roles = ? WHERE id = ?',
+                    ['owner', json_encode(['ROLE_OWNER']), $userId]
+                );
+
+                $em->getConnection()->executeStatement(
+                    'DELETE FROM client WHERE id = ?',
+                    [$userId]
+                );
+
+                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+
+                $ownerRequest->setReviewed(true);
+                $em->flush();
+
+                $em->clear();
+
+                $em->getConnection()->commit();
+
+                return $this->json([
+                    'success' => true,
+                    'message' => 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.'
+                ]);
+
+            } catch (\Exception $e) {
+                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+                $em->getConnection()->rollback();
+                error_log('Erreur lors de la conversion client->owner: ' . $e->getMessage());
+                return $this->json(['error' => 'Erreur lors de l\'acceptation: ' . $e->getMessage()], 500);
+            }
+
+        } catch (\Exception $e) {
+            error_log('Erreur owner request accept: ' . $e->getMessage());
+            return $this->json(['error' => 'Erreur lors de l\'acceptation de la demande: ' . $e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/api/owner-requests/{id}/reject', name: 'api_owner_requests_reject', methods: ['PATCH'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function reject(int $id, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $ownerRequest = $em->getRepository(OwnerRequest::class)->find($id);
+
+            if (!$ownerRequest) {
+                return $this->json(['error' => 'Demande non trouvée.'], 404);
+            }
+
+            if ($ownerRequest->isReviewed()) {
+                return $this->json(['error' => 'Cette demande a déjà été traitée.'], 400);
+            }
+
+            $ownerRequest->setReviewed(true);
+            $em->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Demande rejetée avec succès.'
+            ]);
+
+        } catch (\Exception $e) {
+            error_log('Erreur owner request reject: ' . $e->getMessage());
+            return $this->json(['error' => 'Erreur lors du rejet de la demande.'], 500);
+        }
+    }
+
+    #[Route('/api/owner-requests/{id}', name: 'api_owner_requests_show', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function show(int $id, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $ownerRequest = $em->getRepository(OwnerRequest::class)->find($id);
+
+            if (!$ownerRequest) {
+                return $this->json(['error' => 'Demande non trouvée.'], 404);
+            }
+
+            $data = [
+                'id' => $ownerRequest->getId(),
+                'message' => $ownerRequest->getMessage(),
+                'createdAt' => $ownerRequest->getCreatedAt()->format('Y-m-d H:i:s'),
+                'reviewed' => $ownerRequest->isReviewed(),
+                'user' => [
+                    'id' => $ownerRequest->getUser()->getId(),
+                    'firstName' => $ownerRequest->getUser()->getFirstName(),
+                    'lastName' => $ownerRequest->getUser()->getLastName(),
+                    'email' => $ownerRequest->getUser()->getEmail(),
+                    'phone' => $ownerRequest->getUser()->getPhone(),
+                    'isVerified' => $ownerRequest->getUser()->isVerified(),
+                    'createdAt' => $ownerRequest->getUser()->getCreatedAt()->format('Y-m-d H:i:s')
+                ]
+            ];
+
+            return $this->json($data);
+
+        } catch (\Exception $e) {
+            error_log('Erreur owner request show: ' . $e->getMessage());
+            return $this->json(['error' => 'Erreur lors du chargement du détail.'], 500);
         }
     }
 }

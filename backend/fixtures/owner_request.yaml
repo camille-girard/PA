@@ -1,0 +1,30 @@
+App\Entity\OwnerRequest:
+  owner_request_1:
+    user: '@client_1'
+    message: 'Bonjour, je souhaiterais devenir propriétaire pour proposer mes hébergements sur votre plateforme. J''ai plusieurs propriétés bien situées et je pense que cela pourrait intéresser vos clients.'
+    created_at: '<(new DateTimeImmutable("2024-01-15"))>'
+    reviewed: false
+
+  owner_request_2:
+    user: '@client_2'
+    message: 'Salut ! Je suis intéressé par devenir propriétaire. J''ai un appartement magnifique avec vue sur mer que j''aimerais louer. J''ai déjà de l''expérience dans la location courte durée.'
+    created_at: '<(new DateTimeImmutable("2024-01-20"))>'
+    reviewed: false
+
+  owner_request_3:
+    user: '@client_1'
+    message: 'Je possède une maison de campagne parfaite pour les vacances en famille. Elle dispose d''un grand jardin et d''une piscine. Je pense qu''elle serait parfaite pour votre plateforme.'
+    created_at: '<(new DateTimeImmutable("2024-01-25"))>'
+    reviewed: true
+
+  owner_request_4:
+    user: '@client_2'
+    message: 'Propriétaire expérimenté cherchant à rejoindre votre plateforme. J''ai plusieurs biens immobiliers dans différentes villes touristiques et je souhaiterais les proposer à vos clients.'
+    created_at: '<(new DateTimeImmutable("2024-01-30"))>'
+    reviewed: false
+
+  owner_request_5:
+    user: '@client_1'
+    message: 'Bonjour, je dispose d''un studio moderne en centre-ville, idéal pour les voyageurs d''affaires. Il est entièrement équipé et très bien situé près des transports.'
+    created_at: '<(new DateTimeImmutable("2024-02-05"))>'
+    reviewed: false
