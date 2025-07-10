@@ -102,3 +102,45 @@ services:
     depends_on:
       - backend
       - frontend
+
+  matomo-db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MATOMO_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MATOMO_DB_NAME}
+      MYSQL_USER: ${MATOMO_DB_USER}
+      MYSQL_PASSWORD: ${MATOMO_DB_PASSWORD}
+    volumes:
+      - matomo-db-data:/var/lib/mysql
+    command: --max-allowed-packet=64MB
+    restart: unless-stopped
+    networks:
+      - default
+
+  matomo:
+    image: matomo:5
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - matomo-data:/var/www/html
+    environment:
+      MATOMO_DATABASE_HOST: matomo-db
+      MATOMO_DATABASE_ADAPTER: mysql
+      MATOMO_DATABASE_TABLES_PREFIX: matomo_
+      MATOMO_DATABASE_USERNAME: ${MATOMO_DB_USER}
+      MATOMO_DATABASE_PASSWORD: ${MATOMO_DB_PASSWORD}
+      MATOMO_DATABASE_DBNAME: ${MATOMO_DB_NAME}
+      MATOMO_DATABASE_PORT: 3306
+    depends_on:
+      - matomo-db
+    command: >
+      bash -c "
+        chown -R www-data:www-data /var/www/html &&
+        chmod -R 755 /var/www/html &&
+        apache2-foreground
+      "
+
+volumes:
+  matomo-data:
+  matomo-db-data:

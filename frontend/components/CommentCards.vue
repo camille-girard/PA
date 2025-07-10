@@ -18,9 +18,9 @@
         >
             <div class="flex items-center space-x-2">
                 <img
-                    class="w-10 h-10 rounded-full object-cover" 
-                    :src="item.userImage || item.avatar || '/avatar-test.png'" 
-                    alt="avatar" 
+                    class="w-10 h-10 rounded-full object-cover"
+                    :src="item.userImage || item.avatar || '/avatar-test.png'"
+                    alt="avatar"
                 />
                 <div>
                     <p class="text-body-md font-semibold text-gray-900">{{ item.name }}</p>

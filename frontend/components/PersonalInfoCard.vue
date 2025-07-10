@@ -97,12 +97,7 @@
     <div class="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10 items-start">
         <div class="bg-orange-100 rounded-3xl p-6 flex flex-col items-center w-full md:w-1/4">
             <div class="mb-4">
-                <UAvatar
-                    size="2xl"
-                    :image-src="userAvatarUrl"
-                    :text="userInitials"
-                    status-icon="false"
-                />
+                <UAvatar size="2xl" :image-src="userAvatarUrl" :text="userInitials" status-icon="false" />
             </div>
             <p class="text-body-lg font-bold">{{ auth.user?.firstName }}</p>
         </div>
