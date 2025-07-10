@@ -6,6 +6,7 @@
     import UTable from '~/components/organisms/UTable.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { Accommodation } from '~/types/accommodation';
 
     definePageMeta({
         layout: 'backoffice',
@@ -20,7 +21,7 @@
 
     const pending = ref(false);
     const errorMsg = ref('');
-    const accommodation = ref<any>(null);
+    const accommodation = ref<Accommodation | null>(null);
 
     const showImageModal = ref(false);
     const selectedImageUrl = ref('');
@@ -54,8 +55,17 @@
                 throw error.value;
             }
             accommodation.value = data.value ?? null;
-        } catch (err: any) {
-            errorMsg.value = err?.data?.message || 'Erreur lors du chargement du logement.';
+        } catch (err: unknown) {
+            if (
+                typeof err === 'object' &&
+                err &&
+                'data' in err &&
+                (err as { data?: { message?: string } }).data?.message
+            ) {
+                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
+            } else {
+                errorMsg.value = 'Erreur lors du chargement du logement.';
+            }
             console.error(err);
         } finally {
             pending.value = false;

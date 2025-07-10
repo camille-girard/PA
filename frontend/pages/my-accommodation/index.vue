@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue';
     import RentalCards from '~/components/RentalCards.vue';
+    import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
 
     const accommodations = ref([]);
     const isLoading = ref(true);
@@ -20,14 +21,14 @@
 
             const json = await res.json();
 
-            accommodations.value = json.accommodations.map((acc: any) => ({
+            accommodations.value = json.accommodations.map((acc: AccommodationDto) => ({
                 title: acc.name,
                 image: acc.images?.[0]?.url || 'https://via.placeholder.com/400x250',
                 slug: acc.id,
                 price: acc.price,
             }));
-        } catch (err: any) {
-            error.value = err.message;
+        } catch (err: unknown) {
+            error.value = err instanceof Error ? err.message : 'Une erreur est survenue';
         } finally {
             isLoading.value = false;
         }
@@ -39,8 +40,8 @@
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
                         <h1 class="text-h1">Mes hébergements</h1>
                         <p class="mt-4">Gérez vos logements proposés à la location</p>
                     </div>

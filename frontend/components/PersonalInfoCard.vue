@@ -2,8 +2,6 @@
     import UButton from '~/components/atoms/UButton.vue';
     import EditableField from '@/components/EditableField.vue';
     import { useAuthStore } from '@/stores/auth';
-    import { onMounted, computed } from 'vue';
-    import { useRouter } from 'vue-router';
 
     const auth = useAuthStore();
     const router = useRouter();
@@ -63,15 +61,14 @@
                     if (Array.isArray(parsed)) {
                         return parsed.join(', ');
                     }
-                } catch (e) {
+                } catch {
                     return auth.user.preferences; // Retourner tel quel si c'est déjà une string
                 }
             }
             return '';
         }
 
-        const result = auth.user.preferences.join(', ');
-        return result;
+        return auth.user.preferences.join(', ');
     });
 </script>
 

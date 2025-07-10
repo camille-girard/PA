@@ -31,14 +31,14 @@
 
     const contentEl = ref(null);
 
-    const startTransition = (element: any) => {
+    const startTransition = (element: HTMLElement) => {
         const height = element.scrollHeight;
         element.style.maxHeight = '0px';
         void element.offsetHeight;
         element.style.maxHeight = `${height}px`;
     };
 
-    const endTransition = (element: any) => {
+    const endTransition = (element: HTMLElement) => {
         const height = element.scrollHeight;
         element.style.maxHeight = `${height}px`;
         void element.offsetHeight;

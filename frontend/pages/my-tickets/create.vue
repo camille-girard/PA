@@ -48,8 +48,8 @@
 
             success.value = 'Ticket créé avec succès.';
             router.push('/my-tickets');
-        } catch (e: any) {
-            error.value = e?.data?.message || 'Erreur lors de la création du ticket.';
+        } catch (e: unknown) {
+            error.value = (e as unknown)?.data?.message || 'Erreur lors de la création du ticket.';
         } finally {
             loading.value = false;
         }

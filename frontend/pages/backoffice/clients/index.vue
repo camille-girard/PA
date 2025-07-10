@@ -8,6 +8,7 @@
     import EyeView from '~/components/atoms/icons/EyeView.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { Client } from '~/types/client';
 
     definePageMeta({
         layout: 'backoffice',
@@ -18,7 +19,7 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
-    const clientData = ref<any[]>([]);
+    const clientData = ref<Client[]>([]);
     const pending = ref(false);
     const errorMsg = ref('');
     const successMsg = ref('');
@@ -63,7 +64,7 @@
         try {
             const { data } = await useAuthFetch('/api/clients', { baseURL: apiUrl });
             clientData.value = data.value || [];
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors du chargement des clients.';
         } finally {
             pending.value = false;
@@ -85,7 +86,7 @@
             });
             await refreshClients();
             successMsg.value = 'Client supprimé avec succès.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             if (error?.data?.message) {
                 errorMsg.value = error.data.message;
             } else {

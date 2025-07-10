@@ -9,6 +9,7 @@
     import UBadge from '~/components/atoms/UBadge.vue';
     import UCard from '~/components/molecules/UCard.vue';
     import { useRuntimeConfig } from '#app';
+    import type { Ticket } from '~/types/ticket';
 
     definePageMeta({
         middleware: 'owner',
@@ -20,7 +21,7 @@
     const route = useRoute();
     const router = useRouter();
 
-    const ticket = ref<any>(null);
+    const ticket = ref<Ticket | null>(null);
     const isLoading = ref(true);
     const error = ref<string | null>(null);
     const newMessage = ref('');
@@ -32,12 +33,12 @@
         isLoading.value = true;
         error.value = null;
         try {
-            const { data } = await useAuthFetch(`/api/tickets/${route.params.id}`, {
+            const { data } = await useAuthFetch<Ticket>(`/api/tickets/${route.params.id}`, {
                 baseURL: apiUrl,
             });
             ticket.value = data.value;
-        } catch (e: any) {
-            error.value = e?.data?.message || 'Erreur de chargement';
+        } catch (e: unknown) {
+            error.value = (e as unknown)?.data?.message || 'Erreur de chargement';
         } finally {
             isLoading.value = false;
         }
@@ -51,7 +52,7 @@
         errorMsg.value = '';
         successMsg.value = '';
         try {
-            await useAuthFetch(`/api/tickets/${ticket.value.id}/messages`, {
+            await useAuthFetch(`/api/tickets/${ticket.value?.id}/messages`, {
                 method: 'POST',
                 baseURL: apiUrl,
                 body: { content: newMessage.value },
@@ -59,8 +60,8 @@
             newMessage.value = '';
             successMsg.value = 'Message envoyé';
             await fetchTicket();
-        } catch (e: any) {
-            errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.';
+        } catch (e: unknown) {
+            errorMsg.value = (e as unknown)?.data?.message || "Erreur lors de l'envoi.";
         } finally {
             savingMessage.value = false;
         }

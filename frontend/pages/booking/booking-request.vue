@@ -78,7 +78,7 @@
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section id="booking-request" class="w-full pt-8">
                 <div class="py-16 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                    <div class="text-center">
                         <h1 class="text-h1">Demande de réservation</h1>
                     </div>
                 </div>

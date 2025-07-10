@@ -35,8 +35,8 @@
                 baseURL: apiUrl,
             });
             ticket.value = data.value;
-        } catch (e: any) {
-            error.value = e?.data?.message || 'Erreur de chargement';
+        } catch (e: unknown) {
+            error.value = e instanceof Error ? e.message : 'Erreur de chargement';
         } finally {
             loading.value = false;
         }
@@ -58,8 +58,8 @@
             newMessage.value = '';
             successMsg.value = 'Message envoyé';
             await fetchTicket();
-        } catch (e: any) {
-            errorMsg.value = e?.data?.message || 'Erreur lors de l’envoi.';
+        } catch (e: unknown) {
+            errorMsg.value = e instanceof Error ? e.message : "Erreur lors de l'envoi.";
         } finally {
             savingMessage.value = false;
         }

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import { useRoute } from 'vue-router';
-    import { ref, reactive, watch, computed, onMounted } from 'vue';
     import Input from '~/components/atoms/UInput.vue';
     import UInputNumber from '~/components/atoms/UInputNumber.vue';
     import Textarea from '~/components/atoms/UTextarea.vue';
@@ -81,7 +79,7 @@
                 throw error.value;
             }
             themes.value = data.value?.themes ?? [];
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Erreur chargement des thèmes:', err);
         }
     }
@@ -119,8 +117,17 @@
                 form.longitude = acc.longitude?.toString() ?? '';
                 selectedThemeId.value = acc.themeId ?? null;
             }
-        } catch (err: any) {
-            errorMsg.value = err?.data?.message || 'Erreur lors du chargement.';
+        } catch (err: unknown) {
+            if (
+                typeof err === 'object' &&
+                err &&
+                'data' in err &&
+                (err as { data?: { message?: string } }).data?.message
+            ) {
+                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
+            } else {
+                errorMsg.value = 'Erreur lors du chargement.';
+            }
             console.error(err);
         } finally {
             pending.value = false;
@@ -164,7 +171,7 @@
 
             success.value = true;
             await refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.';
         } finally {
             saving.value = false;

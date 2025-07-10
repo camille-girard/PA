@@ -149,8 +149,8 @@
             </NuxtLink>
 
             <nav class="hidden md:flex items-center gap-6">
-                <ULink to="/thematiques">Thématiques</ULink>
-                <ULink to="/explorer">Explorer</ULink>
+                <ULink to="/thematiques" variant="tertiary">Thématiques</ULink>
+                <ULink to="/explorer" variant="tertiary">Explorer</ULink>
             </nav>
 
             <div class="hidden md:block relative">

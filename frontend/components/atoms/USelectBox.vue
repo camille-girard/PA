@@ -4,7 +4,7 @@
 
     interface SelectOption {
         label: string;
-        value: any;
+        value: unknown;
         icon?: Component;
     }
 
@@ -12,7 +12,7 @@
         placeholder?: string;
         searchInput?: boolean;
         icon?: Component | null;
-        modelValue: any;
+        modelValue: unknown;
         multiple?: boolean;
         name?: string;
         options: SelectOption[];
@@ -41,7 +41,7 @@
     });
 
     const emit = defineEmits<{
-        'update:modelValue': [value: any];
+        'update:modelValue': [value: unknown];
     }>();
 
     const isOpen = ref(false);

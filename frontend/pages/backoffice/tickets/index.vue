@@ -6,6 +6,7 @@
     import UBadge from '~/components/atoms/UBadge.vue';
     import UButton from '~/components/atoms/UButton.vue';
     import { useRuntimeConfig } from '#app';
+    import type { Ticket } from '~/types/ticket';
 
     definePageMeta({
         layout: 'backoffice',
@@ -18,7 +19,7 @@
     } = useRuntimeConfig();
 
     const selectedStatus = ref<'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED'>('ALL');
-    const ticketsData = ref<any[]>([]);
+    const ticketsData = ref<Ticket[]>([]);
     const pending = ref(true);
     const error = ref<Error | null>(null);
 

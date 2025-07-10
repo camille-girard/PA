@@ -10,6 +10,7 @@
     import EyeView from '~/components/atoms/icons/EyeView.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { OwnerDto } from '~/types/dtos/owner.dto';
 
     definePageMeta({
         layout: 'backoffice',
@@ -20,7 +21,7 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
-    const ownerData = ref<any[]>([]);
+    const ownerData = ref<OwnerDto[]>([]);
 
     onMounted(async () => {
         const { data } = await useAuthFetch('/api/owners', { baseURL: apiUrl });
@@ -47,7 +48,7 @@
             });
             await refreshOwners();
             successMsg.value = 'Hôte supprimé avec succès.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.';
             console.error(error);
         }

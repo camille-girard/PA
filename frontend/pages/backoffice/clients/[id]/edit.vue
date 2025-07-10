@@ -4,6 +4,7 @@
     import Input from '~/components/atoms/UInput.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { Client } from '~/types/client';
 
     definePageMeta({
         layout: 'backoffice',
@@ -17,7 +18,7 @@
     } = useRuntimeConfig();
 
     const id = ref<string | undefined>(undefined);
-    const client = ref<any>(null);
+    const client = ref<Client | null>(null);
     const pending = ref(false);
     const errorMsg = ref('');
     const saving = ref(false);
@@ -35,7 +36,7 @@
         pending.value = true;
         errorMsg.value = '';
         try {
-            const { data } = await useAuthFetch<{ client: any }>(`/api/clients/${clientId}`, {
+            const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
                 baseURL: apiUrl,
             });
             client.value = data.value?.client ?? null;
@@ -49,7 +50,7 @@
             } else {
                 errorMsg.value = 'Client introuvable.';
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors du chargement.';
             console.error(error);
         } finally {
@@ -85,7 +86,7 @@
 
             success.value = true;
             await refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.';
         } finally {
             saving.value = false;

@@ -48,7 +48,7 @@
 <template>
     <main class="flex flex-col flex-grow">
         <UHeader />
-        <div class="my-20 py-20 rounded-2xl flex items-center justify-center relative flex-grow">
+        <div class="my-20 py-20 rounded-2xl flex items-center justify-center flex-grow">
             <UGridBackgroundPattern class="absolute top-0 opacity-20" />
             <section class="flex flex-col items-center space-y-8 relative">
                 <div class="text-center space-y-3">
