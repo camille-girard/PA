@@ -1,13 +1,13 @@
 <script setup lang="ts">
-        const authStore = useAuthStore();
-        const user = computed(() => authStore.user);
+    const authStore = useAuthStore();
+    const user = computed(() => authStore.user);
 
-        const router = useRouter();
+    const router = useRouter();
 
-        const logout = async () => {
-              await authStore.logout();
-              router.push('/login');
-        };
+    const logout = async () => {
+        await authStore.logout();
+        router.push('/login');
+    };
 
     const goToProfile = () => {
         router.push('/backoffice/profile');
@@ -36,29 +36,27 @@
                         <span class="font-semibold text-2xl">PopnBed</span>
                     </ULink>
 
-                            <nav class="px-7 mt-4">
-                                  <ul class="space-y-2">
-                                        <ULink
-                                                            to="/backoffice"
-                                            class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                            exact-active-class="bg-brand-600 text-white"
-                            
-                        >
-                                              <HomeIcon class="w-7 h-7 mr-3" />
-                                              Tableau de bord
-                                        </ULink>
-
-                                        <li>
-                                              <ULink
-                                                                    to="/backoffice/owners"
-                                               class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                               exact-active-class="bg-brand-600 text-white"
-                                
+                    <nav class="px-7 mt-4">
+                        <ul class="space-y-2">
+                            <ULink
+                                to="/backoffice"
+                                class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                exact-active-class="bg-brand-600 text-white"
                             >
-                                                    <BuildingIcon class="w-7 h-7 mr-3" />
-                                                    Hôtes
-                                              </ULink>
-                                        </li>
+                                <HomeIcon class="w-7 h-7 mr-3" />
+                                Tableau de bord
+                            </ULink>
+
+                            <li>
+                                <ULink
+                                    to="/backoffice/owners"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <BuildingIcon class="w-7 h-7 mr-3" />
+                                    Hôtes
+                                </ULink>
+                            </li>
 
                             <li>
                                 <ULink
@@ -71,41 +69,38 @@
                                 </ULink>
                             </li>
 
-                                        <li>
-                                              <ULink
-                                                                    to="/backoffice/bookings"
-                                               class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                               exact-active-class="bg-brand-600 text-white"
-                                
-                            >
-                                                    <CoinsHandIcon class="w-7 h-7 mr-3" />
-                                                    Réservations
-                                              </ULink>
-                                        </li>
+                            <li>
+                                <ULink
+                                    to="/backoffice/bookings"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <CoinsHandIcon class="w-7 h-7 mr-3" />
+                                    Réservations
+                                </ULink>
+                            </li>
 
-                                        <li>
-                                              <ULink
-                                                                    to="/backoffice/themes"
-                                               class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                               exact-active-class="bg-brand-600 text-white"
-                                
-                            >
-                                                    <LightningIcon class="w-7 h-7 mr-3" />
-                                                    Themes
-                                              </ULink>
-                                        </li>
+                            <li>
+                                <ULink
+                                    to="/backoffice/themes"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <LightningIcon class="w-7 h-7 mr-3" />
+                                    Themes
+                                </ULink>
+                            </li>
 
-                                        <li>
-                                              <ULink
-                                                                    to="/backoffice/accommodations"
-                                               class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                               exact-active-class="bg-brand-600 text-white"
-                                
-                            >
-                                                    <PinIcon class="w-7 h-7 mr-3" />
-                                                    Logements
-                                              </ULink>
-                                        </li>
+                            <li>
+                                <ULink
+                                    to="/backoffice/accommodations"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <PinIcon class="w-7 h-7 mr-3" />
+                                    Logements
+                                </ULink>
+                            </li>
 
                             <li>
                                 <ULink
@@ -121,21 +116,21 @@
                     </nav>
                 </div>
 
-                      <div class="px-7 py-6 border-t flex flex-col gap-2">
-                            <div
-                                class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg"
-                                @click="goToProfile"
-                            >
-                                  <img
-                                      :src="user?.avatar || '/default-avatar.jpg'"
-                                      alt="Avatar"
-                                      class="w-10 h-10 rounded-full object-cover"
-                                  />
-                                  <div class="flex-1 text-sm">
-                                        <div class="font-semibold">{{ user?.firstName }} {{ user?.lastName }}</div>
-                                        <div class="text-xs text-gray-500">{{ formattedRole }}</div>
-                                  </div>
-                            </div>
+                <div class="px-7 py-6 border-t flex flex-col gap-2">
+                    <div
+                        class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg"
+                        @click="goToProfile"
+                    >
+                        <img
+                            :src="user?.avatar || '/default-avatar.jpg'"
+                            alt="Avatar"
+                            class="w-10 h-10 rounded-full object-cover"
+                        />
+                        <div class="flex-1 text-sm">
+                            <div class="font-semibold">{{ user?.firstName }} {{ user?.lastName }}</div>
+                            <div class="text-xs text-gray-500">{{ formattedRole }}</div>
+                        </div>
+                    </div>
 
                     <button
                         class="flex items-center px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0 w-full text-left"
@@ -155,4 +150,3 @@
         </div>
     </NuxtLayout>
 </template>
-

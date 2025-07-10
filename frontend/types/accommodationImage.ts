@@ -1,5 +1,5 @@
 export type AccommodationImage = {
-  id: number;
-  url: string;
-  isMain?: boolean;
+    id: number;
+    url: string;
+    isMain?: boolean;
 };

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { useAuthFetch } from '~/composables/useAuthFetch'
-  import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
-  import EditIcon from '~/components/atoms/icons/EditIcon.vue'
+    import { useAuthFetch } from '~/composables/useAuthFetch';
+    import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
+    import EditIcon from '~/components/atoms/icons/EditIcon.vue';
 
     definePageMeta({
         layout: 'backoffice',
