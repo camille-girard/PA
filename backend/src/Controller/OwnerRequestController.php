@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\OwnerRequest;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ class OwnerRequestController extends AbstractController
     public function request(Request $request, EntityManagerInterface $em): JsonResponse
     {
         try {
+            /** @var User|null $user */
             $user = $this->getUser();
 
             if (!$user) {

@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\AccommodationRepository;
+use App\Entity\User;
 use App\Repository\BookingRepository;
-use App\Repository\ClientRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
@@ -23,8 +22,6 @@ final class BookingController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private BookingRepository $bookingRepository,
-        private ClientRepository $clientRepository,
-        private AccommodationRepository $accommodationRepository,
         private ValidatorInterface $validator,
         private ValidationErrorFormatterService $errorFormatter,
     ) {
@@ -42,6 +39,7 @@ final class BookingController extends AbstractController
     #[Route('/me', name: 'me', methods: ['GET'])]
     public function me(SerializerInterface $serializer): JsonResponse
     {
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user || !in_array('ROLE_CLIENT', $user->getRoles(), true)) {
             return $this->json(['message' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
@@ -56,6 +54,7 @@ final class BookingController extends AbstractController
     #[Route('/owner', name: 'owner_bookings', methods: ['GET'])]
     public function ownerBookings(SerializerInterface $serializer): JsonResponse
     {
+        /** @var User|null $user */
         $user = $this->getUser();
         if (!$user || !in_array('ROLE_OWNER', $user->getRoles(), true)) {
             return $this->json(['message' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);

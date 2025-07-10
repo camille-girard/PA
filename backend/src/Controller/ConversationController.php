@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Conversation;
-use App\Entity\Owner;
 use App\Entity\Message;
+use App\Entity\User;
 use App\Repository\ClientRepository;
 use App\Repository\ConversationRepository;
 use App\Repository\MessageRepository;
@@ -15,11 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 
 #[Route('/api/conversations', name: 'api_conversation_')]
 class ConversationController extends AbstractController
@@ -39,9 +39,9 @@ class ConversationController extends AbstractController
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->json(['error' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
         }
@@ -59,9 +59,9 @@ class ConversationController extends AbstractController
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(int $id): JsonResponse
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->json(['error' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
         }
@@ -89,7 +89,7 @@ class ConversationController extends AbstractController
         foreach ($unreadMessages as $message) {
             $message->setIsRead(true);
         }
-        
+
         // Si des messages ont été marqués comme lus, mettre à jour
         if (count($unreadMessages) > 0) {
             $conversation->setHasNewMessages(false);
@@ -107,9 +107,9 @@ class ConversationController extends AbstractController
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->json(['error' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
         }
@@ -148,7 +148,7 @@ class ConversationController extends AbstractController
 
         // Vérifier si la conversation existe déjà
         $existingConversation = $this->conversationRepository->findOneByClientAndOwner($client, $owner);
-        
+
         if ($existingConversation) {
             return $this->json(
                 ['conversation' => $existingConversation],
@@ -158,7 +158,6 @@ class ConversationController extends AbstractController
             );
         }
 
-        // Créer une nouvelle conversation
         $conversation = new Conversation();
         $conversation->setClient($client);
         $conversation->setOwner($owner);
@@ -190,9 +189,9 @@ class ConversationController extends AbstractController
     #[Route('/{id}/messages', name: 'send_message', methods: ['POST'])]
     public function sendMessage(int $id, Request $request): JsonResponse
     {
-        /** @var \App\Entity\User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
-        
+
         if (!$user) {
             return $this->json(['error' => 'Utilisateur non connecté'], Response::HTTP_UNAUTHORIZED);
         }
@@ -206,8 +205,8 @@ class ConversationController extends AbstractController
         // Vérifier que l'utilisateur est bien participant à la conversation
         $isClient = in_array('ROLE_CLIENT', $user->getRoles());
         $isOwner = in_array('ROLE_OWNER', $user->getRoles());
-        $isParticipant = ($isClient && $conversation->getClient()->getId() === $user->getId()) || 
-                        ($isOwner && $conversation->getOwner()->getId() === $user->getId());
+        $isParticipant = ($isClient && $conversation->getClient()->getId() === $user->getId())
+                        || ($isOwner && $conversation->getOwner()->getId() === $user->getId());
 
         if (!$isParticipant) {
             return $this->json(['error' => 'Vous n\'êtes pas autorisé à envoyer un message dans cette conversation'], Response::HTTP_FORBIDDEN);
@@ -215,7 +214,7 @@ class ConversationController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        if (!is_array($data) || !isset($data['content']) || trim($data['content']) === '') {
+        if (!is_array($data) || !isset($data['content']) || '' === trim($data['content'])) {
             return $this->json(['error' => 'Contenu du message requis'], Response::HTTP_BAD_REQUEST);
         }
 
@@ -225,7 +224,7 @@ class ConversationController extends AbstractController
         $message->setConversation($conversation);
         $message->setSender($user);
         $message->setIsRead(false);
-        
+
         if ($isClient) {
             $message->setClient($conversation->getClient());
             $message->setOwner($conversation->getOwner());
@@ -250,7 +249,7 @@ class ConversationController extends AbstractController
 
         // Mettre à jour la conversation
         $conversation->setUpdatedAt(new \DateTimeImmutable());
-        $conversation->setLastMessagePreview(substr($message->getContent(), 0, 50) . (strlen($message->getContent()) > 50 ? '...' : ''));
+        $conversation->setLastMessagePreview(substr($message->getContent(), 0, 50).(strlen($message->getContent()) > 50 ? '...' : ''));
         $conversation->setHasNewMessages(true);
         $conversation->addMessage($message);
 
@@ -268,41 +267,6 @@ class ConversationController extends AbstractController
         );
     }
 
-    /**
-     * Génère un JWT pour Mercure
-     */
-    private function generateJwt(): string
-    {
-        $jwtKey = $_ENV['MERCURE_JWT_SECRET'] ?? '!ChangeThisMercureHubJWTSecretKey!';
-        
-        // Créer le payload avec les droits de publication sur tous les sujets
-        $payload = [
-            'mercure' => [
-                'publish' => ['*']
-            ],
-            'exp' => time() + 3600
-        ];
-        
-        $header = json_encode(['alg' => 'HS256', 'typ' => 'JWT']);
-        $payload = json_encode($payload);
-        
-        $base64UrlHeader = $this->base64UrlEncode($header);
-        $base64UrlPayload = $this->base64UrlEncode($payload);
-        
-        $signature = hash_hmac('sha256', $base64UrlHeader . '.' . $base64UrlPayload, $jwtKey, true);
-        $base64UrlSignature = $this->base64UrlEncode($signature);
-        
-        return $base64UrlHeader . '.' . $base64UrlPayload . '.' . $base64UrlSignature;
-    }
-    
-    /**
-     * Encode en base64 URL-safe
-     */
-    private function base64UrlEncode(string $data): string
-    {
-        return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
-    }
-    
     private function publishMessageEvent(Message $message): void
     {
         try {
@@ -311,10 +275,10 @@ class ConversationController extends AbstractController
 
             // Topic pour la conversation
             $topicUrl = "conversation/{$conversation->getId()}";
-            
+
             // Topic pour le destinataire
-            $recipientId = $sender->getId() === $conversation->getClient()->getId() 
-                ? $conversation->getOwner()->getId() 
+            $recipientId = $sender->getId() === $conversation->getClient()->getId()
+                ? $conversation->getOwner()->getId()
                 : $conversation->getClient()->getId();
             $recipientTopicUrl = "user/{$recipientId}/messages";
 
@@ -327,10 +291,10 @@ class ConversationController extends AbstractController
                     'circular_reference_handler' => function ($object) {
                         return $object->getId();
                     },
-                    'ignored_attributes' => ['password', 'bookings', 'comments', 'tickets', 'ticketMessages']
+                    'ignored_attributes' => ['password', 'bookings', 'comments', 'tickets', 'ticketMessages'],
                 ]
             );
-            
+
             try {
                 // Publier sur le topic de la conversation
                 $update = new Update(
@@ -338,11 +302,11 @@ class ConversationController extends AbstractController
                     $messageData,
                     false // Rendre public pour simplifier l'authentification en développement
                 );
-                
+
                 $this->hub->publish($update);
-                error_log("Successfully published to conversation topic : " . $topicUrl);
+                error_log('Successfully published to conversation topic : '.$topicUrl);
             } catch (\Exception $e) {
-                error_log("Error publishing to conversation topic: " . $e->getMessage());
+                error_log('Error publishing to conversation topic: '.$e->getMessage());
             }
 
             try {
@@ -352,14 +316,14 @@ class ConversationController extends AbstractController
                     $messageData,
                     false // Rendre public pour simplifier l'authentification en développement
                 );
-                
+
                 $this->hub->publish($update);
-                error_log("Successfully published to recipient topic: " . $recipientTopicUrl);
+                error_log('Successfully published to recipient topic: '.$recipientTopicUrl);
             } catch (\Exception $e) {
-                error_log("Error publishing to recipient topic: " . $e->getMessage());
+                error_log('Error publishing to recipient topic: '.$e->getMessage());
             }
         } catch (\Exception $e) {
-            error_log("General error in publishMessageEvent: " . $e->getMessage());
+            error_log('General error in publishMessageEvent: '.$e->getMessage());
             // Ne pas relancer l'exception pour éviter de bloquer l'envoi du message
         }
     }

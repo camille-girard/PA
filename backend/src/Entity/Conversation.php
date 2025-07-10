@@ -35,6 +35,9 @@ class Conversation
     #[Groups(['conversation:read', 'conversation:list'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, Message>
+     */
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class, orphanRemoval: true)]
     #[Groups(['conversation:read'])]
     private Collection $messages;
