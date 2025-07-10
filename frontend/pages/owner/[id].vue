@@ -18,31 +18,31 @@
 
     const route = useRoute();
     const router = useRouter();
-    const { 
-        owner, 
-        comments, 
-        rentals, 
+    const {
+        owner,
+        comments,
+        rentals,
         isOwnerLoading,
         fetchOwnerById,
         getAverageRating,
         getFullName,
-        getMembershipDuration
+        getMembershipDuration,
     } = useOwner();
-    
+
     const conversationStore = useConversationStore();
     const authStore = useAuthStore();
     const toast = useToast();
     const isCreatingConversation = ref(false);
-    
+
     // Propriétaire adapté pour le composant OwnerInformationCard
     const hostData = computed<Host>(() => ({
         name: getFullName.value,
-        image: 'https://via.placeholder.com/150',  // Remplacer par l'image du propriétaire si disponible
+        image: 'https://via.placeholder.com/150', // Remplacer par l'image du propriétaire si disponible
         verified: true,
         note: getAverageRating.value,
         evaluations: comments.value?.length || 0,
         experienceYears: parseInt(getMembershipDuration.value) || 1,
-        verifications: ['Email', 'Téléphone']
+        verifications: ['Email', 'Téléphone'],
     }));
 
     /**
@@ -53,24 +53,24 @@
             toast.error('Connexion requise', 'Vous devez être connecté pour contacter un propriétaire.');
             return router.push('/login');
         }
-        
+
         if (!authStore.user?.roles?.includes('ROLE_CLIENT')) {
             toast.error('Accès refusé', 'Seuls les clients peuvent contacter les propriétaires.');
             return;
         }
-        
+
         if (!owner.value?.id) {
             toast.error('Erreur', 'Impossible de contacter ce propriétaire.');
             return;
         }
-        
+
         try {
             isCreatingConversation.value = true;
             const clientId = authStore.user.id;
             const ownerId = parseInt(owner.value.id);
-            
+
             const conversation = await conversationStore.createConversation(clientId, ownerId);
-            
+
             if (conversation) {
                 toast.success('Conversation créée', 'Vous pouvez maintenant échanger avec ce propriétaire.');
                 router.push(`/messages/${conversation.id}`);
@@ -97,17 +97,13 @@
             <div v-if="owner" class="flex flex-col md:flex-row gap-10">
                 <aside class="md:w-1/3 space-y-8">
                     <OwnerInformationCard :host="hostData" />
-                    
+
                     <div class="bg-white rounded-2xl shadow-md p-6">
                         <h3 class="font-semibold text-lg mb-4">Contacter {{ owner.firstName }}</h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
                             Vous avez des questions sur ses hébergements ? Contactez directement {{ owner.firstName }} !
                         </p>
-                        <UButton 
-                            class="w-full"
-                            :disabled="isCreatingConversation"
-                            @click="createConversationWithOwner"
-                        >
+                        <UButton class="w-full" :disabled="isCreatingConversation" @click="createConversationWithOwner">
                             <span v-if="isCreatingConversation" class="animate-spin mr-2">⏳</span>
                             {{ isCreatingConversation ? 'Création...' : 'Contacter le propriétaire' }}
                         </UButton>

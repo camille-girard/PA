@@ -69,7 +69,13 @@
                 <UButton size="sm" variant="primary" class="w-full md:w-auto" @click="onContact(booking.id)">
                     {{ contactLabel }}
                 </UButton>
-                <UButton size="sm" variant="secondary" color="red" class="w-full md:w-auto" @click="onDelete(booking.id)">
+                <UButton
+                    size="sm"
+                    variant="secondary"
+                    color="red"
+                    class="w-full md:w-auto"
+                    @click="onDelete(booking.id)"
+                >
                     {{ deleteLabel }}
                 </UButton>
             </div>

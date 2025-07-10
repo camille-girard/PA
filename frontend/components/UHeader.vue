@@ -8,29 +8,29 @@
     import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
     import SettingsIcon from '~/components/atoms/icons/SettingsIcon.vue';
     import TicketIcon from '~/components/atoms/icons/TicketIcon.vue';
-    
+
     const authStore = useAuthStore();
     const isMenuOpen = ref(false);
-    
+
     /**
      * Génère les initiales de l'utilisateur à partir de son nom et prénom
      */
     const userInitials = computed(() => {
         if (!authStore.user) return '';
-        
+
         const { firstName, lastName } = authStore.user;
-        
+
         if (firstName && lastName) {
             return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
         }
-        
+
         if (firstName) {
             return firstName.charAt(0).toUpperCase();
         }
-        
+
         return '';
     });
-    
+
     const userAvatarUrl = computed(() => {
         return authStore.user?.avatar || '';
     });
@@ -49,7 +49,7 @@
 
     const profileMenuItems = computed<MenuItem[]>(() => {
         const items: MenuItem[] = [];
-        
+
         if (isAdmin.value) {
             // Menu pour les administrateurs
             return [
@@ -66,7 +66,7 @@
                     action: async () => {
                         await authStore.logout();
                     },
-                }
+                },
             ];
         } else {
             items.push(
@@ -141,12 +141,12 @@
 </script>
 
 <template>
-      <header class="bg-white py-5 w-full fixed top-0 z-10 px-4">
-            <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
-                  <NuxtLink to="/" class="flex items-center gap-2">
-                        <ULogo />
-                        <span class="text-body-sm font-semibold">PopnBed</span>
-                  </NuxtLink>
+    <header class="bg-white py-5 w-full fixed top-0 z-10 px-4">
+        <div class="max-w-7xl mx-auto w-full flex items-center justify-between">
+            <NuxtLink to="/" class="flex items-center gap-2">
+                <ULogo />
+                <span class="text-body-sm font-semibold">PopnBed</span>
+            </NuxtLink>
 
             <nav class="hidden md:flex items-center gap-6">
                 <ULink to="/thematiques">Thématiques</ULink>
@@ -165,8 +165,8 @@
                                 class="focus:outline-none transition-transform hover:scale-105 border-2 border-transparent hover:border-gray-200 rounded-full p-0.5"
                                 @click="toggle"
                             >
-                                <UAvatar 
-                                    size="lg" 
+                                <UAvatar
+                                    size="lg"
                                     :image-src="userAvatarUrl"
                                     :text="userInitials"
                                     status-icon="false"
@@ -197,17 +197,15 @@
 
                 <template v-if="authStore.isAuthenticated">
                     <div class="flex items-center gap-3 py-3 mb-2 border-b border-gray-100">
-                        <UAvatar 
-                            size="md" 
-                            :image-src="userAvatarUrl"
-                            :text="userInitials"
-                            status-icon="false"
-                        />
+                        <UAvatar size="md" :image-src="userAvatarUrl" :text="userInitials" status-icon="false" />
                         <div>
                             <span class="text-sm font-medium">
                                 {{ authStore.user?.firstName }} {{ authStore.user?.lastName }}
                             </span>
-                            <span v-if="isAdmin" class="text-xs ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full">
+                            <span
+                                v-if="isAdmin"
+                                class="text-xs ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full"
+                            >
                                 Admin
                             </span>
                         </div>

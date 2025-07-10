@@ -15,7 +15,7 @@
 
     const props = withDefaults(defineProps<DropdownProps>(), {
         position: 'bottom-left',
-        label: undefined
+        label: undefined,
     });
 
     const isOpen = ref(false);
@@ -26,7 +26,7 @@
     }
 
     defineExpose({
-        toggleDropdown
+        toggleDropdown,
     });
 
     const handleClickOutside = (e: MouseEvent) => {
@@ -74,7 +74,12 @@
                     <div v-for="(item, index) in menuItems" :key="index" class="px-1.5 py-px">
                         <div
                             class="px-3 py-2 flex items-center gap-3 group hover:bg-primary-hover transition-colors rounded-md cursor-pointer"
-                            @click="() => { item.action?.(); isOpen = false; }"
+                            @click="
+                                () => {
+                                    item.action?.();
+                                    isOpen = false;
+                                }
+                            "
                         >
                             <div
                                 class="flex items-center gap-2 w-full text-secondary group-hover:text-secondary-hover [&_svg]:text-fg-quaternary [&_svg]:group-hover:text-fg-quaternary-hover [&_svg]:size-4 text-sm font-semibold"

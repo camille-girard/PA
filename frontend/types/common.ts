@@ -1,5 +1,5 @@
 export interface SelectOption {
-  label: string;
-  value: string | number;
-  disabled?: boolean;
+    label: string;
+    value: string | number;
+    disabled?: boolean;
 }

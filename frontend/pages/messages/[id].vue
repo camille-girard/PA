@@ -2,7 +2,7 @@
     import { useConversationStore } from '~/stores/conversation';
     import { useAuthStore } from '~/stores/auth';
     import { useMercure } from '~/composables/useMercure';
-import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
+    import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
 
     definePageMeta({
         middleware: ['auth'],
@@ -90,4 +90,3 @@ import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
         </main>
     </NuxtLayout>
 </template>
-

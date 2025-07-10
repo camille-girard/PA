@@ -1,4 +1,4 @@
-<script setup lang="ts"> 
+<script setup lang="ts">
     import { loadStripe } from '@stripe/stripe-js';
     import { useAuthStore } from '~/stores/auth';
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
     definePageMeta({
         middleware: 'owner',
-        layout: 'default'
-    })
+        layout: 'default',
+    });
 
     const route = useRoute();
     const accommodationId = route.params.id as string;

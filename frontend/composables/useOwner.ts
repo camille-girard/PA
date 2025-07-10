@@ -38,7 +38,7 @@ export interface OwnerDetail {
 
 export const useOwner = () => {
     const { $api } = useNuxtApp();
-    
+
     const owner = ref<OwnerDetail | null>(null);
     const comments = ref<OwnerDetail['comments']>([]);
     const rentals = ref<AccommodationItemDto[]>([]);
@@ -87,7 +87,7 @@ export const useOwner = () => {
         if (!comments.value || comments.value.length === 0) {
             return 0;
         }
-        
+
         const sum = comments.value.reduce((total, comment) => total + comment.rating, 0);
         return parseFloat((sum / comments.value.length).toFixed(1));
     });
@@ -115,16 +115,17 @@ export const useOwner = () => {
      */
     const getMembershipDuration = computed((): string => {
         if (!owner.value || !owner.value.createdAt) return '';
-        
+
         const createdDate = new Date(owner.value.createdAt);
         const now = new Date();
-        const diffMonths = (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
-        
+        const diffMonths =
+            (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
+
         if (diffMonths >= 12) {
             const years = Math.floor(diffMonths / 12);
             return `${years} ${years === 1 ? 'an' : 'ans'}`;
         }
-        
+
         return `${diffMonths} mois`;
     });
 
@@ -138,6 +139,6 @@ export const useOwner = () => {
         getAverageRating,
         getFullName,
         isOwnerLoading,
-        getMembershipDuration
+        getMembershipDuration,
     };
 };

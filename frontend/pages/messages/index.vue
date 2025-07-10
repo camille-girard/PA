@@ -65,4 +65,3 @@
         </main>
     </NuxtLayout>
 </template>
-
