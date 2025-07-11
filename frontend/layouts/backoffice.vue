@@ -126,7 +126,7 @@ to="/backoffice/admins"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
-                                    <MessageIcon class="w-7 h-7 mr-3" />
+                                    <TicketIcon class="w-7 h-7 mr-3" />
                                     Tickets
                                 </ULink>
                             </li>

@@ -7,12 +7,23 @@ import CheckCircleIcon from "~/components/atoms/icons/CheckCircleIcon.vue"
 import XIcon from "~/components/atoms/icons/XIcon.vue"
 import { useRuntimeConfig } from '#app'
 import { useAuthFetch } from '~/composables/useAuthFetch'
+import { useToast } from '~/composables/useToast'
+
+interface ApiError {
+  status?: number
+  data?: {
+    message?: string
+    error?: string
+  }
+  message?: string
+}
 
 definePageMeta({
   layout: 'backoffice',
   middleware: 'admin',
 })
 
+const toast = useToast()
 const { public: { apiUrl } } = useRuntimeConfig()
 
 interface OwnerRequest {
@@ -30,8 +41,6 @@ interface OwnerRequest {
 
 const ownerRequestData = ref<OwnerRequest[]>([])
 const pending = ref(false)
-const errorMsg = ref('')
-const successMsg = ref('')
 const selectedRequest = ref<OwnerRequest | null>(null)
 const showDetailModal = ref(false)
 const actionPending = ref(false)
@@ -82,15 +91,12 @@ function closeDetailModal() {
 
 async function loadOwnerRequests() {
   pending.value = true
-  errorMsg.value = ''
   try {
-    const { data } = await useAuthFetch('/api/owner-requests', { baseURL: apiUrl })
+    const { data, error } = await useAuthFetch('/api/owner-requests', { baseURL: apiUrl })
+    if (error.value) throw error.value
     ownerRequestData.value = data.value || []
-  } catch (error: unknown) {
-    errorMsg.value = error && typeof error === 'object' && 'data' in error &&
-    error.data && typeof error.data === 'object' && 'message' in error.data
-        ? (error.data as { message: string }).message
-        : 'Erreur lors du chargement des demandes.'
+  } catch (err) {
+    toast.error('Erreur', extractErrorMessage(err))
   } finally {
     pending.value = false
   }
@@ -101,8 +107,6 @@ async function refreshOwnerRequests() {
 }
 
 async function acceptRequest(id: string | number) {
-  successMsg.value = ''
-  errorMsg.value = ''
   actionPending.value = true
   try {
     const { error } = await useAuthFetch(`/api/owner-requests/${id}/accept`, {
@@ -110,35 +114,22 @@ async function acceptRequest(id: string | number) {
       baseURL: apiUrl,
     })
 
-    if (error.value) {
-      throw error.value
-    }
+    if (error.value) throw error.value
 
     await refreshOwnerRequests()
-    successMsg.value = 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.'
+    toast.success('Succès', 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.')
     closeDetailModal()
 
-    setTimeout(() => {
-      window.location.reload()
-    }, 2000)
-
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data) {
-      errorMsg.value = (error.data as { message: string }).message
-    } else if (error && typeof error === 'object' && 'message' in error) {
-      errorMsg.value = (error as { message: string }).message
-    } else {
-      errorMsg.value = 'Erreur lors de l\'acceptation.'
-    }
-    console.error(error)
+    setTimeout(() => window.location.reload(), 1500)
+  } catch (err) {
+    toast.error('Erreur', extractErrorMessage(err))
+    console.error(err)
   } finally {
     actionPending.value = false
   }
 }
 
 async function rejectRequest(id: string | number) {
-  successMsg.value = ''
-  errorMsg.value = ''
   actionPending.value = true
   try {
     const { error } = await useAuthFetch(`/api/owner-requests/${id}/reject`, {
@@ -146,22 +137,14 @@ async function rejectRequest(id: string | number) {
       baseURL: apiUrl,
     })
 
-    if (error.value) {
-      throw error.value
-    }
+    if (error.value) throw error.value
 
     await refreshOwnerRequests()
-    successMsg.value = 'Demande rejetée avec succès.'
+    toast.success('Succès', 'Demande rejetée avec succès.')
     closeDetailModal()
-  } catch (error: unknown) {
-    if (error && typeof error === 'object' && 'data' in error && error.data && typeof error.data === 'object' && 'message' in error.data) {
-      errorMsg.value = (error.data as { message: string }).message
-    } else if (error && typeof error === 'object' && 'message' in error) {
-      errorMsg.value = (error as { message: string }).message
-    } else {
-      errorMsg.value = 'Erreur lors du rejet.'
-    }
-    console.error(error)
+  } catch (err) {
+    toast.error('Erreur', extractErrorMessage(err))
+    console.error(err)
   } finally {
     actionPending.value = false
   }
@@ -170,6 +153,26 @@ async function rejectRequest(id: string | number) {
 onMounted(() => {
   loadOwnerRequests()
 })
+
+function extractErrorMessage(err: unknown): string {
+  if (typeof err === 'object' && err !== null) {
+    const e = err as ApiError
+
+    if (e.data?.error) {
+      return e.data.error
+    }
+
+    if (e.data?.message) {
+      return e.data.message
+    }
+
+    if (e.message) {
+      return e.message
+    }
+  }
+
+  return 'Erreur inattendue'
+}
 </script>
 
 <template>
@@ -178,8 +181,6 @@ onMounted(() => {
 
     <div v-if="pending" class="text-gray-600">Chargement…</div>
     <div v-else>
-      <div v-if="successMsg" class="text-green-600 text-sm mb-4">{{ successMsg }}</div>
-      <div v-if="errorMsg" class="text-red-600 text-sm mb-4">{{ errorMsg }}</div>
 
       <UTable :columns="columns" :data="ownerRequestsData">
         <template #cell-status="{ value }">
@@ -230,7 +231,7 @@ onMounted(() => {
       </UTable>
     </div>
 
-    <div v-if="showDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div v-if="showDetailModal" style="margin: 0;" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="p-6">
           <!-- Header -->

@@ -49,7 +49,9 @@ class OwnerRequestController extends AbstractController
             ]);
 
             if ($existing) {
-                return $this->json(['error' => 'Vous avez déjà une demande en attente.'], 400);
+                return $this->json([
+                    'error' => 'Vous avez déjà une demande en attente. Merci d\'attendre qu\'elle soit traitée.'
+                ], 409);
             }
 
             $ownerRequest = new OwnerRequest();
@@ -119,46 +121,41 @@ class OwnerRequestController extends AbstractController
 
             $user = $ownerRequest->getUser();
 
-            $existingOwner = $em->getRepository(Owner::class)->findOneBy(['email' => $user->getEmail()]);
-            if ($existingOwner) {
-                return $this->json(['error' => 'Cet utilisateur est déjà propriétaire.'], 400);
-            }
-
-            $existingClient = $em->getRepository(Client::class)->find($user->getId());
-            if (!$existingClient) {
+            $client = $em->getRepository(Client::class)->find($user->getId());
+            if (!$client) {
                 return $this->json(['error' => 'L\'utilisateur doit être un client pour devenir propriétaire.'], 400);
             }
 
-            $em->getConnection()->beginTransaction();
+            if (method_exists($client, 'getBookings') && count($client->getBookings()) > 0) {
+                return $this->json([
+                    'error' => 'Impossible de promouvoir en propriétaire : le client possède des réservations en cours.'
+                ], 409);
+            }
+
+            $conn = $em->getConnection();
+            $conn->beginTransaction();
 
             try {
-                $userId = $user->getId();
+                $conn->executeStatement('DELETE FROM client WHERE id = :id', ['id' => $user->getId()]);
 
-                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
-
-                $em->getConnection()->executeStatement(
-                    'INSERT INTO owner (id, bio, notation) VALUES (?, NULL, 0.0)',
-                    [$userId]
+                $conn->executeStatement(
+                    'INSERT INTO owner (id, bio, notation) VALUES (:id, NULL, 0.0)',
+                    ['id' => $user->getId()]
                 );
 
-                $em->getConnection()->executeStatement(
-                    'UPDATE user SET discr = ?, roles = ? WHERE id = ?',
-                    ['owner', json_encode(['ROLE_OWNER']), $userId]
+                $conn->executeStatement(
+                    'UPDATE user SET discr = :discr, roles = :roles WHERE id = :id',
+                    [
+                        'discr' => 'owner',
+                        'roles' => json_encode(['ROLE_OWNER']),
+                        'id' => $user->getId()
+                    ]
                 );
-
-                $em->getConnection()->executeStatement(
-                    'DELETE FROM client WHERE id = ?',
-                    [$userId]
-                );
-
-                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
 
                 $ownerRequest->setReviewed(true);
+
                 $em->flush();
-
-                $em->clear();
-
-                $em->getConnection()->commit();
+                $conn->commit();
 
                 return $this->json([
                     'success' => true,
@@ -166,15 +163,14 @@ class OwnerRequestController extends AbstractController
                 ]);
 
             } catch (\Exception $e) {
-                $em->getConnection()->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
-                $em->getConnection()->rollback();
-                error_log('Erreur lors de la conversion client->owner: ' . $e->getMessage());
-                return $this->json(['error' => 'Erreur lors de l\'acceptation: ' . $e->getMessage()], 500);
+                $conn->rollBack();
+                error_log('Erreur transaction owner request accept: ' . $e->getMessage());
+                return $this->json(['error' => 'Erreur lors du traitement de la demande.'], 500);
             }
 
         } catch (\Exception $e) {
             error_log('Erreur owner request accept: ' . $e->getMessage());
-            return $this->json(['error' => 'Erreur lors de l\'acceptation de la demande: ' . $e->getMessage()], 500);
+            return $this->json(['error' => 'Erreur lors de l\'acceptation de la demande.'], 500);
         }
     }
 
