@@ -117,9 +117,9 @@
 
 <template>
     <div class="max-w-3xl p-6 md:p-10 dark:bg-gray-900 space-y-8">
-      <ULink to="/backoffice/bookings" size="lg" class="flex flex-row gap-2" >
-        <ArrowLeftIcon /> Retour à la liste
-      </ULink>
+        <ULink to="/backoffice/bookings" size="lg" class="flex flex-row gap-2">
+            <ArrowLeftIcon /> Retour à la liste
+        </ULink>
         <h1 class="text-3xl font-semibold text-gray-800 dark:text-white">Modifier la réservation</h1>
 
         <form class="grid gap-6 md:grid-cols-2" :aria-busy="saving || pending" @submit.prevent="save">

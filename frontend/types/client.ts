@@ -15,7 +15,6 @@ export interface Client {
     bookingCount?: number;
 }
 
-
 export interface BookingSummary {
     id: number;
     startDate: string;

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import BreadcrumbElement from '~/components/BreadcrumbElement.vue';
+
     const authStore = useAuthStore();
     const user = computed(() => authStore.user);
 
@@ -25,19 +27,19 @@
 
 <template>
     <NuxtLayout name="default">
-        <div class="flex min-h-screen bg-gray-25 text-gray-800">
+        <div class="flex h-full w-full bg-gray-25 text-gray-800 overflow-x-hidden">
             <!-- Sidebar -->
             <aside
-                class="w-80 bg-white border-r shadow-sm flex flex-col justify-between min-h-screen fixed left-0 top-0 bottom-0"
+                class="w-80 bg-white border-r shadow-sm flex flex-col justify-between h-full fixed left-0 top-0 bottom-0"
             >
                 <div>
-                    <ULink to="/" class="py-10 flex items-center justify-center space-x-2">
+                    <NuxtLink to="/" class="pt-6 pb-4 flex items-center justify-center space-x-2">
                         <ULogo class="w-10 h-10" />
-                        <span class="font-semibold text-2xl">PopnBed</span>
-                    </ULink>
+                        <span class="text-2xl font-semibold">PopnBed</span>
+                    </NuxtLink>
 
                     <nav class="px-7 mt-4">
-                        <ul class="space-y-2">
+                        <ul class="space-y-1">
                             <ULink
                                 to="/backoffice"
                                 variant="tertiary"
@@ -73,14 +75,15 @@
                             </li>
 
                             <li>
-                              <ULink
-to="/backoffice/admins"
-                                     variant="tertiary"
-                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                     exact-active-class="bg-brand-600 text-white">
-                                <BuildingIcon class="w-7 h-7 mr-3" />
-                                Admins
-                              </ULink>
+                                <ULink
+                                    to="/backoffice/admins"
+                                    variant="tertiary"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <BuildingIcon class="w-7 h-7 mr-3" />
+                                    Admins
+                                </ULink>
                             </li>
 
                             <li>
@@ -130,21 +133,22 @@ to="/backoffice/admins"
                                     Tickets
                                 </ULink>
                             </li>
-                          <li>
-                            <ULink
-to="/backoffice/owner-requests"
-                                   variant="tertiary"
-                                   class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                   exact-active-class="bg-brand-600 text-white">
-                              <MessageIcon class="w-7 h-7 mr-3" />
-                              Demandes propriétaire
-                            </ULink>
-                          </li>
+                            <li>
+                                <ULink
+                                    to="/backoffice/owner-requests"
+                                    variant="tertiary"
+                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                    exact-active-class="bg-brand-600 text-white"
+                                >
+                                    <MessageIcon class="w-7 h-7 mr-3" />
+                                    Demandes propriétaire
+                                </ULink>
+                            </li>
                         </ul>
                     </nav>
                 </div>
 
-                <div class="px-7 py-6 border-t flex flex-col gap-2">
+                <div class="px-7 py-3 border-t flex flex-col gap-1">
                     <div
                         class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg"
                         @click="goToProfile"
@@ -170,8 +174,9 @@ to="/backoffice/owner-requests"
                 </div>
             </aside>
 
-            <div class="flex-1 ml-80">
-                <main class="py-12 px-16 flex flex-col gap-10 overflow-x-hidden">
+            <div class="flex-1 w-full">
+                <main class="py-12 ml-[23rem] mr-8 pr-6 flex flex-col gap-10 max-w-screen overflow-x-hidden">
+                    <BreadcrumbElement />
                     <slot />
                 </main>
             </div>
