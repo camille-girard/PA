@@ -40,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['me:read', 'admin:read', 'message:read', 'conversation:read'])]
+    #[Groups(['me:read', 'admin:read', 'message:read', 'conversation:read', 'client:read' ])]
     private array $roles = [];
 
     /**
@@ -63,11 +63,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['me:read', 'admin:read',])]
+    #[Groups(['me:read', 'admin:read', 'client:read' ])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['me:read', 'admin:read',])]
+    #[Groups(['me:read', 'admin:read', 'client:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column]
