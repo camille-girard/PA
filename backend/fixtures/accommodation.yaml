@@ -46,8 +46,8 @@ App\Entity\Accommodation:
   accommodation_3:
     owner: '@owner_1'
     theme: '@theme_3'
-    name: 'Maison Shreck'
-    description: 'Une maison ludique inspirée de Shreck avec son marais.'
+    name: 'Maison Shrek'
+    description: 'Une maison ludique inspirée de Shrek avec son marais.'
     address: '45 Rue Sainte-Catherine, 33000 Bordeaux, France'
     city: 'Bordeaux'
     postalCode: '33000'
