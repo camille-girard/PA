@@ -51,7 +51,7 @@
         errorMsg.value = error?.data?.message || 'Erreur lors du chargement des thèmes.'
         console.error(error);
       } finally {
-        pending.value = false,
+        pending.value = false;
       }
     }
 
@@ -95,7 +95,7 @@ async function saveNewTheme() {
     errorMsg.value = error?.data?.message || 'Erreur lors de l\'ajout du thème.'
     console.error('Erreur lors de l\'ajout:', error)
   } finally {
-    isSaving.value = false
+    isSaving.value = false;
   }
 }
 
