@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
 class Accommodation
@@ -83,10 +84,12 @@ class Accommodation
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[MaxDepth(1)]
     private ?Owner $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[MaxDepth(1)]
     private ?Theme $theme = null;
 
     /**

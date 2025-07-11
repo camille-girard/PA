@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 class Owner extends User
@@ -17,15 +19,18 @@ class Owner extends User
      */
     #[ORM\OneToMany(targetEntity: Accommodation::class, mappedBy: 'owner', orphanRemoval: true)]
     #[Groups(['owner:read'])]
+    #[MaxDepth(1)]
     private Collection $accommodations;
 
     /**
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'owner')]
+    #[Groups(['owner:read'])]
     private Collection $messages;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['owner:read'])]
     private ?string $bio = null;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]

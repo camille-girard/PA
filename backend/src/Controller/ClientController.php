@@ -40,7 +40,7 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer ): JsonResponse
     {
         $client = $this->clientRepository->find($id);
 
@@ -48,9 +48,11 @@ final class ClientController extends AbstractController
             return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'client' => $client,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($client, 'json', [
+            'groups' => ['client:read', 'booking:read'],
+        ]);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]

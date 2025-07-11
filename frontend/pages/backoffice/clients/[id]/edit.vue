@@ -62,7 +62,7 @@ async function loadClient(clientId: string) {
     const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
       baseURL: apiUrl,
     });
-    client.value = data.value?.client ?? null;
+    client.value = data.value ?? null;
 
     if (client.value) {
       form.firstName = client.value.firstName;
@@ -71,7 +71,7 @@ async function loadClient(clientId: string) {
       form.phone = client.value.phone ?? '';
       form.address = client.value.address ?? '';
       form.avatar = client.value.avatar ?? '';
-      form.isVerified = !!client.value.isVerified;
+      form.isVerified = Boolean(client.value?.isVerified);
       form.role = client.value.roles?.[0] ?? 'ROLE_CLIENT';
       form.preferences = (client.value.preferences ?? []).join(', ');
     } else {
@@ -174,6 +174,9 @@ watch(
 
 <template>
   <div class="max-w-3xl space-y-6">
+    <ULink to="/backoffice/clients" size="lg" class="flex flex-row gap-2" >
+      <ArrowLeftIcon /> Retour à la liste
+    </ULink>
     <h1 class="text-2xl font-semibold">Modifier le client</h1>
 
     <div v-if="pending" class="text-gray-600">Chargement…</div>

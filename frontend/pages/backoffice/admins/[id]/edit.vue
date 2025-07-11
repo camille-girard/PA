@@ -62,7 +62,7 @@ async function loadAdmin(adminId: string) {
       baseURL: apiUrl,
     });
 
-    const adminData = data.value?.value ?? null;
+    const adminData = data.value ?? null;
     admin.value = adminData;
 
     if (adminData) {
@@ -136,9 +136,11 @@ watch(
 );
 </script>
 
-
 <template>
   <div class="max-w-3xl space-y-6">
+    <ULink to="/backoffice/admins" size="lg" class="flex flex-row gap-2" >
+      <ArrowLeftIcon /> Retour à la liste
+    </ULink>
     <h1 class="text-2xl font-semibold">Modifier l’administrateur</h1>
 
     <div v-if="pending" class="text-gray-600">Chargement…</div>
@@ -167,7 +169,6 @@ watch(
           </UButton>
 
           <span v-if="success" class="text-green-600 text-sm">Modifications enregistrées</span>
-          <span v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</span>
         </div>
       </form>
 

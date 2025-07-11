@@ -77,7 +77,7 @@ async function loadAdmins() {
 
     if (data.value) {
       if (Array.isArray(data.value.value)) {
-        adminData.value = data.value.value;
+        adminData.value = data.value;
       } else if (Array.isArray(data.value)) {
         adminData.value = data.value;
       } else {

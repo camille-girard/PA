@@ -63,11 +63,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['me:read', 'admin:read', 'client:read' ])]
+    #[Groups(['me:read', 'owner:read', 'admin:read', 'client:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['me:read', 'admin:read', 'client:read'])]
+    #[Groups(['me:read', 'owner:read', 'admin:read', 'client:read'])]
     private ?string $avatar = null;
 
     #[ORM\Column]
@@ -75,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isVerified = null;
 
     #[ORM\Column]
-    #[Groups(['admin:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read',])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]

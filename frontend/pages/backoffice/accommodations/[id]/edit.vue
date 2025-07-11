@@ -186,6 +186,9 @@
 
 <template>
     <div class="space-y-6">
+      <ULink to="/backoffice/accommodations" size="lg" class="flex flex-row gap-2" >
+        <ArrowLeftIcon /> Retour à la liste
+      </ULink>
         <h1 class="text-2xl font-semibold">Modifier le logement</h1>
 
         <form :aria-busy="saving || pending" class="flex flex-col gap-6" @submit.prevent="save">
