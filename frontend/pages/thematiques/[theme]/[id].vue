@@ -16,6 +16,14 @@
 
     const Location = ref<Accommodation | null>(null);
 
+    useSeoMeta({
+        title: () => (Location.value ? `${Location.value.name} - PopnBed` : 'Hébergement - PopnBed'),
+        description: () =>
+            Location.value
+                ? `Découvrez ${Location.value.name}, un hébergement unique à ${Location.value.price}€/nuit. Réservez maintenant votre séjour thématique.`
+                : 'Découvrez un hébergement unique pour votre séjour thématique',
+    });
+
     onMounted(async () => {
         const { $api } = useNuxtApp();
 

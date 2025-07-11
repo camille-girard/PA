@@ -1,3 +1,9 @@
+<script setup lang="ts">
+    useHead({
+        title: 'Explorer - PopnBed',
+        description: 'Explorez des hébergements inspirés de films et trouvez votre prochaine destination de vacances.',
+    });
+</script>
 <template>
     <main class="w-full flex-grow">
         <UHeader />

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import UHeader from '~/components/UHeader.vue';
     import UFooter from '~/components/UFooter.vue';

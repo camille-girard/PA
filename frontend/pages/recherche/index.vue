@@ -5,7 +5,11 @@
 
     const { accommodationItems, isLoading, hasResults, loadSearchResults } = useAccommodationSearch();
 
-    // Charger les résultats de recherche au chargement de la page
+    useSeoMeta({
+        title: "PopnBed - Recherche d'hébergements inspirés de films",
+        description: "Trouvez l'hébergement parfait inspiré de vos films et séries préférés.",
+    });
+
     onMounted(() => {
         loadSearchResults();
     });

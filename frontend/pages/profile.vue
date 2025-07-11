@@ -8,6 +8,11 @@
     const user = authStore.user;
     const personalizedRecommendations = ref([]);
 
+    useSeoMeta({
+        title: () => (user?.firstName ? `Profil de ${user.firstName} - PopnBed` : 'Mon profil - PopnBed'),
+        description: 'Gérez vos informations personnelles, vos biens publiés et vos suggestions personnalisées.',
+    });
+
     onMounted(async () => {
         const recommendations = await getPersonalizedRecommendations();
         if (recommendations && recommendations.length > 0) {

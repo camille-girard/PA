@@ -77,6 +77,20 @@ final class ThemeController extends AbstractController
         ], Response::HTTP_OK);
     }
 
+    #[Route('/{slug}', name: 'show', methods: ['GET'])]
+    public function showBySlug(string $slug): JsonResponse
+    {
+        $theme = $this->themeRepository->findOneBy(['slug' => $slug]);
+
+        if (!$theme) {
+            return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json([
+            'theme' => $theme,
+        ], Response::HTTP_OK);
+    }
+
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
