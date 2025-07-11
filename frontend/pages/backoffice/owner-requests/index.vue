@@ -237,8 +237,8 @@ onMounted(() => {
           <div class="flex justify-between items-start mb-6">
             <h2 class="text-xl font-semibold">Détail de la demande</h2>
             <button
-                @click="closeDetailModal"
                 class="text-gray-400 hover:text-gray-600 text-2xl"
+                @click="closeDetailModal"
             >
               ×
             </button>

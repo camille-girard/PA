@@ -40,6 +40,7 @@
                         <ul class="space-y-2">
                             <ULink
                                 to="/backoffice"
+                                variant="tertiary"
                                 class="flex px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                 exact-active-class="bg-brand-600 text-white"
                             >
@@ -50,6 +51,7 @@
                             <li>
                                 <ULink
                                     to="/backoffice/owners"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -61,6 +63,7 @@
                             <li>
                                 <ULink
                                     to="/backoffice/clients"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -70,8 +73,20 @@
                             </li>
 
                             <li>
+                              <ULink
+to="/backoffice/admins"
+                                     variant="tertiary"
+                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
+                                     exact-active-class="bg-brand-600 text-white">
+                                <BuildingIcon class="w-7 h-7 mr-3" />
+                                Admins
+                              </ULink>
+                            </li>
+
+                            <li>
                                 <ULink
                                     to="/backoffice/bookings"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -83,6 +98,7 @@
                             <li>
                                 <ULink
                                     to="/backoffice/themes"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -94,6 +110,7 @@
                             <li>
                                 <ULink
                                     to="/backoffice/accommodations"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -105,6 +122,7 @@
                             <li>
                                 <ULink
                                     to="/backoffice/tickets"
+                                    variant="tertiary"
                                     class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                     exact-active-class="bg-brand-600 text-white"
                                 >
@@ -113,29 +131,13 @@
                                 </ULink>
                             </li>
                           <li>
-                            <ULink to="/backoffice/owner-requests"
+                            <ULink
+to="/backoffice/owner-requests"
+                                   variant="tertiary"
                                    class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
                                    exact-active-class="bg-brand-600 text-white">
                               <MessageIcon class="w-7 h-7 mr-3" />
                               Demandes propriétaire
-                            </ULink>
-                          </li>
-
-                          <li>
-                            <ULink to="/backoffice/tickets"
-                                   class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                   exact-active-class="bg-brand-600 text-white">
-                              <MessageIcon class="w-7 h-7 mr-3" />
-                              Tickets
-                            </ULink>
-                          </li>
-
-                          <li>
-                            <ULink to="/backoffice/admins"
-                                   class="block px-3 py-3 rounded-lg hover:bg-brand-600 hover:text-white hover:no-underline focus:outline-none focus:ring-0"
-                                   exact-active-class="bg-brand-600 text-white">
-                              <BuildingIcon class="w-7 h-7 mr-3" />
-                              Admins
                             </ULink>
                           </li>
                         </ul>

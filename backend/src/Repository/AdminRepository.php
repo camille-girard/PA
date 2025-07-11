@@ -16,6 +16,18 @@ class AdminRepository extends ServiceEntityRepository
         parent::__construct($registry, Admin::class);
     }
 
+    /**
+     * @return Admin[]
+     */
+    public function findAllActive(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.isDeleted = :deleted')
+            ->setParameter('deleted', false)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Admin[] Returns an array of Admin objects
     //     */

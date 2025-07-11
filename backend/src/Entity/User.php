@@ -26,21 +26,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
+    #[Groups(['client:read', 'owner:read', 'admin:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
+    #[Groups(['client:read', 'owner:read', 'admin:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['me:read', 'message:read', 'conversation:read'])]
+    #[Groups(['me:read', 'admin:read', 'message:read', 'conversation:read'])]
     private array $roles = [];
 
     /**
@@ -51,30 +51,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
+    #[Groups(['client:read', 'owner:read', 'admin:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
+    #[Groups(['client:read', 'owner:read', 'admin:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['client:read', 'owner:read', 'me:read'])]
+    #[Groups(['client:read', 'owner:read', 'admin:read', 'me:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['me:read'])]
+    #[Groups(['me:read', 'admin:read',])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['me:read'])]
+    #[Groups(['me:read', 'admin:read',])]
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read',])]
     private ?bool $isVerified = null;
 
     #[ORM\Column]
+    #[Groups(['admin:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]
