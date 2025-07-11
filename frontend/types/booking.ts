@@ -11,6 +11,11 @@ export interface Booking {
         address?: string;
         price: number;
         images?: Array<{ url: string; isMain?: boolean }>;
+        owner?: {
+            id: number;
+            firstName: string;
+            lastName: string;
+        };
     };
     client?: {
         id: number;

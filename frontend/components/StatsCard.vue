@@ -22,11 +22,12 @@
 </template>
 
 <script setup lang="ts">
+    import type { Component } from 'vue';
     defineProps<{
         stats: {
             label: string;
             value: string | number;
-            icon: any;
+            icon: Component;
         }[];
     }>();
 </script>

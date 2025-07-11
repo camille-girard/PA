@@ -45,8 +45,8 @@
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
                         <h1 class="text-h1">Thématiques - {{ theme?.name || 'Chargement...' }}</h1>
                         <p class="text-body-md mt-4">
                             Trouvez le lieu parfait inspiré de vos films et séries préférés.

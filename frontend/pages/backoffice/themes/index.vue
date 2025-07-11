@@ -2,6 +2,7 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
     import EditIcon from '~/components/atoms/icons/EditIcon.vue';
+    import type { ThemeDto } from '~/types/dtos/theme.dto';
 
     definePageMeta({
         layout: 'backoffice',
@@ -12,7 +13,7 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
-    const themes = ref<any[]>([]);
+    const themes = ref<ThemeDto[]>([]);
     const pending = ref(false);
     const isSaving = ref(false);
     const editingTheme = ref<number | null>(null);
@@ -33,7 +34,7 @@
                 transform: (res) => res.themes,
             });
             themes.value = data.value || [];
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors du chargement des thèmes.';
             console.error(error);
         } finally {
@@ -58,14 +59,14 @@
             Object.assign(newTheme, { name: '', description: '' });
             await refreshThemes();
             successMsg.value = 'Thème ajouté avec succès.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de l’ajout du thème.';
         } finally {
             isSaving.value = false;
         }
     }
 
-    async function updateTheme(theme: any) {
+    async function updateTheme(theme: ThemeDto) {
         successMsg.value = '';
         errorMsg.value = '';
         try {
@@ -80,7 +81,7 @@
             editingTheme.value = null;
             await refreshThemes();
             successMsg.value = 'Thème mis à jour.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de la mise à jour.';
         }
     }
@@ -107,7 +108,7 @@
             themes.value = themes.value.filter((theme) => theme.id !== id);
 
             successMsg.value = 'Thème supprimé avec succès.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de la suppression du thème.';
             console.error(error);
         }

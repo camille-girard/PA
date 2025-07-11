@@ -63,7 +63,7 @@
     const selectedAccommodation = ref<Accommodation | null>(null);
     const showModal = ref(false);
 
-    function openAvailability(accommodation: any) {
+    function openAvailability(accommodation: Accommodation) {
         selectedAccommodation.value = accommodation;
         showModal.value = true;
     }

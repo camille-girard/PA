@@ -8,6 +8,7 @@
     import EyeView from '~/components/atoms/icons/EyeView.vue';
     import ConfirmPopover from '~/components/ConfirmPopover.vue';
     import UBadge from '~/components/atoms/UBadge.vue';
+    import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
 
     definePageMeta({
         layout: 'backoffice',
@@ -18,7 +19,7 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
-    const accommodationsData = ref<any[]>([]);
+    const accommodationsData = ref<AccommodationDto[]>([]);
     const pending = ref(false);
     const successMsg = ref('');
     const errorMsg = ref('');
@@ -83,8 +84,17 @@
                 throw error.value;
             }
             accommodationsData.value = data.value || [];
-        } catch (err: any) {
-            errorMsg.value = err?.data?.message || 'Erreur lors du chargement des hébergements.';
+        } catch (err: unknown) {
+            if (
+                typeof err === 'object' &&
+                err &&
+                'data' in err &&
+                (err as { data?: { message?: string } }).data?.message
+            ) {
+                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
+            } else {
+                errorMsg.value = 'Erreur lors du chargement des hébergements.';
+            }
             console.error(err);
         } finally {
             pending.value = false;
@@ -106,8 +116,17 @@
             });
             await refreshAccommodations();
             successMsg.value = 'Hébergement supprimé avec succès.';
-        } catch (err: any) {
-            errorMsg.value = err?.data?.message || 'Erreur lors de la suppression.';
+        } catch (err: unknown) {
+            if (
+                typeof err === 'object' &&
+                err &&
+                'data' in err &&
+                (err as { data?: { message?: string } }).data?.message
+            ) {
+                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
+            } else {
+                errorMsg.value = 'Erreur lors de la suppression.';
+            }
             console.error(err);
         } finally {
             pending.value = false;

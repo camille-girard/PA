@@ -1,9 +1,10 @@
 <script setup lang="ts">
-    import { ref, reactive, watch, onMounted } from 'vue';
+    import { ref, reactive, watch } from 'vue';
     import { useRoute } from 'vue-router';
     import Input from '~/components/atoms/UInput.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { OwnerDto } from '~/types/dtos/owner.dto';
 
     definePageMeta({
         layout: 'backoffice',
@@ -12,7 +13,7 @@
 
     const route = useRoute();
     const id = ref<string | undefined>(undefined);
-    const owner = ref<any>(null);
+    const owner = ref<OwnerDto | null>(null);
     const pending = ref(false);
     const errorMsg = ref('');
     const success = ref(false);
@@ -47,7 +48,7 @@
             } else {
                 errorMsg.value = 'Aucun hôte trouvé.';
             }
-        } catch (e: any) {
+        } catch (e: unknown) {
             errorMsg.value = e?.data?.message || 'Erreur lors du chargement.';
         } finally {
             pending.value = false;
@@ -81,7 +82,7 @@
             });
             success.value = true;
             await refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.';
         } finally {
             saving.value = false;

@@ -6,6 +6,7 @@
     import ConfirmPopover from '~/components/ConfirmPopover.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { Booking } from '~/types/booking';
 
     definePageMeta({
         layout: 'backoffice',
@@ -16,7 +17,7 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
-    const bookingData = ref<any[]>([]);
+    const bookingData = ref<Booking[]>([]);
     const pending = ref(false);
     const successMsg = ref('');
     const errorMsg = ref('');
@@ -68,7 +69,7 @@
         try {
             const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl });
             bookingData.value = data.value || [];
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors du chargement des réservations.';
             console.error(error);
         } finally {
@@ -91,7 +92,7 @@
             });
             await refreshBookings();
             successMsg.value = 'Réservation supprimée avec succès.';
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.';
             console.error(error);
         } finally {

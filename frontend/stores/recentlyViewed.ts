@@ -41,7 +41,7 @@ export const useRecentlyViewedStore = defineStore('recentlyViewed', {
                 title: item.name,
                 image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
                 id: item.id,
-                slug: item.id.toString(),
+                slug: item.slug,
                 price: item.price,
             }));
         },

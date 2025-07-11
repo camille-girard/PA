@@ -7,6 +7,8 @@ export interface Client {
     roles?: string[];
     bookings?: BookingSummary[];
     createdAt?: string;
+    isVerified?: boolean;
+    bookingCount?: number;
 }
 
 export interface BookingSummary {

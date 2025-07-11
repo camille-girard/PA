@@ -1,7 +1,7 @@
 <template>
     <main class="flex flex-col flex-grow">
         <UHeader />
-        <div class="my-20 py-20 rounded-2xl flex items-center justify-center relative flex-grow">
+        <div class="my-20 py-20 rounded-2xl flex items-center justify-center flex-grow">
             <UGridBackgroundPattern class="absolute top-0 opacity-20" />
             <section class="flex flex-col items-center space-y-8 relative">
                 <div class="text-center space-y-3">
@@ -149,8 +149,8 @@
             } else {
                 toast.error('Erreur', response.message || 'Une erreur est survenue lors de la réinitialisation.');
             }
-        } catch (error: any) {
-            const errorMessage = error.data?.message || 'Une erreur est survenue. Veuillez réessayer.';
+        } catch (error: unknown) {
+            const errorMessage = (error as unknown).data?.message || 'Une erreur est survenue. Veuillez réessayer.';
             toast.error('Erreur', errorMessage);
         } finally {
             loading.value = false;

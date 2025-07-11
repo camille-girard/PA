@@ -7,6 +7,8 @@
     import UButton from '~/components/atoms/UButton.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import type { Client } from '~/types/client';
+    import type { Accommodation } from '~/types/accommodation';
 
     definePageMeta({
         layout: 'backoffice',
@@ -31,7 +33,7 @@
     const { data: clients } = await useAuthFetch('/api/clients', {
         baseURL: apiUrl,
         transform: (res) =>
-            res.map((c: any) => ({
+            res.map((c: Client) => ({
                 label: `${c.firstName} ${c.lastName}`,
                 value: c.id,
             })),
@@ -40,7 +42,7 @@
     const { data: accommodations } = await useAuthFetch('/api/accommodations', {
         baseURL: apiUrl,
         transform: (res) =>
-            res.map((a: any) => ({
+            res.map((a: Accommodation) => ({
                 label: a.name,
                 value: a.id,
             })),
@@ -104,7 +106,7 @@
             });
             success.value = true;
             await refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Erreur lors de la mise à jour :', error);
             errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.';
         } finally {

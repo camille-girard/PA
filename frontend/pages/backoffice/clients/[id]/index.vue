@@ -53,7 +53,7 @@
                 baseURL: apiUrl,
             });
             client.value = data.value?.client ?? null;
-        } catch (error: any) {
+        } catch (error: unknown) {
             errorMsg.value = error?.data?.message || 'Erreur lors du chargement du client.';
             console.error(error);
         } finally {

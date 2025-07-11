@@ -40,8 +40,8 @@
                     'Si un compte avec cette adresse email existe, vous recevrez un lien de réinitialisation.'
             );
             form.email = '';
-        } catch (err: any) {
-            const errorMessage = err.data?.error || 'Une erreur est survenue. Veuillez réessayer.';
+        } catch (err: unknown) {
+            const errorMessage = (err as unknown).data?.error || 'Une erreur est survenue. Veuillez réessayer.';
             toast.error('Erreur', errorMessage);
         } finally {
             loading.value = false;
@@ -52,7 +52,7 @@
 <template>
     <main class="flex flex-col flex-grow">
         <UHeader />
-        <div class="my-20 py-20 rounded-2xl flex items-center justify-center relative flex-grow">
+        <div class="my-20 py-20 rounded-2xl flex items-center justify-center flex-grow">
             <UGridBackgroundPattern class="absolute top-0 opacity-20" />
             <section class="flex flex-col items-center space-y-8 relative">
                 <div class="text-center space-y-3">

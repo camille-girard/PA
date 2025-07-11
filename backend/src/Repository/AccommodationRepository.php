@@ -183,7 +183,7 @@ class AccommodationRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('a');
 
         if (empty($preferences)) {
-            return $qb->orderBy('RAND()')
+            return $qb->orderBy('a.createdAt', 'DESC')
                       ->setMaxResults($limit)
                       ->getQuery()
                       ->getResult();

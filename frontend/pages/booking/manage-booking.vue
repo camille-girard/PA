@@ -22,7 +22,7 @@
         refresh: refreshBookings,
     } = await useAsyncData('ownerBookings', async () => {
         const data = await $fetch($api('/api/bookings/owner'), { credentials: 'include' });
-        return data.map((b: any) => ({
+        return data.map((b: AccommodationDto) => ({
             ...b,
             startDate: new Date(b.startDate),
             endDate: new Date(b.endDate),
@@ -61,8 +61,8 @@
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
                         <h1 class="text-h1">Réservations reçues</h1>
                         <p class="mt-4">Gérez les réservations de vos hébergements.</p>
                     </div>

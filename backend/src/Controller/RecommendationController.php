@@ -29,7 +29,6 @@ final class RecommendationController extends AbstractController
         }
 
         $accommodations = $accommodationRepository->findByPreferences($userPreferences, 6);
-
         $json = $serializer->serialize($accommodations, 'json', [
             'groups' => ['accommodation:read'],
             'ignored_attributes' => ['owner', 'bookings', 'comments'],
