@@ -1,179 +1,174 @@
 <script setup lang="ts">
-  import { ref, reactive, onMounted } from 'vue'
-  import { useRuntimeConfig } from '#app'
-  import { useAuthFetch } from '~/composables/useAuthFetch'
-  import UCard from '~/components/molecules/UCard.vue'
-  import UInput from '~/components/atoms/UInput.vue'
-  import UTextarea from '~/components/atoms/UTextarea.vue'
-  import UButton from '~/components/atoms/UButton.vue'
-  import ConfirmPopover from '~/components/ConfirmPopover.vue'
-  import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
-  import EditIcon from '~/components/atoms/icons/EditIcon.vue'
-  import type { ThemeDto } from '~/types/dtos/theme.dto';
+import { ref, reactive, onMounted } from 'vue';
+import { useRuntimeConfig } from '#app';
+import { useAuthFetch } from '~/composables/useAuthFetch';
+import { useToast } from '~/composables/useToast';
+import UCard from '~/components/molecules/UCard.vue';
+import UInput from '~/components/atoms/UInput.vue';
+import UTextarea from '~/components/atoms/UTextarea.vue';
+import UButton from '~/components/atoms/UButton.vue';
+import ConfirmPopover from '~/components/ConfirmPopover.vue';
+import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
+import EditIcon from '~/components/atoms/icons/EditIcon.vue';
+import type { ThemeDto } from '~/types/dtos/theme.dto';
 
-  definePageMeta({
-    layout: 'backoffice',
-    middleware: 'admin',
-  });
+definePageMeta({
+  layout: 'backoffice',
+  middleware: 'admin',
+});
 
-    const {
-        public: { apiUrl },
-    } = useRuntimeConfig();
+const toast = useToast();
+const {
+  public: { apiUrl },
+} = useRuntimeConfig();
 
-    const themes = ref<ThemeDto[]>([]);
-    const pending = ref(false);
-    const isSaving = ref(false);
-    const editingTheme = ref<number | null>(null);
-    const successMsg = ref('');
-    const errorMsg = ref('');
+const themes = ref<ThemeDto[]>([]);
+const pending = ref(false);
+const isSaving = ref(false);
+const editingTheme = ref<number | null>(null);
 
-    const originalThemeData = ref<any>({})
-    const editingThemeData = ref<any>({})
+const editingThemeData = ref<Partial<ThemeDto>>({});
+const originalThemeData = ref<Partial<ThemeDto>>({});
 
-    const newTheme = reactive({
-        name: '',
-        description: '',
+const newTheme = reactive<{ name: string; description: string }>({
+  name: '',
+  description: '',
+});
+
+interface ApiError {
+  data?: { message?: string };
+}
+
+async function loadThemes() {
+  pending.value = true;
+  try {
+    const { data } = await useAuthFetch<{ themes: ThemeDto[] }>('/api/themes', {
+      baseURL: apiUrl,
+      transform: (res) => res.themes,
     });
 
-    async function loadThemes() {
-      pending.value = true;
-      errorMsg.value = '';
-      try {
-        const { data } = await useAuthFetch('/api/themes', {
-          baseURL: apiUrl,
-          transform: (res) => res.themes,
-        });
+    themes.value = (data.value || []).filter((theme) =>
+        theme && theme.id && theme.name && theme.description
+    );
 
-        themes.value = (data.value || []).filter(theme =>
-            theme && theme.id && theme.name && theme.description
-        )
-      } catch (error: unknown) {
-        errorMsg.value = error?.data?.message || 'Erreur lors du chargement des thèmes.'
-        console.error(error);
-      } finally {
-        pending.value = false;
-      }
-    }
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    toast.error('Erreur', error?.data?.message || 'Erreur lors du chargement des thèmes.');
+    console.error(err);
+  } finally {
+    pending.value = false;
+  }
+}
 
-    async function refreshThemes() {
-        await loadThemes();
-    }
+async function refreshThemes() {
+  await loadThemes();
+}
 
 async function saveNewTheme() {
-  if (isSaving.value) return
+  if (isSaving.value) return;
 
-  isSaving.value = true
-  successMsg.value = ''
-  errorMsg.value = ''
-
+  isSaving.value = true;
   try {
     if (!newTheme.name.trim() || !newTheme.description.trim()) {
-      errorMsg.value = 'Le nom et la description sont requis.'
-      return
+      toast.error('Erreur', 'Le nom et la description sont requis.');
+      return;
     }
 
-    const response = await useAuthFetch('/api/themes', {
+    if (newTheme.description.trim().length < 10) {
+      toast.error('Erreur', 'La description doit faire au moins 10 caractères.');
+      return;
+    }
+
+    await useAuthFetch('/api/themes', {
       method: 'POST',
       baseURL: apiUrl,
       body: {
         name: newTheme.name.trim(),
-        description: newTheme.description.trim()
+        description: newTheme.description.trim(),
       },
-    })
+    });
 
-    if (response.error.value) {
-      errorMsg.value = response.error.value.data?.message || 'Erreur lors de l\'ajout du thème.'
-      return
-    }
+    Object.assign(newTheme, { name: '', description: '' });
 
-    Object.assign(newTheme, { name: '', description: '' })
+    await refreshThemes();
+    toast.success('Succès', 'Thème ajouté avec succès.');
 
-    await refreshThemes()
-    successMsg.value = 'Thème ajouté avec succès.'
-
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de l\'ajout du thème.'
-    console.error('Erreur lors de l\'ajout:', error)
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    toast.error('Erreur', error?.data?.message || 'Erreur lors de l\'ajout du thème.');
+    console.error(err);
   } finally {
     isSaving.value = false;
   }
 }
 
-function startEdit(theme: any) {
-  editingTheme.value = theme.id
-  originalThemeData.value = {
-    name: theme.name,
-    description: theme.description
-  }
-  editingThemeData.value = {
-    name: theme.name,
-    description: theme.description
-  }
+function startEdit(theme: ThemeDto) {
+  editingTheme.value = theme.id;
+  originalThemeData.value = { ...theme };
+  editingThemeData.value = { ...theme };
 }
 
 async function updateTheme(themeId: number) {
-  successMsg.value = ''
-  errorMsg.value = ''
   try {
-    const response = await useAuthFetch(`/api/themes/${themeId}`, {
+    if (!editingThemeData.value.name?.trim() || !editingThemeData.value.description?.trim()) {
+      toast.error('Erreur', 'Le nom et la description sont requis.');
+      return;
+    }
+
+    if (editingThemeData.value.description.trim().length < 10) {
+      toast.error('Erreur', 'La description doit faire au moins 10 caractères.');
+      return;
+    }
+
+    await useAuthFetch(`/api/themes/${themeId}`, {
       method: 'PUT',
       baseURL: apiUrl,
       body: {
         name: editingThemeData.value.name,
         description: editingThemeData.value.description,
       },
-    })
+    });
 
-    if (response.error.value) {
-      errorMsg.value = response.error.value.data?.message || 'Erreur lors de la mise à jour.'
-      return
-    }
+    editingTheme.value = null;
+    editingThemeData.value = {};
+    originalThemeData.value = {};
 
-    editingTheme.value = null
-    editingThemeData.value = {}
-    originalThemeData.value = {}
+    await refreshThemes();
+    toast.success('Succès', 'Thème mis à jour.');
 
-    await refreshThemes()
-    successMsg.value = 'Thème mis à jour.'
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de la mise à jour.'
-    console.error('Erreur lors de la mise à jour:', error)
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    toast.error('Erreur', error?.data?.message || 'Erreur lors de la mise à jour.');
+    console.error(err);
   }
 }
 
 function cancelEdit() {
-  editingTheme.value = null
-  editingThemeData.value = {}
-  originalThemeData.value = {}
+  editingTheme.value = null;
+  editingThemeData.value = {};
+  originalThemeData.value = {};
 }
 
 async function deleteTheme(id: number) {
-  successMsg.value = ''
-  errorMsg.value = ''
-
   try {
-    const response = await useAuthFetch(`/api/themes/${id}`, {
+    await useAuthFetch(`/api/themes/${id}`, {
       method: 'DELETE',
       baseURL: apiUrl,
-    })
+    });
 
-    if (response.error.value) {
-      errorMsg.value = response.error.value.data?.message || 'Erreur lors de la suppression du thème.'
-      return
-    }
+    themes.value = themes.value.filter((theme) => theme.id !== id);
+    toast.success('Succès', 'Thème supprimé avec succès.');
 
-    themes.value = themes.value.filter(theme => theme.id !== id)
-    successMsg.value = 'Thème supprimé avec succès.'
-
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de la suppression du thème.'
-    console.error(error)
+  } catch (err: unknown) {
+    const error = err as ApiError;
+    toast.error('Erreur', error?.data?.message || 'Erreur lors de la suppression du thème.');
+    console.error(err);
   }
 }
 
 onMounted(() => {
-  loadThemes()
-})
+  loadThemes();
+});
 </script>
 
 <template>
