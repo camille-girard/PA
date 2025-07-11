@@ -10,3 +10,39 @@ App\Entity\Owner:
     notation: '5'
     avatar: 'https://picsum.photos/200/300'
     bio: 'Passionné de voyages et de découvertes, j‘aime partager des expériences uniques avec mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'
+
+  owner_2:
+    email: 'owner2@example.com'
+    roles: ['ROLE_OWNER']
+    password: 'password123'
+    first_name: 'Michel'
+    last_name: 'Polnareff'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+    notation: '3'
+    avatar: 'https://picsum.photos/200/300'
+    bio: 'Chanteur et compositeur passionné, j‘aime créer des espaces uniques pour mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'
+
+  owner_3:
+    email: 'owner3@example.com'
+    roles: ['ROLE_OWNER']
+    password: 'password123'
+    first_name: 'Francis'
+    last_name: 'Cabrel'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+    notation: '4'
+    avatar: 'https://picsum.photos/200/300'
+    bio: 'Nostalgie dans l‘air, j‘aime partager des moments authentiques avec mes hôtes. Mes logements sont conçus pour vous offrir une expérience inoubliable, inspirée de vos univers préférés !'
+
+  owner_4:
+    email: 'owner4@example.com'
+    roles: ['ROLE_OWNER']
+    password: 'password123'
+    first_name: 'Johnny'
+    last_name: 'Haliday'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+    notation: '3'
+    avatar: 'https://picsum.photos/200/300'
+    bio: 'Allumer le feu ne fait pas tout, il faut financer les bijoux de Laeticia. Je propose donc mes différents logement, je peux même brader les prix et je fais le ménage !'

@@ -39,3 +39,8 @@ App\Entity\Theme:
     name: 'Western'
     description: 'Retour au Far West : chevauchées, duels et saloons vous attendent. Hi Ha !'
     slug: 'western'
+
+  theme_9:
+    name: 'Comédie'
+    description: 'Rien de mieux qu’un bon film pour rire et se détendre. Préparez-vous à des moments hilarants !'
+    slug: 'comédie'
