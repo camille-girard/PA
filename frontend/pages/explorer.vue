@@ -1,11 +1,10 @@
-<script setup lang="ts"></script>
 <template>
-    <main>
+    <main class="w-full flex-grow">
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
                         <h1 class="text-h1">Explorez votre prochaine destination</h1>
                         <p class="mt-4">Découvrez le lieu de vos prochaines vacances</p>
                     </div>

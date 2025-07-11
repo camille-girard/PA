@@ -1,3 +1,7 @@
 <script setup></script>
 
-<template></template>
+<template>
+    <div>
+        <!-- Contenu du dashboard -->
+    </div>
+</template>

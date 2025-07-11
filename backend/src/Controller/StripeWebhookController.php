@@ -28,6 +28,11 @@ class StripeWebhookController extends AbstractController
         $sigHeader = $request->headers->get('stripe-signature');
         $secret = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? null;
 
+        // 🔍 Logs de debug
+        $logger->info('🔑 Secret configuré : '.($secret ? 'OUI ('.substr($secret, 0, 15).'...)' : 'NON'));
+        $logger->info('📝 Signature reçue : '.($sigHeader ? substr($sigHeader, 0, 30).'...' : 'MANQUANTE'));
+        $logger->info('📦 Payload length : '.strlen($payload));
+
         if (!$secret) {
             $logger->error('STRIPE_WEBHOOK_SECRET manquant dans .env');
 
@@ -36,8 +41,10 @@ class StripeWebhookController extends AbstractController
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
+            $logger->info('✅ Signature validée avec succès pour événement : '.$event->type);
         } catch (\Throwable $e) {
-            $logger->error('Stripe Webhook Signature ERROR: '.$e->getMessage());
+            $logger->error('❌ Stripe Webhook Signature ERROR: '.$e->getMessage());
+            $logger->error('❌ Secret utilisé : '.substr($secret, 0, 15).'...');
 
             return new Response('Invalid signature', 400);
         }

@@ -1,13 +1,9 @@
 <script setup lang="ts">
-    interface TrendingItem {
-        title: string;
-        image: string;
-        price?: number;
-    }
+    import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
 
     const _props = withDefaults(
         defineProps<{
-            items?: TrendingItem[];
+            items?: AccommodationItemDto[];
         }>(),
         {
             items: () => [],

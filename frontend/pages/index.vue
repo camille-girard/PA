@@ -1,25 +1,16 @@
 <script setup lang="ts">
-    import '~/types/accommodation';
+    import { useAccomodations } from '~/composables/useAccomodations';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
+
     useSeoMeta({
         title: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
     });
 
-    const trending = ref<Accommodation[]>([]);
+    const { trendingItems: trending, loadTrendingItems } = useAccomodations();
 
     onMounted(async () => {
-        const { $api } = useNuxtApp();
-        const response = await useAuthFetch<any>($api('/api/accommodations/'));
-
-        if (response.data.value && Array.isArray(response.data.value)) {
-            trending.value = response.data.value.slice(0, 3).map((acc: any) => ({
-                ...acc,
-                id: acc.id,
-                title: acc.name,
-                slug: acc.theme?.slug || acc.theme?.name?.toLowerCase().replace(/\s+/g, '-') || 'accommodation',
-                image: acc.images?.[0]?.url || 'https://via.placeholder.com/400x250',
-            }));
-        }
+        await loadTrendingItems(3);
     });
 </script>
 
@@ -28,8 +19,8 @@
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
                         <h1 class="text-h1">Séjourner dans un lieu inspiré de films</h1>
                         <p class="mt-4">Trouver et réservez des hébergements uniques à thème cinématographique</p>
                         <SearchBar />
@@ -40,7 +31,7 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">Les tendances du moment</h2>
                 </div>
-                <LocationCards :items="trending" />
+                <AccommodationCards :items="trending" />
                 <div class="mt-10 text-center">
                     <NuxtLink to="/tendances">
                         <UButton class="mx-auto">Voir plus</UButton>

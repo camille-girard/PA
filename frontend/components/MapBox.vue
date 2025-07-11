@@ -4,7 +4,18 @@
     import 'mapbox-gl/dist/mapbox-gl.css';
 
     const mapContainer = ref<HTMLDivElement | null>(null);
-    const accommodations = ref<any[]>([]);
+    interface AccommodationMap {
+        id: number;
+        name: string;
+        latitude: string;
+        longitude: string;
+        price: number;
+        image?: string;
+        images?: { url: string }[];
+        theme: { slug: string };
+    }
+
+    const accommodations = ref<AccommodationMap[]>([]);
 
     const loadMap = async () => {
         if (import.meta.client && mapContainer.value) {
@@ -69,7 +80,7 @@
                             if (accommodationDiv) {
                                 accommodationDiv.addEventListener('click', (e) => {
                                     e.stopPropagation();
-                                    const accommodationId = accommodationDiv.getAttribute('data-accommodation-id');
+                                    const _accommodationId = accommodationDiv.getAttribute('data-accommodation-id');
                                     navigateTo(`/thematiques/${theme}/${id}`);
                                 });
                             }

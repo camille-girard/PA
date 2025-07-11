@@ -13,6 +13,7 @@
         modelValue?: string | number;
         icon?: Component | string | null;
         iconPosition?: 'leading' | 'trailing';
+        disabled?: boolean;
     }
 
     const _props = withDefaults(defineProps<InputProps>(), {
@@ -32,11 +33,12 @@
         'update:modelValue': [value: string | number];
     }>();
 
-    const baseClasses = 'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none shadow-xs w-full';
+    const baseClasses =
+        'flex gap-2 border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full';
 
     const variantClasses = {
-        default: 'focus:border-orange-500 focus:ring-orange-500',
-        destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
+        default: 'border-primary focus:ring-primary',
+        destructive: 'border-error-subtle focus:ring-error',
     };
 
     const sizeClasses = {
@@ -49,14 +51,14 @@
 
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" class="text-body-sm" :for="name">
+        <label v-if="label" class="text-secondary text-sm font-medium" :for="name">
             {{ label }} <span v-if="required" class="text-brand-tertiary">*</span>
         </label>
         <div :class="wrapperClasses">
             <component
                 :is="icon"
                 v-if="icon && iconPosition === 'leading'"
-                class="absolute left-3 size-5 text-body-md pointer-events-none"
+                class="absolute left-3 size-5 text-tertiary pointer-events-none"
             />
             <input
                 :id="name"
@@ -66,20 +68,23 @@
                     sizeClasses[size],
                     { 'pl-10': icon && iconPosition === 'leading' },
                     { 'pr-10': icon && iconPosition === 'trailing' },
+                    { 'cursor-not-allowed opacity-50': disabled },
                 ]"
                 :type="type"
                 :placeholder="placeholder"
                 :name="name"
                 :value="modelValue"
+                :required="required"
+                :disabled="disabled"
                 @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
             />
             <component
                 :is="icon"
                 v-if="icon && iconPosition === 'trailing'"
-                class="absolute right-3 size-5 text-body-md pointer-events-none"
+                class="absolute right-3 size-5 text-tertiary pointer-events-none"
             />
         </div>
-        <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-md']">
+        <p v-if="hintText" :class="['text-sm', destructive ? 'text-error-primary' : 'text-tertiary']">
             {{ hintText }}
         </p>
     </div>

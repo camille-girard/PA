@@ -1,60 +1,63 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import { useRuntimeConfig } from '#app'
-import { useAuthFetch } from '~/composables/useAuthFetch'
-import UCard from '~/components/molecules/UCard.vue'
-import UInput from '~/components/atoms/UInput.vue'
-import UTextarea from '~/components/atoms/UTextarea.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import ConfirmPopover from '~/components/ConfirmPopover.vue'
-import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
-import EditIcon from '~/components/atoms/icons/EditIcon.vue'
+  import { ref, reactive, onMounted } from 'vue'
+  import { useRuntimeConfig } from '#app'
+  import { useAuthFetch } from '~/composables/useAuthFetch'
+  import UCard from '~/components/molecules/UCard.vue'
+  import UInput from '~/components/atoms/UInput.vue'
+  import UTextarea from '~/components/atoms/UTextarea.vue'
+  import UButton from '~/components/atoms/UButton.vue'
+  import ConfirmPopover from '~/components/ConfirmPopover.vue'
+  import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
+  import EditIcon from '~/components/atoms/icons/EditIcon.vue'
+  import type { ThemeDto } from '~/types/dtos/theme.dto';
 
-definePageMeta({
-  layout: 'backoffice',
-  middleware: 'admin',
-})
+  definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+  });
 
-const { public: { apiUrl } } = useRuntimeConfig()
+    const {
+        public: { apiUrl },
+    } = useRuntimeConfig();
 
-const themes = ref<any[]>([])
-const pending = ref(false)
-const isSaving = ref(false)
-const editingTheme = ref<number | null>(null)
-const successMsg = ref('')
-const errorMsg = ref('')
+    const themes = ref<ThemeDto[]>([]);
+    const pending = ref(false);
+    const isSaving = ref(false);
+    const editingTheme = ref<number | null>(null);
+    const successMsg = ref('');
+    const errorMsg = ref('');
 
-const originalThemeData = ref<any>({})
-const editingThemeData = ref<any>({})
+    const originalThemeData = ref<any>({})
+    const editingThemeData = ref<any>({})
 
-const newTheme = reactive({
-  name: '',
-  description: '',
-})
+    const newTheme = reactive({
+        name: '',
+        description: '',
+    });
 
-async function loadThemes() {
-  pending.value = true
-  errorMsg.value = ''
-  try {
-    const { data } = await useAuthFetch('/api/themes', {
-      baseURL: apiUrl,
-      transform: res => res.themes,
-    })
+    async function loadThemes() {
+      pending.value = true;
+      errorMsg.value = '';
+      try {
+        const { data } = await useAuthFetch('/api/themes', {
+          baseURL: apiUrl,
+          transform: (res) => res.themes,
+        });
 
-    themes.value = (data.value || []).filter(theme =>
-        theme && theme.id && theme.name && theme.description
-    )
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors du chargement des thèmes.'
-    console.error(error)
-  } finally {
-    pending.value = false
-  }
-}
+        themes.value = (data.value || []).filter(theme =>
+            theme && theme.id && theme.name && theme.description
+        )
+      } catch (error: unknown) {
+        errorMsg.value = error?.data?.message || 'Erreur lors du chargement des thèmes.'
+        console.error(error);
+      } finally {
+        pending.value = false,
+      }
+    }
 
-async function refreshThemes() {
-  await loadThemes()
-}
+    async function refreshThemes() {
+        await loadThemes();
+    }
 
 async function saveNewTheme() {
   if (isSaving.value) return

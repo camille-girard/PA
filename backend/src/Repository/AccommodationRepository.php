@@ -172,4 +172,57 @@ class AccommodationRepository extends ServiceEntityRepository
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * @param array<string> $preferences
+     *
+     * @return Accommodation[]
+     */
+    public function findByPreferences(array $preferences, int $limit = 6): array
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if (empty($preferences)) {
+            return $qb->orderBy('a.createdAt', 'DESC')
+                      ->setMaxResults($limit)
+                      ->getQuery()
+                      ->getResult();
+        }
+
+        $orConditions = [];
+        $paramIndex = 0;
+
+        foreach ($preferences as $preference) {
+            $preference = trim(strtolower($preference));
+            if (!empty($preference)) {
+                $paramName = 'pref'.$paramIndex;
+                $orConditions[] = "(
+                    LOWER(a.practicalInformations) LIKE :$paramName OR 
+                    LOWER(a.description) LIKE :$paramName OR 
+                    LOWER(a.name) LIKE :$paramName
+                )";
+                $qb->setParameter($paramName, '%'.$preference.'%');
+                ++$paramIndex;
+            }
+        }
+
+        if (!empty($orConditions)) {
+            $qb->where(implode(' OR ', $orConditions));
+        }
+
+        $results = $qb->orderBy('a.createdAt', 'DESC')
+                      ->setMaxResults($limit)
+                      ->getQuery()
+                      ->getResult();
+
+        if (empty($results)) {
+            return $this->createQueryBuilder('a')
+                        ->orderBy('a.createdAt', 'DESC')
+                        ->setMaxResults($limit)
+                        ->getQuery()
+                        ->getResult();
+        }
+
+        return $results;
+    }
 }

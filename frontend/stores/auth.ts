@@ -7,9 +7,10 @@ type User = {
     email: string;
     phone?: string;
     address?: string;
+    preferences?: string[];
     roles: string[];
+    avatar: string;
 };
-
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({

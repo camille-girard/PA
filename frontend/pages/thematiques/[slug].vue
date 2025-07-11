@@ -1,22 +1,42 @@
 <script setup lang="ts">
-    import '~/types/logement';
-    import '~/types/theme';
+    import { useThemes } from '~/composables/useThemes';
+    import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
+    import type { ThemeWithAccommodationsDto } from '~/types/dtos/theme_with_accommodations.dto';
+    import AccommodationCards from '~/components/AccommodationCards.vue';
 
-    const Theme = ref<Theme[]>([]);
+    useSeoMeta({
+        title: 'PopnBed - Thématique',
+        description: 'Découvrez nos hébergements par thématique',
+    });
+
+    const route = useRoute();
+    const { getThemeBySlug } = useThemes();
+
+    const theme = ref<ThemeWithAccommodationsDto | null>(null);
+    const accommodations = ref<AccommodationItemDto[]>([]);
 
     onMounted(async () => {
-        const { $api } = useNuxtApp();
-        const route = useRoute();
+        if (typeof route.params.slug === 'string') {
+            const themeData = await getThemeBySlug(route.params.slug);
 
-        const response = await useAuthFetch<Theme>($api('/api/themes/accommodation/' + route.params.slug));
+            if (themeData) {
+                theme.value = themeData;
 
-        Theme.value = response.data.value.themes;
-        Theme.value.accommodations = response.data.value.themes.accommodations.map((accommodation) => ({
-            title: accommodation.name,
-            image: accommodation.images[0].url,
-            id: accommodation.id,
-            slug: response.data.value.themes.slug,
-        }));
+                // Mise à jour des métadonnées SEO avec le nom du thème
+                useSeoMeta({
+                    title: `PopnBed - ${themeData.name}`,
+                    description: `Découvrez nos hébergements inspirés de ${themeData.name}`,
+                });
+
+                accommodations.value =
+                    themeData.accommodations?.map((accommodation) => ({
+                        id: accommodation.id,
+                        title: accommodation.name,
+                        image: accommodation.images[0]?.url || 'https://via.placeholder.com/400x250',
+                        slug: themeData.slug,
+                    })) || [];
+            }
+        }
     });
 </script>
 
@@ -25,9 +45,9 @@
         <UHeader />
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section class="w-full pt-8">
-                <div class="py-20 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
-                        <h1 class="text-h1">Thématiques - {{ Theme.name }}</h1>
+                <div class="py-20 rounded-2xl flex items-center justify-center">
+                    <div class="text-center">
+                        <h1 class="text-h1">Thématiques - {{ theme?.name || 'Chargement...' }}</h1>
                         <p class="text-body-md mt-4">
                             Trouvez le lieu parfait inspiré de vos films et séries préférés.
                         </p>
@@ -36,9 +56,9 @@
             </section>
             <section class="w-full pt-12">
                 <div class="text-center mb-10">
-                    <h2 class="text-h2">{{ Theme.name }}</h2>
+                    <h2 class="text-h2">{{ theme?.name || 'Chargement...' }}</h2>
                 </div>
-                <LocationCards :items="Theme.accommodations" />
+                <AccommodationCards :items="accommodations" />
             </section>
         </div>
         <UFooter />

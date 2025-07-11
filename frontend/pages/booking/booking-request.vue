@@ -1,6 +1,4 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
     import { loadStripe } from '@stripe/stripe-js';
     import { useAuthStore } from '~/stores/auth';
 
@@ -38,10 +36,6 @@
     const totalPrice = (pricePerNight * nights + 12 + 5).toFixed(2);
 
     const createCheckout = async () => {
-        console.log('user:', user.value);
-        console.log('clientId:', clientId.value);
-        console.log('accommodationId:', accommodationId);
-
         if (!clientId.value || !accommodationId) {
             alert('Informations manquantes pour créer la réservation.');
             return;
@@ -50,7 +44,7 @@
         try {
             isLoading.value = true;
 
-            const res = await $fetch('/api/checkout/create-session', {
+            const res = await $fetch<{ id: string }>('/api/checkout/create-session', {
                 method: 'POST',
                 body: {
                     totalPrice: Number(totalPrice),
@@ -84,7 +78,7 @@
         <div class="max-w-7xl w-full mx-auto pt-8 px-4">
             <section id="booking-request" class="w-full pt-8">
                 <div class="py-16 rounded-2xl flex items-center justify-center relative">
-                    <div class="text-center z-10">
+                    <div class="text-center">
                         <h1 class="text-h1">Demande de réservation</h1>
                     </div>
                 </div>

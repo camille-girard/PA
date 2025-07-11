@@ -40,11 +40,11 @@ class CheckoutController extends AbstractController
             'success_url' => $baseUrl.'/booking/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $baseUrl.'/booking/cancel',
             'metadata' => [
-                'client_id' => $clientId,
-                'accommodation_id' => $accommodationId,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'total_price' => $price,
+                'client_id' => (string) $clientId,
+                'accommodation_id' => (string) $accommodationId,
+                'start_date' => (string) $startDate,
+                'end_date' => (string) $endDate,
+                'total_price' => (string) $price,
             ],
         ]);
 

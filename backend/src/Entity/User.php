@@ -26,21 +26,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['client:read', 'owner:read', 'me:read'])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['me:read'])]
+    #[Groups(['me:read', 'message:read', 'conversation:read'])]
     private array $roles = [];
 
     /**
@@ -51,11 +51,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail'])]
+    #[Groups(['client:read', 'owner:read', 'booking:read', 'accommodation:read', 'me:read', 'ticket:list', 'ticket:detail', 'message:read', 'conversation:read', 'conversation:list'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -78,6 +78,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]
+    /**
+     * @phpstan-ignore-next-line
+     */
     private Collection $tickets;
 
     #[ORM\Column(type: 'boolean')]
@@ -284,7 +287,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeTicketMessage(TicketMessage $ticketMessage): static
     {
         if ($this->ticketMessages->removeElement($ticketMessage)) {
-            // set the owning side to null (unless already changed)
             if ($ticketMessage->getAuthor() === $this) {
                 $ticketMessage->setAuthor(null);
             }
@@ -307,6 +309,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->tickets->add($ticket);
             $ticket->setOwner($this);
         }
+
         return $this;
     }
 
@@ -317,7 +320,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ticket->setOwner(null);
             }
         }
+
         return $this;
     }
-
 }

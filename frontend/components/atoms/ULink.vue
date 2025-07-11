@@ -5,7 +5,6 @@
         size?: 'sm' | 'md';
         disabled?: boolean;
         showExternalIcon?: boolean;
-        className?: string;
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -13,7 +12,6 @@
         size: 'md',
         disabled: false,
         showExternalIcon: true,
-        className: '',
     });
 
     const _emit = defineEmits(['click']);
@@ -23,16 +21,20 @@
     });
 
     const baseClasses =
-        'text-body-md flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent';
+        'flex gap-1 items-center font-semibold focus:ring focus:ring-primary ring-offset-2 rounded ring-offset-transparent group';
 
     const variantClasses = {
-        primary: 'hover:underline underline-offset-4 transition disabled:text-fg-disabled',
-        secondary: 'text-tertiary hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        primary:
+            'text-brand-primary hover:text-brand-secondary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        secondary:
+            'text-tertiary hover:text-tertiary-hover hover:underline underline-offset-4 transition disabled:text-fg-disabled',
+        tertiary:
+            'text-black hover:text-brand-primary hover:underline underline-offset-4 transition disabled:text-fg-disabled',
     };
 
     const sizeClasses = {
-        sm: 'text-body-sm',
-        md: 'text-body-md',
+        sm: 'text-sm',
+        md: 'text-base',
     };
 </script>
 
@@ -46,14 +48,13 @@
             variantClasses[variant],
             sizeClasses[size],
             disabled ? 'opacity-50 cursor-not-allowed' : '',
-            className,
         ]"
         @click="!disabled && $emit('click', $event)"
     >
         <slot />
         <svg
             v-if="isExternal ? showExternalIcon : false"
-            class="size-4"
+            class="size-4 hidden group-hover:block"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"

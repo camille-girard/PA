@@ -1,18 +1,22 @@
 <script setup lang="ts">
+    import type { Booking } from '~/types/booking';
+
     defineProps<{
-        booking: any;
+        booking: Booking;
         contactLabel?: string;
         deleteLabel?: string;
     }>();
 
     const emit = defineEmits(['delete', 'contact']);
 
-    const formatDate = (d: Date) =>
-        d.toLocaleDateString('fr-FR', {
+    const formatDate = (d: string) => {
+        const date = new Date(d);
+        return date.toLocaleDateString('fr-FR', {
             day: '2-digit',
             month: 'short',
             year: 'numeric',
         });
+    };
 
     function onDelete(id: number) {
         emit('delete', id);
@@ -20,6 +24,12 @@
 
     function onContact(id: number) {
         emit('contact', id);
+    }
+
+    function calculateNights(startDate: string, endDate: string): number {
+        const start = new Date(startDate).getTime();
+        const end = new Date(endDate).getTime();
+        return Math.round((end - start) / (1000 * 60 * 60 * 24));
     }
 </script>
 
@@ -32,7 +42,7 @@
             <p class="text-gray-600">
                 Du <strong>{{ formatDate(booking.startDate) }}</strong> au
                 <strong>{{ formatDate(booking.endDate) }}</strong> ({{
-                    Math.round((booking.endDate - booking.startDate) / 86400000)
+                    calculateNights(booking.startDate, booking.endDate)
                 }}
                 nuits)
             </p>
@@ -59,7 +69,13 @@
                 <UButton size="sm" variant="primary" class="w-full md:w-auto" @click="onContact(booking.id)">
                     {{ contactLabel }}
                 </UButton>
-                <UButton size="sm" variant="danger" class="w-full md:w-auto" @click="onDelete(booking.id)">
+                <UButton
+                    size="sm"
+                    variant="secondary"
+                    color="red"
+                    class="w-full md:w-auto"
+                    @click="onDelete(booking.id)"
+                >
                     {{ deleteLabel }}
                 </UButton>
             </div>

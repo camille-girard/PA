@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia';
+import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
+
+interface SearchResults {
+    accommodations: AccommodationDto[];
+}
 
 export const useSearchResultsStore = defineStore('searchResults', {
     state: () => ({
-        results: null as any,
+        results: null as SearchResults | null,
     }),
     actions: {
-        setResults(data: any) {
+        setResults(data: SearchResults) {
             this.results = data;
         },
         clearResults() {

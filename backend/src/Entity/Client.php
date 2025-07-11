@@ -13,10 +13,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Client extends User
 {
     /**
-     * @var array<string>
+     * @var array<string>|null
      */
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    #[Groups(['client:read'])]
+    #[Groups(['client:read', 'me:read'])]
     private ?array $preferences = null;
 
     /**

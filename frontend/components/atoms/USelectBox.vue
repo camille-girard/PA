@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import ChrevronDownIcon from '~/components/atoms/icons/ChrevronDownIcon.vue';
+    import XIcon from '~/components/atoms/icons/XIcon.vue';
 
     interface SelectOption {
         label: string;
-        value: string | number | Array<string>;
+        value: unknown;
         icon?: Component;
     }
 
@@ -11,7 +12,7 @@
         placeholder?: string;
         searchInput?: boolean;
         icon?: Component | null;
-        modelValue: string | number | Array<string> | null;
+        modelValue: unknown;
         multiple?: boolean;
         name?: string;
         options: SelectOption[];
@@ -40,7 +41,7 @@
     });
 
     const emit = defineEmits<{
-        'update:modelValue': [value: string | number | Array<string> | null];
+        'update:modelValue': [value: unknown];
     }>();
 
     const isOpen = ref(false);
@@ -49,10 +50,12 @@
 
     const selectedOptions = computed(() => {
         if (props.multiple) {
+            // Pour sélections multiples, on retourne un tableau d'options
             return props.options.filter(
-                (option) => Array.isArray(props.modelValue) && props.modelValue.some((val) => val === option.value)
+                (option) => Array.isArray(props.modelValue) && props.modelValue.includes(option.value)
             );
         } else {
+            // Pour sélection unique, on retourne une seule option
             return props.options.find((option) => option.value === props.modelValue);
         }
     });
@@ -91,13 +94,13 @@
     function selectOption(option: SelectOption) {
         if (props.multiple) {
             const currentValue = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
-            const index = currentValue.findIndex((val) => val === option.value);
+            const index = currentValue.indexOf(option.value);
 
             if (index === -1) {
-                if (typeof option.value === 'string') {
-                    currentValue.push(option.value);
-                }
+                // Ajouter la valeur si elle n'est pas déjà sélectionnée
+                currentValue.push(option.value);
             } else {
+                // Retirer la valeur si elle est déjà sélectionnée
                 currentValue.splice(index, 1);
             }
 
@@ -110,7 +113,7 @@
 
     function isSelected(option: SelectOption): boolean {
         if (props.multiple) {
-            return Array.isArray(props.modelValue) && props.modelValue.some((val) => val === option.value);
+            return Array.isArray(props.modelValue) && props.modelValue.includes(option.value);
         }
         return props.modelValue === option.value;
     }
@@ -124,44 +127,35 @@
         }
     }
 
-    let handleClickOutside: (e: MouseEvent) => void;
-    let handleKeyDown: (e: KeyboardEvent) => void;
-
     // Gestionnaire de clic à l'extérieur du selectbox pour le fermer
     onMounted(() => {
-        handleClickOutside = (e: MouseEvent) => {
+        document.addEventListener('click', (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (selectBoxRef.value && !selectBoxRef.value.contains(target)) {
                 isOpen.value = false;
             }
-        };
-
-        handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isOpen.value) {
-                isOpen.value = false;
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        document.addEventListener('keydown', handleKeyDown);
+        });
     });
 
     onUnmounted(() => {
-        document.removeEventListener('click', handleClickOutside);
-        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.key === 'Escape' && isOpen.value) {
+                isOpen.value = false;
+            }
+        });
     });
 
     const baseClasses =
-        'flex gap-2 border border-gray-300 rounded-lg focus:ring-2 focus:outline-none shadow-xs w-full focus:border-orange-500 focus:ring-orange-500 px-3 py-2 px-10';
+        'border bg-primary rounded-lg focus:ring-2 focus:border-transparent focus:outline-none placeholder:text-placeholder text-primary shadow-xs w-full';
 
     const variantClasses = {
-        default: 'focus:border-orange-500 focus:ring-orange-500',
-        destructive: 'border-error-subtle focus:ring-error focus:border-error-subtle',
+        default: 'border-primary focus:ring-primary',
+        destructive: 'border-error-subtle focus:ring-error',
         disabled: 'bg-disabled border-disabled-subtle text-fg-disabled cursor-not-allowed',
     };
 
     const sizeClasses = {
-        sm: 'px-3 py-2 text-sm',
+        sm: 'px-3 py-2',
         md: 'px-4 py-2.5',
     };
 </script>
@@ -195,7 +189,15 @@
             </div>
 
             <div class="flex items-center">
-                <ChrevronDownIcon class="size-5 text-tertiary" />
+                <button
+                    v-if="modelValue && (modelValue.length > 0 || modelValue !== null)"
+                    type="button"
+                    class="mr-1 p-0.5 text-tertiary hover:text-tertiary-hover"
+                    @click.stop="clearSelection($event)"
+                >
+                    <XIcon class="size-4" />
+                </button>
+                <ChrevronDownIcon class="size-5 text-fg-quaternary" />
             </div>
         </div>
 
@@ -236,7 +238,7 @@
                         >
                             <div
                                 class="flex items-center gap-2 w-full text-secondary group-hover:text-secondary-hover text-sm font-semibold"
-                                :class="{ '!text-brand-primary': isSelected(option) }"
+                                :class="{ '!text-brand-secondary': isSelected(option) }"
                             >
                                 <component
                                     :is="option.icon"
@@ -248,7 +250,7 @@
                                 <!-- Indicateur de sélection -->
                                 <svg
                                     v-if="isSelected(option)"
-                                    class="ml-auto size-4 text-brand-primary"
+                                    class="ml-auto size-4 text-brand-secondary"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="none"
@@ -267,3 +269,40 @@
         </Transition>
     </div>
 </template>
+
+<style scoped>
+    /* Animations pour l'apparition et disparition du dropdown */
+    .dropdown-bottom-right-enter-active,
+    .dropdown-bottom-right-leave-active,
+    .dropdown-bottom-left-enter-active,
+    .dropdown-bottom-left-leave-active {
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .dropdown-bottom-right-enter-from,
+    .dropdown-bottom-right-leave-to,
+    .dropdown-bottom-left-enter-from,
+    .dropdown-bottom-left-leave-to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    .dropdown-top-right-enter-active,
+    .dropdown-top-right-leave-active,
+    .dropdown-top-left-enter-active,
+    .dropdown-top-left-leave-active {
+        transition:
+            opacity 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .dropdown-top-right-enter-from,
+    .dropdown-top-right-leave-to,
+    .dropdown-top-left-enter-from,
+    .dropdown-top-left-leave-to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+</style>
