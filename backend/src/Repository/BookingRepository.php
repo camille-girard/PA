@@ -19,6 +19,8 @@ class BookingRepository extends ServiceEntityRepository
 
     /**
      * Récupère toutes les réservations liées aux hébergements appartenant à un owner donné.
+     *
+     * @return Booking[]
      */
     public function findBookingsByOwner(User $owner): array
     {

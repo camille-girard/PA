@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +22,9 @@ final class UserController extends AbstractController
     public function index(UserRepository $userRepository, SerializerInterface $serializerInterface): JsonResponse
     {
         $current_user = $this->getUser();
+        if (!$current_user instanceof User) {
+            return new JsonResponse(['message' => 'Utilisateur non trouvé'], 404);
+        }
         $user = $userRepository->find($current_user->getId());
 
         $userSerialized = $serializerInterface->serialize($user, 'json', [
@@ -39,6 +43,7 @@ final class UserController extends AbstractController
     ): JsonResponse {
         /** @var User $user */
         $user = $this->getUser();
+
         $data = json_decode($request->getContent(), true);
 
         if (isset($data['firstName'])) {
@@ -62,6 +67,7 @@ final class UserController extends AbstractController
         }
 
         if (isset($data['preferences'])) {
+            /** @var Client $user */
             $user->setPreferences($data['preferences']);
         }
 

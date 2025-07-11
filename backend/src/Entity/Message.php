@@ -13,9 +13,6 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    /**
-     * @phpstan-ignore-next-line
-     */
     #[Groups(['message:read', 'conversation:read'])]
     private ?int $id = null;
 
@@ -36,16 +33,16 @@ class Message
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['message:read', 'conversation:read'])]
     private ?Owner $owner = null;
-    
+
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['message:read', 'conversation:read'])]
     private ?Conversation $conversation = null;
-    
+
     #[ORM\Column]
     #[Groups(['message:read', 'conversation:read'])]
     private bool $isRead = false;
-    
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['message:read', 'conversation:read'])]
@@ -103,7 +100,7 @@ class Message
 
         return $this;
     }
-    
+
     public function getConversation(): ?Conversation
     {
         return $this->conversation;
@@ -115,7 +112,7 @@ class Message
 
         return $this;
     }
-    
+
     public function isRead(): bool
     {
         return $this->isRead;
@@ -127,7 +124,7 @@ class Message
 
         return $this;
     }
-    
+
     public function getSender(): ?User
     {
         return $this->sender;

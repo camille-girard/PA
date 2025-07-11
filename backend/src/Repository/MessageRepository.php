@@ -2,19 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\Message;
 use App\Entity\Conversation;
+use App\Entity\Message;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Message>
- *
- * @method Message|null find($id, $lockMode = null, $lockVersion = null)
- * @method Message|null findOneBy(array $criteria, array $orderBy = null)
- * @method Message[]    findAll()
- * @method Message[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MessageRepository extends ServiceEntityRepository
 {
@@ -24,7 +19,9 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find messages for a specific conversation
+     * Find messages for a specific conversation.
+     *
+     * @return Message[]
      */
     public function findByConversation(Conversation $conversation): array
     {
@@ -37,7 +34,9 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find unread messages for a user in a conversation
+     * Find unread messages for a user in a conversation.
+     *
+     * @return Message[]
      */
     public function findUnreadMessagesForUser(Conversation $conversation, User $user): array
     {
@@ -53,7 +52,7 @@ class MessageRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count unread messages for a user
+     * Count unread messages for a user.
      */
     public function countUnreadMessagesForUser(User $user): int
     {

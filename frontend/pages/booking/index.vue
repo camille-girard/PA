@@ -84,7 +84,7 @@
             </div>
             <div v-else-if="error" class="text-center py-10">
                 <p class="text-red-600 mb-4">Une erreur est survenue lors du chargement</p>
-                <Ubutton @click="loadBookings()" size="lg" variant="primary"> Réessayer </Ubutton>
+                <Ubutton size="lg" variant="primary" @click="loadBookings()"> Réessayer </Ubutton>
             </div>
             <div v-else-if="!bookings?.length" class="text-center py-10 flex flex-col items-center">
                 <p class="text-gray-500 mb-4">Aucune réservation trouvée</p>

@@ -78,6 +78,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]
+    /**
+     * @phpstan-ignore-next-line
+     */
     private Collection $tickets;
 
     #[ORM\Column(type: 'boolean')]

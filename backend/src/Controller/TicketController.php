@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ticket;
 use App\Entity\TicketMessage;
+use App\Entity\User;
 use App\Enum\TicketStatus;
 use App\Repository\TicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,15 +47,23 @@ final class TicketController extends AbstractController
         }
 
         $ticket = new Ticket();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
         $ticket->setTitle($data['title'])
             ->setDescription($data['description'] ?? null)
-            ->setOwner($this->getUser())
+            ->setOwner($user)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setUpdatedAt(new \DateTimeImmutable());
 
         $message = new TicketMessage();
+
+        /** @var User $author */
+        $author = $this->getUser();
+
         $message->setContent($data['message'])
-            ->setAuthor($this->getUser())
+            ->setAuthor($author)
             ->setCreatedAt(new \DateTimeImmutable())
             ->setTicket($ticket);
 
@@ -84,6 +93,7 @@ final class TicketController extends AbstractController
     #[Route('/tickets/{id}/messages', methods: ['POST'])]
     public function addMessage(Request $request, Ticket $ticket): JsonResponse
     {
+        /** @var User $user */
         $user = $this->getUser();
 
         if ($this->isGranted('ROLE_OWNER') && $ticket->getOwner() !== $user) {

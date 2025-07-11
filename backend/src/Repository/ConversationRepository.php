@@ -2,20 +2,15 @@
 
 namespace App\Repository;
 
-use App\Entity\Conversation;
-use App\Entity\User;
 use App\Entity\Client;
+use App\Entity\Conversation;
 use App\Entity\Owner;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Conversation>
- *
- * @method Conversation|null find($id, $lockMode = null, $lockVersion = null)
- * @method Conversation|null findOneBy(array $criteria, array $orderBy = null)
- * @method Conversation[]    findAll()
- * @method Conversation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ConversationRepository extends ServiceEntityRepository
 {
@@ -25,7 +20,9 @@ class ConversationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find conversations for a user (client or owner)
+     * Find conversations for a user (client or owner).
+     *
+     * @return Conversation[]
      */
     public function findByUser(User $user): array
     {
@@ -45,7 +42,7 @@ class ConversationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find a conversation between a client and an owner
+     * Find a conversation between a client and an owner.
      */
     public function findOneByClientAndOwner(Client $client, Owner $owner): ?Conversation
     {

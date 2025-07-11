@@ -19,7 +19,7 @@ final class RecommendationController extends AbstractController
         AccommodationRepository $accommodationRepository,
         SerializerInterface $serializer,
     ): JsonResponse {
-        /** @var Client $user */
+        /** @var Client|null $user */
         $user = $this->getUser();
 
         $userPreferences = [];
