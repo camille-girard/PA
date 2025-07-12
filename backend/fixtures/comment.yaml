@@ -22,7 +22,7 @@ App\Entity\Comment:
     accommodation: '@accommodation_1'
 
   comment_4:
-    content: 'Grand fan de Shrek, c’est juste incroyable ! Et Jean-François est au top !'
+    content: 'Grand fan de Shrek, c’est juste incroyable ! Et Richard est au top !'
     rating: 4
     createdAt: '<(new DateTimeImmutable("-3 week"))>'
     client: '@client_1'
