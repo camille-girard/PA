@@ -8,15 +8,8 @@
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import { useToast } from '~/composables/useToast';
-
-    interface ApiError {
-        status?: number;
-        data?: {
-            message?: string;
-            error?: string;
-        };
-        message?: string;
-    }
+    import type { ApiError } from '~/types/apiError';
+    import type { OwnerRequest } from '~/types/ownerRequest';
 
     definePageMeta({
         layout: 'backoffice',
@@ -27,19 +20,6 @@
     const {
         public: { apiUrl },
     } = useRuntimeConfig();
-
-    interface OwnerRequest {
-        id: number;
-        message: string;
-        createdAt: string;
-        reviewed: boolean;
-        user: {
-            id: number;
-            firstName: string;
-            lastName: string;
-            email: string;
-        };
-    }
 
     const ownerRequestData = ref<OwnerRequest[]>([]);
     const pending = ref(false);

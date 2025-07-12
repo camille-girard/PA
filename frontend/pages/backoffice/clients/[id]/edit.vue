@@ -9,14 +9,7 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import { useToast } from '~/composables/useToast';
     import type { Client } from '~/types/client';
-
-    interface ApiError {
-        data?: {
-            message?: string;
-            status?: number;
-        };
-        message?: string;
-    }
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',

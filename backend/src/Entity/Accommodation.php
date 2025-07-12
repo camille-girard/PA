@@ -16,14 +16,14 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['accommodation:read', 'booking:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -63,7 +63,7 @@ class Accommodation
     private ?int $capacity = null;
 
     #[ORM\Column]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private ?float $price = null;
 
     /**
@@ -96,7 +96,7 @@ class Accommodation
      * @var Collection<int, AccommodationImages>
      */
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private Collection $images;
 
     /**

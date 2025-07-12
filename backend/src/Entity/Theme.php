@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
 #[UniqueEntity(
@@ -25,14 +26,14 @@ class Theme
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read', 'theme:read'])]
+    #[Groups(['theme:list', 'theme:read', 'accommodation:read', 'booking:read', 'owner:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read', 'theme:read'])]
+    #[Groups(['theme:list', 'theme:read', 'accommodation:read', 'booking:read', 'owner:read'])]
     #[Assert\NotBlank(message: 'Le nom ne peut pas être vide')]
     #[Assert\Length(
         min: 2,
@@ -47,7 +48,7 @@ class Theme
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['theme:read'])]
+    #[Groups(['theme:list', 'theme:read'])]
     #[Assert\NotBlank(message: 'La description ne peut pas être vide')]
     #[Assert\Length(
         min: 10,
@@ -61,10 +62,12 @@ class Theme
      * @var Collection<int, Accommodation>
      */
     #[ORM\OneToMany(targetEntity: Accommodation::class, mappedBy: 'theme')]
+    #[Groups(['theme:read'])]
+    #[MaxDepth(1)]
     private Collection $accommodations;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['theme:list', 'accommodation:read', 'booking:read', 'owner:read', 'theme:read'])]
     #[Assert\NotBlank(message: 'Le slug ne peut pas être vide')]
     #[Assert\Length(
         min: 2,

@@ -8,6 +8,8 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import { useToast } from '~/composables/useToast';
     import type { AdminDto } from '~/types/dtos/admin.dto';
+    import type { ApiError } from '~/types/apiError';
+    import type { FormData } from '~/types/formData';
 
     definePageMeta({
         layout: 'backoffice',
@@ -28,16 +30,6 @@
     const saving = ref(false);
     const success = ref(false);
 
-    interface FormData {
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone: string;
-        address: string;
-        avatar: string;
-        isVerified: boolean;
-    }
-
     const form = reactive<FormData>({
         firstName: '',
         lastName: '',
@@ -47,12 +39,6 @@
         avatar: '',
         isVerified: false,
     });
-
-    interface ApiError {
-        data?: {
-            message?: string;
-        };
-    }
 
     async function loadAdmin(adminId: string) {
         pending.value = true;

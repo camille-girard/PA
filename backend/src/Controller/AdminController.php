@@ -35,8 +35,18 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, #[CurrentUser] ?Admin $currentUser ): JsonResponse
     {
+        if (!$currentUser) {
+            return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if ($currentUser->getId() === $id) {
+            return $this->json([
+                'message' => 'Impossible de consulter ses propres informations via cette interface'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
         $admin = $this->adminRepository->find($id);
 
         if (!$admin || $admin->isDeleted()) {
@@ -57,7 +67,6 @@ final class AdminController extends AbstractController
             return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
         }
 
-        // Champs requis
         $requiredFields = ['email', 'password', 'firstName', 'lastName'];
         $missingFields = [];
 
@@ -74,10 +83,9 @@ final class AdminController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // Créer un nouvel admin
         $admin = new Admin();
         $admin->setEmail($data['email']);
-        $admin->setPassword(password_hash($data['password'], PASSWORD_BCRYPT)); // ou ton encodeur Symfony si tu veux
+        $admin->setPassword(password_hash($data['password'], PASSWORD_BCRYPT));
         $admin->setFirstName($data['firstName']);
         $admin->setLastName($data['lastName']);
         $admin->setIsVerified($data['isVerified'] ?? false);
@@ -97,7 +105,6 @@ final class AdminController extends AbstractController
 
         $admin->setCreatedAt(new \DateTimeImmutable());
 
-        // Valider l'entité
         $errors = $validator->validate($admin);
         if (count($errors) > 0) {
             return $this->json([
@@ -109,15 +116,22 @@ final class AdminController extends AbstractController
         $this->entityManager->persist($admin);
         $this->entityManager->flush();
 
-        // Sérialiser la réponse
         $json = $this->serializer->serialize($admin, 'json', ['groups' => 'admin:read']);
 
         return JsonResponse::fromJsonString($json, Response::HTTP_CREATED);
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
-    public function update(Request $request, int $id): JsonResponse
+    public function update(Request $request, int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse
     {
+        if (!$currentUser) {
+            return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if ($currentUser->getId() === $id) {
+            return $this->json(['message' => 'Impossible de modifier ses propres informations depuis cette interface. Consultez votre profil'], Response::HTTP_FORBIDDEN);
+        }
+
         $admin = $this->adminRepository->find($id);
 
         if (!$admin || $admin->isDeleted()) {
@@ -156,6 +170,7 @@ final class AdminController extends AbstractController
 
         return $this->json(['message' => 'Admin mis à jour avec succès'], Response::HTTP_OK);
     }
+
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse

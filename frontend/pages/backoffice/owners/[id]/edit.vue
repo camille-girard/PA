@@ -9,18 +9,12 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import { useToast } from '~/composables/useToast';
     import type { OwnerDto } from '~/types/dtos/owner.dto';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
         middleware: 'admin',
     });
-
-    interface ApiError {
-        data?: {
-            message?: string;
-        };
-        message?: string;
-    }
 
     function isApiError(error: unknown): error is ApiError {
         return typeof error === 'object' && error !== null && 'data' in error;

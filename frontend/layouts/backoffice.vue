@@ -17,7 +17,6 @@
 
     const formattedRole = computed(() => {
         if (!user.value?.roles?.length) return 'User';
-        // Show first role nicely
         return user.value.roles[0]
             .replace('ROLE_', '')
             .toLowerCase()
@@ -175,7 +174,7 @@
             </aside>
 
             <div class="flex-1 w-full">
-                <main class="py-12 ml-[23rem] mr-8 pr-6 flex flex-col gap-10 max-w-screen overflow-x-hidden">
+                <main class="py-12 ml-[23rem] mr-8 pr-6 pl-1 flex flex-col gap-10 max-w-screen overflow-x-hidden">
                     <BreadcrumbElement />
                     <slot />
                 </main>

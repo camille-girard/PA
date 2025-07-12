@@ -11,6 +11,7 @@
     import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
     import EditIcon from '~/components/atoms/icons/EditIcon.vue';
     import type { ThemeDto } from '~/types/dtos/theme.dto';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -34,10 +35,6 @@
         name: '',
         description: '',
     });
-
-    interface ApiError {
-        data?: { message?: string };
-    }
 
     async function loadThemes() {
         pending.value = true;
@@ -146,17 +143,22 @@
 
     async function deleteTheme(id: number) {
         try {
-            await useAuthFetch(`/api/themes/${id}`, {
+            const { error, status } = await useAuthFetch(`/api/themes/${id}`, {
                 method: 'DELETE',
                 baseURL: apiUrl,
             });
 
+            if (error.value || (status.value && status.value >= 400)) {
+                const message = error.value?.data?.message || 'Erreur lors de la suppression du thème.';
+                throw new Error(message);
+            }
+
             themes.value = themes.value.filter((theme) => theme.id !== id);
             toast.success('Succès', 'Thème supprimé avec succès.');
         } catch (err: unknown) {
-            const error = err as ApiError;
-            toast.error('Erreur', error?.data?.message || 'Erreur lors de la suppression du thème.');
             console.error(err);
+            const error = err as Error;
+            toast.error('Erreur', error?.message || 'Erreur lors de la suppression du thème.');
         }
     }
 

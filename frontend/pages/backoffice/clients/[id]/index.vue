@@ -8,6 +8,8 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import ULink from '~/components/atoms/ULink.vue';
     import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
+    import type { ApiError } from '~/types/apiError';
+    import type { Client } from '~/types/client';
 
     definePageMeta({
         layout: 'backoffice',
@@ -31,26 +33,6 @@
         totalPrice: number;
     }
 
-    interface Client {
-        id: number;
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        phone?: string;
-        address?: string;
-        avatar?: string;
-        roles?: string[];
-        createdAt: string;
-        isVerified: boolean;
-        preferences?: string[];
-        bookings?: Booking[];
-    }
-
-    interface ApiError {
-        data?: {
-            message?: string;
-        };
-    }
 
     const client = ref<Client | null>(null);
     const pending = ref(false);

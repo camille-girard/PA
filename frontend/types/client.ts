@@ -11,7 +11,6 @@ export interface Client {
     preferences?: string[];
     bookings?: BookingSummary[];
     createdAt?: string;
-    isVerified?: boolean;
     bookingCount?: number;
 }
 

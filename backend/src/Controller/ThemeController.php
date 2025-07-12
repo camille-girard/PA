@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/themes', name: 'api_themes_')]
 #[OA\Tag(name: 'Themes')]
@@ -27,17 +28,24 @@ final class ThemeController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
         $themes = $this->themeRepository->findAll();
 
-        return $this->json([
-            'themes' => $themes,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            ['themes' => $themes],
+            'json',
+            [
+                'groups' => ['theme:list'],
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
+
     #[Route('/accommodation', name: 'accommodation', methods: ['GET'])]
-    public function getThemesWithAccommodations(): JsonResponse
+    public function getThemesWithAccommodations(SerializerInterface $serializer): JsonResponse
     {
         $themes = $this->themeRepository->findAllWithAccommodations();
 
@@ -45,26 +53,40 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'No themes found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'themes' => $themes,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            ['themes' => $themes],
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
+                'enable_max_depth' => true
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/accommodation/{slug}', name: 'accommodations_by_slug', methods: ['GET'])]
-    public function getThemesWithAccommodationsBySlug(string $slug): JsonResponse
+    public function getThemesWithAccommodationsBySlug(string $slug, SerializerInterface $serializer): JsonResponse
     {
         $theme = $this->themeRepository->findOneBy(['slug' => $slug]);
         if (!$theme) {
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'themes' => $theme,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            $theme,
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
+                'enable_max_depth' => true
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer): JsonResponse
     {
         $theme = $this->themeRepository->find($id);
 
@@ -72,9 +94,16 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'theme' => $theme,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            $theme,
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:read', 'owner:summary'],
+                'enable_max_depth' => true
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -142,7 +171,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la sauvegarde',
-                'error' => $e->getMessage(),
+                'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -206,7 +235,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la mise à jour',
-                'error' => $e->getMessage(),
+                'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -223,6 +252,12 @@ final class ThemeController extends AbstractController
 
         if (!$theme) {
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (count($theme->getAccommodations()) > 0) {
+            return $this->json([
+                'message' => 'Impossible de supprimer ce thème car il possède encore des logements associés.'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         try {

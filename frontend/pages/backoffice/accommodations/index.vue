@@ -1,141 +1,120 @@
 <script setup lang="ts">
-    import { ref, computed, onMounted } from 'vue';
-    import { useRuntimeConfig } from '#app';
-    import { useAuthFetch } from '~/composables/useAuthFetch';
-    import UTable from '~/components/organisms/UTable.vue';
-    import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
-    import EditIcon from '~/components/atoms/icons/EditIcon.vue';
-    import EyeView from '~/components/atoms/icons/EyeView.vue';
-    import ConfirmPopover from '~/components/ConfirmPopover.vue';
-    import UBadge from '~/components/atoms/UBadge.vue';
-    import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
+import { ref, computed, onMounted } from 'vue';
+import { useRuntimeConfig } from '#app';
+import { useAuthFetch } from '~/composables/useAuthFetch';
+import UTable from '~/components/organisms/UTable.vue';
+import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
+import EditIcon from '~/components/atoms/icons/EditIcon.vue';
+import EyeView from '~/components/atoms/icons/EyeView.vue';
+import ConfirmPopover from '~/components/ConfirmPopover.vue';
+import UBadge from '~/components/atoms/UBadge.vue';
+import { useToast } from '~/composables/useToast';
+import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
+import type { ApiError } from '~/types/apiError';
 
-    definePageMeta({
-        layout: 'backoffice',
-        middleware: 'admin',
-    });
+definePageMeta({
+    layout: 'backoffice',
+    middleware: 'admin',
+});
 
-    const {
-        public: { apiUrl },
-    } = useRuntimeConfig();
+const {
+    public: { apiUrl },
+} = useRuntimeConfig();
 
-    const accommodationsData = ref<AccommodationDto[]>([]);
-    const pending = ref(false);
-    const successMsg = ref('');
-    const errorMsg = ref('');
+const accommodationsData = ref<AccommodationDto[]>([]);
+const pending = ref(false);
+const toast = useToast();
 
-    interface Booking {
-        startDate: string;
-        endDate: string;
+interface Booking {
+    startDate: string;
+    endDate: string;
+}
+
+interface AccommodationRow {
+    id: number;
+    name: string;
+    owner?: { firstName: string; lastName: string };
+    city?: string;
+    country?: string;
+    address?: string;
+    price: number;
+    capacity: number;
+    theme?: { name: string };
+    bookings?: Booking[];
+}
+
+const today = new Date().toISOString().slice(0, 10);
+
+function isAvailableNow(acc: AccommodationRow) {
+    return !acc.bookings?.some((b) => b.startDate <= today && b.endDate >= today);
+}
+
+const accommodations = computed(() => accommodationsData.value || []);
+
+const accommodationsTableData = computed(() =>
+    accommodations.value.map((acc) => ({
+        id: acc.id,
+        name: acc.name,
+        owner: acc.owner ? `${acc.owner.firstName} ${acc.owner.lastName}` : 'N/A',
+        address: [acc.city, acc.country].filter(Boolean).join(', '),
+        availability: isAvailableNow(acc) ? 'Disponible' : 'Indisponible',
+        price: acc.price.toFixed(2),
+        capacity: acc.capacity,
+        theme: acc.theme?.name || 'Aucun',
+        _original: acc,
+    }))
+);
+
+const columns = [
+    { key: 'name', label: 'Nom', sortable: true },
+    { key: 'owner', label: 'Hôte' },
+    { key: 'address', label: 'Adresse' },
+    { key: 'price', label: 'Prix (€) / nuit' },
+    { key: 'capacity', label: 'Capacité' },
+    { key: 'theme', label: 'Thème' },
+    { key: 'availability', label: 'Disponibilité' },
+    { key: 'actions', label: '' },
+];
+
+async function loadAccommodations() {
+    pending.value = true;
+    try {
+        const { data } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl });
+        accommodationsData.value = data.value || [];
+    } catch (error: unknown) {
+        const err = error as ApiError;
+        console.error(err);
+        toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement des hébergements.');
+    } finally {
+        pending.value = false;
     }
+}
 
-    interface AccommodationRow {
-        id: number;
-        name: string;
-        owner?: { firstName: string; lastName: string };
-        city?: string;
-        country?: string;
-        address?: string;
-        price: number;
-        capacity: number;
-        theme?: { name: string };
-        bookings?: Booking[];
+async function refreshAccommodations() {
+    await loadAccommodations();
+}
+
+async function deleteAccommodation(id: number) {
+    pending.value = true;
+    try {
+        await useAuthFetch(`/api/accommodations/${id}`, {
+            method: 'DELETE',
+            baseURL: apiUrl,
+        });
+        await refreshAccommodations();
+        toast.success('Succès', 'Hébergement supprimé avec succès.');
+    } catch (error: unknown) {
+        const err = error as ApiError;
+        console.error(err);
+        toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de la suppression.');
+    } finally {
+        pending.value = false;
     }
+}
 
-    const today = new Date().toISOString().slice(0, 10);
-
-    function isAvailableNow(acc: AccommodationRow) {
-        return !acc.bookings?.some((b) => b.startDate <= today && b.endDate >= today);
-    }
-
-    const accommodations = computed(() => accommodationsData.value || []);
-
-    const accommodationsTableData = computed(() =>
-        accommodations.value.map((acc) => ({
-            id: acc.id,
-            name: acc.name,
-            owner: acc.owner ? `${acc.owner.firstName} ${acc.owner.lastName}` : 'N/A',
-            address: [acc.city, acc.country].filter(Boolean).join(', '),
-            availability: isAvailableNow(acc) ? 'Disponible' : 'Indisponible',
-            price: acc.price.toFixed(2),
-            capacity: acc.capacity,
-            theme: acc.theme?.name || 'Aucun',
-            _original: acc,
-        }))
-    );
-
-    const columns = [
-        { key: 'name', label: 'Nom', sortable: true },
-        { key: 'owner', label: 'Hôte' },
-        { key: 'address', label: 'Adresse' },
-        { key: 'price', label: 'Prix (€) / nuit' },
-        { key: 'capacity', label: 'Capacité' },
-        { key: 'theme', label: 'Thème' },
-        { key: 'availability', label: 'Disponibilité' },
-        { key: 'actions', label: '' },
-    ];
-
-    async function loadAccommodations() {
-        pending.value = true;
-        errorMsg.value = '';
-        try {
-            const { data, error } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl });
-            if (error.value) {
-                throw error.value;
-            }
-            accommodationsData.value = data.value || [];
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors du chargement des hébergements.';
-            }
-            console.error(err);
-        } finally {
-            pending.value = false;
-        }
-    }
-
-    async function refreshAccommodations() {
-        await loadAccommodations();
-    }
-
-    async function deleteAccommodation(id: number) {
-        successMsg.value = '';
-        errorMsg.value = '';
-        pending.value = true;
-        try {
-            await useAuthFetch(`/api/accommodations/${id}`, {
-                method: 'DELETE',
-                baseURL: apiUrl,
-            });
-            await refreshAccommodations();
-            successMsg.value = 'Hébergement supprimé avec succès.';
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors de la suppression.';
-            }
-            console.error(err);
-        } finally {
-            pending.value = false;
-        }
-    }
-
-    onMounted(() => {
-        loadAccommodations();
-    });
+onMounted(() => {
+    loadAccommodations();
+});
 </script>
 
 <template>
@@ -145,9 +124,6 @@
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>
-            <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-            <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
-
             <UTable :columns="columns" :data="accommodationsTableData">
                 <template #cell-availability="{ row }">
                     <UBadge :color="row.availability === 'Disponible' ? 'success' : 'error'" variant="pill" size="sm">

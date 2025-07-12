@@ -6,6 +6,7 @@
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import type { AdminDto } from '~/types/dtos/admin.dto';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -21,12 +22,6 @@
     const admin = ref<AdminDto | null>(null);
     const pending = ref(false);
     const errorMsg = ref('');
-
-    interface ApiError {
-        data?: {
-            message?: string;
-        };
-    }
 
     async function loadAdmin(adminId: string) {
         pending.value = true;
