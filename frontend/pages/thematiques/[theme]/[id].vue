@@ -49,13 +49,15 @@
             }
 
             if (commentsResponse?.data?.value) {
+                console.log('Debug commentaires reçus:', commentsResponse.data.value);
                 comment.value = commentsResponse.data.value.map((c: CommentDto) => ({
                     id: c.id,
                     name: `${c.client.firstName || 'Client'} ${c.client.lastName || ''}`.trim(),
                     userDetail: 'PopnBeder depuis ' + (1 + Math.floor(Math.random() * 5)) + ' ans',
                     comment: c.content,
                     rating: c.rating,
-                    userImage: 'https://via.placeholder.com/150',
+                    avatar: c.client.avatar,
+                    userImage: c.client.avatar || '/avatar-test.png',
                 }));
             } else {
                 console.warn('Aucun commentaire trouvé pour ce logement.');

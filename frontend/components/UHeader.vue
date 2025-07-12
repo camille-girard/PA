@@ -90,15 +90,19 @@
                     action: async () => {
                         await navigateTo('/booking');
                     },
-                },
-                {
+                }
+            );
+
+            // Support uniquement pour les owners
+            if (authStore.user?.roles?.includes('ROLE_OWNER')) {
+                items.push({
                     label: 'Support',
                     icon: TicketIcon,
                     action: async () => {
                         await navigateTo('/my-tickets');
                     },
-                }
-            );
+                });
+            }
 
             if (canViewAccommodation.value) {
                 items.push({

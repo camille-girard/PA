@@ -17,7 +17,11 @@
             class="p-4 bg-white rounded-2xl shadow-md flex flex-col items-start space-y-2"
         >
             <div class="flex items-center space-x-2">
-                <img class="w-10 h-10 rounded-full object-cover" :src="item.userImage" alt="avatar" />
+                <img
+                    class="w-10 h-10 rounded-full object-cover" 
+                    :src="item.userImage || item.avatar || '/avatar-test.png'" 
+                    alt="avatar" 
+                />
                 <div>
                     <p class="text-body-md font-semibold text-gray-900">{{ item.name }}</p>
                     <p class="text-body-sm text-gray-500">{{ item.userDetail }}</p>
