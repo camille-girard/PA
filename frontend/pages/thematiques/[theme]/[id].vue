@@ -9,9 +9,14 @@
     const recentlyViewedStore = useRecentlyViewedStore();
     const { theme, id } = useRoute().params;
 
-    const currentId = typeof id === 'string' ? parseInt(id) : id;
+    const currentId = computed(() => {
+        if (!id) return null;
+        return typeof id === 'string' ? parseInt(id) : id;
+    });
+
     const recentlyViewed = computed(() => {
-        return recentlyViewedStore.getRecentlyViewedExcept(currentId);
+        if (currentId.value === null) return [];
+        return recentlyViewedStore.getRecentlyViewedExcept(currentId.value);
     });
 
     const Location = ref<Accommodation | null>(null);
@@ -49,7 +54,6 @@
             }
 
             if (commentsResponse?.data?.value) {
-                console.log('Debug commentaires reçus:', commentsResponse.data.value);
                 comment.value = commentsResponse.data.value.map((c: CommentDto) => ({
                     id: c.id,
                     name: `${c.client.firstName || 'Client'} ${c.client.lastName || ''}`.trim(),

@@ -31,17 +31,17 @@
 
     const userInitials = computed(() => {
         if (!authStore.user) return '';
-        
+
         const { firstName, lastName } = authStore.user;
-        
+
         if (firstName && lastName) {
             return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
         }
-        
+
         if (firstName) {
             return firstName.charAt(0).toUpperCase();
         }
-        
+
         return '';
     });
 
@@ -119,7 +119,12 @@
             </div>
 
             <div class="flex justify-center mb-6">
-                <UAvatar :image-src="previewUrl || currentAvatar || undefined" :text="userInitials" size="xl" class="ring-4 ring-white" />
+                <UAvatar
+                    :image-src="previewUrl || currentAvatar || undefined"
+                    :text="userInitials"
+                    size="xl"
+                    class="ring-4 ring-white"
+                />
             </div>
 
             <div class="mb-6">

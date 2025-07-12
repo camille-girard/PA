@@ -4,7 +4,7 @@
     const router = useRouter();
 
     const goToAccount = () => {
-        router.push('/profile/booking');
+        router.push('/booking');
     };
 </script>
 
