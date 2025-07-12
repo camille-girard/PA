@@ -1,7 +1,7 @@
 <script setup lang="ts">
     interface Props {
         to: string;
-        variant?: 'primary' | 'secondary';
+        variant?: 'primary' | 'secondary' | 'tertiary';
         size?: 'sm' | 'md';
         disabled?: boolean;
         showExternalIcon?: boolean;

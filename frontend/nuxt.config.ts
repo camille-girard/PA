@@ -9,7 +9,6 @@ export default defineNuxtConfig({
             titleTemplate: '%s',
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-                { rel: 'icon', type: 'image/png', href: '/icon.png' },
             ],
         },
     },
@@ -26,6 +25,10 @@ export default defineNuxtConfig({
         '@nuxtjs/sitemap',
         '@nuxtjs/seo',
     ],
+
+    site: {
+        url: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000',
+    },
 
     i18n: {
         locales: [
@@ -87,10 +90,7 @@ export default defineNuxtConfig({
 
     nitro: {
         compressPublicAssets: true,
-        prerender: {
-            crawlLinks: true,
-            routes: ['/'],
-        },
+        minify: true,
     },
 
     sitemap: {
