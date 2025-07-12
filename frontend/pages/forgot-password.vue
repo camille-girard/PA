@@ -5,12 +5,7 @@
 
     useSeoMeta({
         title: 'Mot de passe oublié - PopnBed',
-        meta: [
-            {
-                name: 'description',
-                content: 'Réinitialisez votre mot de passe PopnBed en recevant un lien par email.',
-            },
-        ],
+        description: 'Réinitialisez votre mot de passe PopnBed en recevant un lien par email.',
     });
 
     const toast = useToast();

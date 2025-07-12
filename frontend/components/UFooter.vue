@@ -28,8 +28,9 @@
             <div class="grid grid-cols-1 gap-2 text-sm text-gray-700">
                 <ULink to="/thematiques" variant="tertiary">Thématiques</ULink>
                 <ULink to="/explorer" variant="tertiary">Explorer</ULink>
-                <ULink to="#" variant="tertiary">Conditions Générales de vente</ULink>
-                <ULink to="#" variant="tertiary">Plan du site</ULink>
+                <ULink to="/cgv" variant="tertiary">Conditions Générales de vente</ULink>
+                <ULink to="/sitemap" variant="tertiary">Plan du site</ULink>
+                <ULink to="/mentions-legales" variant="tertiary">Mentions légales</ULink>
                 <p class="text-body-sm text-gray-500 mt-4">© {{ currentYear }} PopnBed, Inc</p>
             </div>
         </div>
