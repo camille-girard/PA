@@ -1,5 +1,4 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue';
     import { useRuntimeConfig } from '#app';
     import UHeader from '~/components/UHeader.vue';
     import UFooter from '~/components/UFooter.vue';

@@ -2,6 +2,11 @@
     import { ref } from 'vue';
     import { useAuthStore } from '@/stores/auth';
 
+    useSeoMeta({
+        title: 'Demande pour devenir propriétaire - PopnBed',
+        description: 'Envoyez une demande pour devenir propriétaire sur PopnBed.',
+    });
+
     const _auth = useAuthStore();
 
     const form = ref({

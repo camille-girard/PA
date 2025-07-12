@@ -88,6 +88,14 @@
             await fetchOwnerById(route.params.id);
         }
     });
+
+    useSeoMeta({
+        title: () => (owner.value ? `${getFullName.value} - PopnBed` : 'Propriétaire - PopnBed'),
+        description: () =>
+            owner.value
+                ? `Découvrez ${getFullName.value}, un propriétaire passionné par l'hospitalité et la nature. Contactez-le pour en savoir plus sur ses hébergements uniques.`
+                : "Découvrez nos propriétaires passionnés par l'hospitalité et la nature.",
+    });
 </script>
 
 <template>

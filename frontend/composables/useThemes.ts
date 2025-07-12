@@ -50,7 +50,7 @@ export const useThemes = () => {
             isLoading.value = false;
 
             if (response.data.value) {
-                return response.data.value as unknown as ThemeWithAccommodationsDto;
+                return response.data.value;
             }
             return null;
         } catch (err) {

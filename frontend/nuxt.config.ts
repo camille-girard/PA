@@ -2,6 +2,17 @@
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: { enabled: true },
+
+    app: {
+        head: {
+            title: 'PopnBed',
+            titleTemplate: '%s',
+            link: [
+                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            ],
+        },
+    },
+
     modules: [
         '@nuxt/eslint',
         '@nuxt/image',
@@ -12,7 +23,12 @@ export default defineNuxtConfig({
         '@nuxtjs/google-fonts',
         '@nuxtjs/i18n',
         '@nuxtjs/sitemap',
+        '@nuxtjs/seo',
     ],
+
+    site: {
+        url: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000',
+    },
 
     i18n: {
         locales: [
@@ -74,5 +90,22 @@ export default defineNuxtConfig({
 
     nitro: {
         compressPublicAssets: true,
+        minify: true,
+    },
+
+    sitemap: {
+        exclude: [
+            '/backoffice/**',
+            '/doc/**',
+            '/booking/**',
+            '/recherche/**',
+            'profile/**',
+            '/messages/**',
+            '/my-accommodation/**',
+            '/my-tickets/**',
+            '/forgot-password/**',
+            '/reset-password/**',
+            '/owner-request/**',
+        ],
     },
 });
