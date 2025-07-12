@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -12,31 +12,59 @@ class Comment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    /**
-     * @phpstan-ignore-next-line
-     */
+    #[Groups(['comment:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    // CHANGEMENT: client pointe maintenant vers User au lieu de Client
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comment:read'])]
+    private ?User $client = null;
+
+    #[ORM\ManyToOne(targetEntity: Accommodation::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['comment:read'])]
+    private ?Accommodation $accommodation = null;
+
+    #[ORM\Column(type: 'text')]
+    #[Groups(['comment:read'])]
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups(['comment:read'])]
     private ?int $rating = null;
 
     #[ORM\Column]
+    #[Groups(['comment:read'])]
     private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Client $client = null;
-
-    #[ORM\ManyToOne(inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Accommodation $accommodation = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getClient(): ?User
+    {
+        return $this->client;
+    }
+
+    public function setClient(?User $client): static
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getAccommodation(): ?Accommodation
+    {
+        return $this->accommodation;
+    }
+
+    public function setAccommodation(?Accommodation $accommodation): static
+    {
+        $this->accommodation = $accommodation;
+
+        return $this;
     }
 
     public function getContent(): ?string
@@ -71,30 +99,6 @@ class Comment
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getClient(): ?Client
-    {
-        return $this->client;
-    }
-
-    public function setClient(?Client $client): static
-    {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    public function getAccommodation(): ?Accommodation
-    {
-        return $this->accommodation;
-    }
-
-    public function setAccommodation(?Accommodation $accommodation): static
-    {
-        $this->accommodation = $accommodation;
 
         return $this;
     }

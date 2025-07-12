@@ -5,6 +5,8 @@
     import UButton from '~/components/atoms/UButton.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
+    import type { ApiError } from '~/types/apiError';
 
     interface Theme {
         id: number;
@@ -45,12 +47,10 @@
     const pending = ref(false);
     const saving = ref(false);
     const success = ref(false);
-    const errorMsg = ref('');
-
     const themes = ref<Theme[]>([]);
     const selectedThemeId = ref<number | null>(null);
-
     const accommodation = ref<Accommodation | null>(null);
+    const toast = useToast();
 
     const form = reactive({
         name: '',
@@ -72,15 +72,14 @@
 
     async function loadThemes() {
         try {
-            const { data, error } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', {
+            const { data } = await useAuthFetch<{ themes: Theme[] }>('/api/themes', {
                 baseURL: apiUrl,
             });
-            if (error.value) {
-                throw error.value;
-            }
             themes.value = data.value?.themes ?? [];
-        } catch (err: unknown) {
-            console.error('Erreur chargement des thèmes:', err);
+        } catch (error: unknown) {
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement des thèmes.');
         }
     }
 
@@ -88,16 +87,12 @@
 
     async function loadAccommodation() {
         pending.value = true;
-        errorMsg.value = '';
         try {
-            const { data, error } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
+            const { data } = await useAuthFetch<Accommodation>(`/api/accommodations/${id}`, {
                 baseURL: apiUrl,
             });
-            if (error.value) {
-                throw error.value;
-            }
-
             accommodation.value = data.value ?? null;
+
             if (accommodation.value) {
                 const acc = accommodation.value;
                 form.name = acc.name;
@@ -117,18 +112,10 @@
                 form.longitude = acc.longitude?.toString() ?? '';
                 selectedThemeId.value = acc.themeId ?? null;
             }
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors du chargement.';
-            }
+        } catch (error: unknown) {
+            const err = error as ApiError;
             console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement.');
         } finally {
             pending.value = false;
         }
@@ -141,7 +128,6 @@
     async function save() {
         saving.value = true;
         success.value = false;
-        errorMsg.value = '';
         try {
             await useAuthFetch(`/api/accommodations/${id}`, {
                 method: 'PUT',
@@ -170,9 +156,12 @@
             });
 
             success.value = true;
+            toast.success('Succès', 'Modifications enregistrées.');
             await refresh();
         } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.';
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de l’enregistrement.');
         } finally {
             saving.value = false;
         }
@@ -186,6 +175,9 @@
 
 <template>
     <div class="space-y-6">
+        <ULink to="/backoffice/accommodations" size="lg" class="flex flex-row gap-2">
+            <ArrowLeftIcon /> Retour à la liste
+        </ULink>
         <h1 class="text-2xl font-semibold">Modifier le logement</h1>
 
         <form :aria-busy="saving || pending" class="flex flex-col gap-6" @submit.prevent="save">
@@ -252,8 +244,6 @@
                 <UButton :disabled="saving" :is-loading="saving" size="lg" variant="primary" type="submit">
                     {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
                 </UButton>
-                <span v-if="success" class="text-green-600 text-sm">Modifications enregistrées</span>
-                <span v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</span>
             </div>
         </form>
     </div>

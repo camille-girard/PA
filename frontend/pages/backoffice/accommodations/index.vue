@@ -8,7 +8,9 @@
     import EyeView from '~/components/atoms/icons/EyeView.vue';
     import ConfirmPopover from '~/components/ConfirmPopover.vue';
     import UBadge from '~/components/atoms/UBadge.vue';
+    import { useToast } from '~/composables/useToast';
     import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -21,8 +23,7 @@
 
     const accommodationsData = ref<AccommodationDto[]>([]);
     const pending = ref(false);
-    const successMsg = ref('');
-    const errorMsg = ref('');
+    const toast = useToast();
 
     interface Booking {
         startDate: string;
@@ -77,25 +78,13 @@
 
     async function loadAccommodations() {
         pending.value = true;
-        errorMsg.value = '';
         try {
-            const { data, error } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl });
-            if (error.value) {
-                throw error.value;
-            }
+            const { data } = await useAuthFetch('/api/accommodations', { baseURL: apiUrl });
             accommodationsData.value = data.value || [];
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors du chargement des hébergements.';
-            }
+        } catch (error: unknown) {
+            const err = error as ApiError;
             console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement des hébergements.');
         } finally {
             pending.value = false;
         }
@@ -106,8 +95,6 @@
     }
 
     async function deleteAccommodation(id: number) {
-        successMsg.value = '';
-        errorMsg.value = '';
         pending.value = true;
         try {
             await useAuthFetch(`/api/accommodations/${id}`, {
@@ -115,19 +102,11 @@
                 baseURL: apiUrl,
             });
             await refreshAccommodations();
-            successMsg.value = 'Hébergement supprimé avec succès.';
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors de la suppression.';
-            }
+            toast.success('Succès', 'Hébergement supprimé avec succès.');
+        } catch (error: unknown) {
+            const err = error as ApiError;
             console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de la suppression.');
         } finally {
             pending.value = false;
         }
@@ -145,9 +124,6 @@
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>
-            <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-            <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
-
             <UTable :columns="columns" :data="accommodationsTableData">
                 <template #cell-availability="{ row }">
                     <UBadge :color="row.availability === 'Disponible' ? 'success' : 'error'" variant="pill" size="sm">

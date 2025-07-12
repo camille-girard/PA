@@ -49,6 +49,7 @@
                 :class="[baseClasses]"
                 :required="required"
                 :placeholder="placeholder"
+                :value="modelValue"
                 @change="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
             />
         </div>

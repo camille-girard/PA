@@ -1,0 +1,12 @@
+App\Entity\OwnerRequest:
+  owner_request_1:
+    user: '@client_1'
+    message: 'Bonjour, je souhaiterais devenir propriétaire pour proposer mes hébergements sur votre plateforme. J''ai plusieurs propriétés bien situées et je pense que cela pourrait intéresser vos clients.'
+    created_at: '<(new DateTimeImmutable("2024-01-15"))>'
+    reviewed: false
+
+  owner_request_2:
+    user: '@client_2'
+    message: 'Salut ! Je suis intéressé par devenir propriétaire. J''ai un appartement magnifique avec vue sur mer que j''aimerais louer. J''ai déjà de l''expérience dans la location courte durée.'
+    created_at: '<(new DateTimeImmutable("2024-01-20"))>'
+    reviewed: false

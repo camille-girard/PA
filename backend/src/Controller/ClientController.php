@@ -38,7 +38,7 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer): JsonResponse
     {
         $client = $this->clientRepository->find($id);
 
@@ -46,9 +46,11 @@ final class ClientController extends AbstractController
             return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'client' => $client,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize($client, 'json', [
+            'groups' => ['client:read', 'booking:read'],
+        ]);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -126,41 +128,119 @@ final class ClientController extends AbstractController
             return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
         }
 
+        $newRole = $data['role'] ?? $client->getRoles()[0];
+
+        if ($newRole !== $client->getRoles()[0]) {
+            $discrMap = [
+                'ROLE_CLIENT' => 'client',
+                'ROLE_OWNER' => 'owner',
+                'ROLE_ADMIN' => 'admin',
+            ];
+
+            $newDiscr = $discrMap[$newRole] ?? null;
+
+            if (!$newDiscr) {
+                return $this->json(['message' => 'Rôle invalide'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if ('ROLE_CLIENT' !== $newRole && count($client->getBookings()) > 0) {
+                return $this->json([
+                    'message' => 'Impossible de changer le rôle vers '.$newRole.' car ce client possède des réservations.',
+                ], Response::HTTP_CONFLICT);
+            }
+
+            $conn = $this->entityManager->getConnection();
+
+            $conn->executeStatement('DELETE FROM client WHERE id = :id', ['id' => $client->getId()]);
+
+            $conn->executeStatement(
+                'UPDATE user SET discr = :discr WHERE id = :id',
+                ['discr' => $newDiscr, 'id' => $client->getId()]
+            );
+
+            if ('client' === $newDiscr) {
+                $prefs = isset($data['preferences']) ? serialize($data['preferences']) : serialize([]);
+                $conn->executeStatement(
+                    'INSERT INTO client (id, preferences) VALUES (:id, :prefs)',
+                    ['id' => $client->getId(), 'prefs' => $prefs]
+                );
+            } elseif ('owner' === $newDiscr) {
+                $conn->executeStatement(
+                    'INSERT INTO owner (id) VALUES (:id)',
+                    ['id' => $client->getId()]
+                );
+            } elseif ('admin' === $newDiscr) {
+                $conn->executeStatement(
+                    'INSERT INTO admin (id) VALUES (:id)',
+                    ['id' => $client->getId()]
+                );
+            }
+
+            $client->setRoles([$newRole]);
+
+            if (isset($data['email'])) {
+                $client->setEmail($data['email']);
+            }
+            if (isset($data['password'])) {
+                $client->setPassword($data['password']);
+            }
+            if (isset($data['firstName'])) {
+                $client->setFirstName($data['firstName']);
+            }
+            if (isset($data['lastName'])) {
+                $client->setLastName($data['lastName']);
+            }
+            if (isset($data['phone'])) {
+                $client->setPhone($data['phone']);
+            }
+            if (isset($data['avatar'])) {
+                $client->setAvatar($data['avatar']);
+            }
+            if (isset($data['address'])) {
+                $client->setAddress($data['address']);
+            }
+            if (isset($data['isVerified'])) {
+                $client->setIsVerified($data['isVerified']);
+            }
+
+            $this->entityManager->flush();
+
+            return $this->json([
+                'message' => 'Utilisateur transformé en '.$newRole,
+                'user' => $client,
+            ], Response::HTTP_OK);
+        }
+
         if (isset($data['email'])) {
             $client->setEmail($data['email']);
         }
-
         if (isset($data['password'])) {
             $client->setPassword($data['password']);
         }
-
         if (isset($data['firstName'])) {
             $client->setFirstName($data['firstName']);
         }
-
         if (isset($data['lastName'])) {
             $client->setLastName($data['lastName']);
         }
-
         if (isset($data['phone'])) {
             $client->setPhone($data['phone']);
         }
-
         if (isset($data['avatar'])) {
             $client->setAvatar($data['avatar']);
         }
-
+        if (isset($data['address'])) {
+            $client->setAddress($data['address']);
+        }
+        if (isset($data['isVerified'])) {
+            $client->setIsVerified($data['isVerified']);
+        }
         if (isset($data['preferences'])) {
             $client->setPreferences($data['preferences']);
         }
 
-        if (isset($data['isVerified'])) {
-            $client->setIsVerified($data['isVerified']);
-        }
-
-        $errors = $this->validator->validate($client);
-        if (count($errors) > 0) {
-            return $this->errorFormatter->createValidationErrorResponse($errors);
+        if (isset($data['role'])) {
+            $client->setRoles([$data['role']]);
         }
 
         $this->entityManager->flush();

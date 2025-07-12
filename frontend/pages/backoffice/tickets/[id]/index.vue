@@ -111,6 +111,9 @@
 
 <template>
     <div class="space-y-8">
+        <ULink to="/backoffice/tickets" size="lg" class="flex flex-row gap-2">
+            <ArrowLeftIcon /> Retour à la liste
+        </ULink>
         <h1 class="text-2xl font-semibold">Détails du ticket</h1>
 
         <div v-if="loading" class="text-gray-500">Chargement...</div>

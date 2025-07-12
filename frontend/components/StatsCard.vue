@@ -1,8 +1,19 @@
+<script setup lang="ts">
+    import type { Component } from 'vue';
+    defineProps<{
+        stats: {
+            label: string;
+            value: string | number;
+            icon: Component;
+        }[];
+    }>();
+</script>
+
 <template>
     <div class="bg-white rounded-[20px] shadow-custom p-6 flex items-center justify-center overflow-hidden w-fit">
         <template v-for="(stat, index) in stats" :key="index">
             <!-- Stat -->
-            <div class="flex items-center gap-6 w-60">
+            <div class="flex items-center gap-4 w-56">
                 <!-- Icon with gradient background -->
                 <div class="icon-circle w-20 h-20 flex items-center justify-center rounded-full">
                     <component :is="stat.icon" class="w-9 h-9 text-brand-600" />
@@ -16,21 +27,10 @@
             </div>
 
             <!-- Divider -->
-            <div v-if="index !== stats.length - 1" class="h-20 w-px bg-gray-200 mr-10"></div>
+            <div v-if="index !== stats.length - 1" class="h-20 w-px bg-gray-200 mr-8"></div>
         </template>
     </div>
 </template>
-
-<script setup lang="ts">
-    import type { Component } from 'vue';
-    defineProps<{
-        stats: {
-            label: string;
-            value: string | number;
-            icon: Component;
-        }[];
-    }>();
-</script>
 
 <style scoped>
     .shadow-custom {

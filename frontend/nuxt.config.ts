@@ -7,9 +7,7 @@ export default defineNuxtConfig({
         head: {
             title: 'PopnBed',
             titleTemplate: '%s',
-            link: [
-                { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            ],
+            link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
         },
     },
 
@@ -64,7 +62,7 @@ export default defineNuxtConfig({
             allowedHosts: ['popnbed.com'],
         },
         optimizeDeps: {
-            include: ['swagger-ui-dist/swagger-ui-bundle.js'],
+            include: ['swagger-ui-dist/swagger-ui-bundle.js', 'vue-chartjs', 'chart.js'],
         },
     },
 

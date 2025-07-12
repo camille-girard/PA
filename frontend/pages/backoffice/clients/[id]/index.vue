@@ -6,6 +6,10 @@
     import UTable from '~/components/organisms/UTable.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import ULink from '~/components/atoms/ULink.vue';
+    import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
+    import type { ApiError } from '~/types/apiError';
+    import type { Client } from '~/types/client';
 
     definePageMeta({
         layout: 'backoffice',
@@ -29,21 +33,13 @@
         totalPrice: number;
     }
 
-    interface Client {
-        id: number;
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        phone?: string;
-        createdAt: string;
-        verified: boolean;
-        preferences?: string[];
-        bookings?: Booking[];
-    }
-
     const client = ref<Client | null>(null);
     const pending = ref(false);
     const errorMsg = ref('');
+
+    function isApiError(error: unknown): error is ApiError {
+        return typeof error === 'object' && error !== null && 'data' in error;
+    }
 
     async function loadClient(clientId: string) {
         pending.value = true;
@@ -52,9 +48,13 @@
             const { data } = await useAuthFetch<{ client: Client }>(`/api/clients/${clientId}`, {
                 baseURL: apiUrl,
             });
-            client.value = data.value?.client ?? null;
-        } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors du chargement du client.';
+            client.value = data.value ?? null;
+        } catch (error) {
+            if (isApiError(error)) {
+                errorMsg.value = error.data?.message || 'Erreur lors du chargement du client.';
+            } else {
+                errorMsg.value = 'Erreur lors du chargement du client.';
+            }
             console.error(error);
         } finally {
             pending.value = false;
@@ -90,6 +90,10 @@
 
 <template>
     <div class="space-y-6">
+        <ULink to="/backoffice/clients" size="lg" class="flex flex-row gap-2">
+            <ArrowLeftIcon /> Retour à la liste
+        </ULink>
+
         <h1 class="text-2xl font-semibold">Fiche client</h1>
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
@@ -98,19 +102,34 @@
         <div v-else class="space-y-6">
             <UCard>
                 <template #header>
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-                        <div class="text-lg font-medium">{{ client.firstName }} {{ client.lastName }}</div>
-                        <UBadge :color="getStatusProps(client.verified).color" variant="pill">
-                            {{ getStatusProps(client.verified).label }}
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
+                        <div class="flex items-center gap-6">
+                            <img
+                                v-if="client.avatar"
+                                :src="client.avatar"
+                                alt="Avatar du client"
+                                class="w-24 h-24 rounded-full object-cover border shadow"
+                            />
+                            <div>
+                                <div class="text-xl font-semibold">{{ client.firstName }} {{ client.lastName }}</div>
+                                <div class="text-gray-500">{{ client.email }}</div>
+                            </div>
+                        </div>
+                        <UBadge :color="getStatusProps(client.isVerified).color" variant="pill">
+                            {{ getStatusProps(client.isVerified).label }}
                         </UBadge>
                     </div>
                 </template>
 
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-6 mt-4">
                     <div><strong>Email :</strong> {{ client.email }}</div>
                     <div><strong>Téléphone :</strong> {{ client.phone || 'Non renseigné' }}</div>
-                    <div><strong>Date de création :</strong> {{ new Date(client.createdAt).toLocaleDateString() }}</div>
+                    <div><strong>Adresse :</strong> {{ client.address || 'Non renseignée' }}</div>
                     <div><strong>Préférences :</strong> {{ client.preferences?.join(', ') || '—' }}</div>
+                    <div>
+                        <strong>Date de création :</strong>
+                        {{ new Date(client.createdAt).toLocaleDateString() }}
+                    </div>
                 </div>
             </UCard>
 
