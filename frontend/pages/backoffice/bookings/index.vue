@@ -6,6 +6,7 @@
     import ConfirmPopover from '~/components/ConfirmPopover.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
     import type { Booking } from '~/types/booking';
 
     definePageMeta({
@@ -17,10 +18,10 @@
         public: { apiUrl },
     } = useRuntimeConfig();
 
+    const toast = useToast();
+
     const bookingData = ref<Booking[]>([]);
     const pending = ref(false);
-    const successMsg = ref('');
-    const errorMsg = ref('');
 
     const columns = [
         { key: 'client', label: 'Client', sortable: true },
@@ -65,12 +66,11 @@
 
     async function loadBookings() {
         pending.value = true;
-        errorMsg.value = '';
         try {
             const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl });
             bookingData.value = data.value || [];
         } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors du chargement des réservations.';
+            toast.error('Erreur', error?.data?.message || 'Erreur lors du chargement des réservations.');
             console.error(error);
         } finally {
             pending.value = false;
@@ -82,8 +82,6 @@
     }
 
     async function deleteBooking(id: number) {
-        successMsg.value = '';
-        errorMsg.value = '';
         pending.value = true;
         try {
             await $fetch(`/api/bookings/${id}`, {
@@ -91,9 +89,9 @@
                 baseURL: apiUrl,
             });
             await refreshBookings();
-            successMsg.value = 'Réservation supprimée avec succès.';
+            toast.success('Succès', 'Réservation supprimée avec succès.');
         } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.';
+            toast.error('Erreur', error?.data?.message || 'Erreur lors de la suppression.');
             console.error(error);
         } finally {
             pending.value = false;
@@ -112,9 +110,6 @@
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>
-            <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-            <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
-
             <div class="w-full overflow-x-auto">
                 <div class="min-w-[800px]">
                     <UTable :columns="columns" :data="bookingsData">

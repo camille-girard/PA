@@ -4,10 +4,13 @@ export interface Client {
     lastName: string;
     email: string;
     phone?: string;
+    address?: string;
+    avatar?: string;
+    isVerified?: boolean;
     roles?: string[];
+    preferences?: string[];
     bookings?: BookingSummary[];
     createdAt?: string;
-    isVerified?: boolean;
     bookingCount?: number;
 }
 

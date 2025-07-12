@@ -43,4 +43,4 @@ App\Entity\Theme:
   theme_9:
     name: 'Comédie'
     description: 'Rien de mieux qu’un bon film pour rire et se détendre. Préparez-vous à des moments hilarants !'
-    slug: 'comédie'
+    slug: 'comedie'

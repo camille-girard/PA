@@ -13,7 +13,6 @@
     onMounted(async () => {
         if (typeof route.params.slug === 'string') {
             const themeData = await getThemeBySlug(route.params.slug);
-            console.log(themeData);
             if (themeData && themeData.theme) {
                 theme.value = themeData.theme;
 

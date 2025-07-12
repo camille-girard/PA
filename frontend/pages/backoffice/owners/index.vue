@@ -11,6 +11,8 @@
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import type { OwnerDto } from '~/types/dtos/owner.dto';
+    import { useToast } from '~/composables/useToast';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -30,8 +32,7 @@
 
     const owners = computed(() => ownerData.value || []);
 
-    const successMsg = ref('');
-    const errorMsg = ref('');
+    const toast = useToast();
 
     async function refreshOwners() {
         const { data } = await useAuthFetch('/api/owners', { baseURL: apiUrl });
@@ -39,18 +40,17 @@
     }
 
     async function deleteOwner(id: string) {
-        successMsg.value = '';
-        errorMsg.value = '';
         try {
             await $fetch(`/api/owners/${id}`, {
                 method: 'DELETE',
                 baseURL: apiUrl,
             });
             await refreshOwners();
-            successMsg.value = 'Hôte supprimé avec succès.';
+            toast.success('Succès', 'Hôte supprimé avec succès.');
         } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors de la suppression.';
-            console.error(error);
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de la suppression.');
         }
     }
 
@@ -95,9 +95,6 @@
 <template>
     <div class="space-y-6">
         <p class="text-2xl font-semibold">Hôtes</p>
-
-        <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-        <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
 
         <UTable :columns="columns" :data="ownersData">
             <template #cell-status="{ value }">

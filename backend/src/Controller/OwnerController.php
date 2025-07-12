@@ -129,6 +129,18 @@ final class OwnerController extends AbstractController
             $owner->setPhone($data['phone']);
         }
 
+        if (isset($data['address'])) {
+            $owner->setAddress($data['address']);
+        }
+
+        if (isset($data['bio'])) {
+            $owner->setBio($data['bio']);
+        }
+
+        if (isset($data['isVerified'])) {
+            $owner->setIsVerified($data['isVerified']);
+        }
+
         $errors = $this->validator->validate($owner);
         if (count($errors) > 0) {
             return $this->errorFormatter->createValidationErrorResponse($errors);

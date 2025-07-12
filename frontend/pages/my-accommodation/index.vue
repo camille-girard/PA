@@ -9,6 +9,10 @@
 
     const config = useRuntimeConfig();
 
+    definePageMeta({
+        middleware: 'owner',
+    });
+
     onMounted(async () => {
         try {
             const res = await fetch(`${config.public.apiUrl}/api/accommodations/me`, {

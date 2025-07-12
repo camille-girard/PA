@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/themes', name: 'api_themes_')]
@@ -27,17 +28,23 @@ final class ThemeController extends AbstractController
     }
 
     #[Route('', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(SerializerInterface $serializer): JsonResponse
     {
         $themes = $this->themeRepository->findAll();
 
-        return $this->json([
-            'themes' => $themes,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            ['themes' => $themes],
+            'json',
+            [
+                'groups' => ['theme:list'],
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/accommodation', name: 'accommodation', methods: ['GET'])]
-    public function getThemesWithAccommodations(): JsonResponse
+    public function getThemesWithAccommodations(SerializerInterface $serializer): JsonResponse
     {
         $themes = $this->themeRepository->findAllWithAccommodations();
 
@@ -45,26 +52,40 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'No themes found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'themes' => $themes,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            ['themes' => $themes],
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
+                'enable_max_depth' => true,
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/accommodation/{slug}', name: 'accommodations_by_slug', methods: ['GET'])]
-    public function getThemesWithAccommodationsBySlug(string $slug): JsonResponse
+    public function getThemesWithAccommodationsBySlug(string $slug, SerializerInterface $serializer): JsonResponse
     {
         $theme = $this->themeRepository->findOneBy(['slug' => $slug]);
         if (!$theme) {
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'themes' => $theme,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            $theme,
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
+                'enable_max_depth' => true,
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id): JsonResponse
+    public function show(int $id, SerializerInterface $serializer): JsonResponse
     {
         $theme = $this->themeRepository->find($id);
 
@@ -72,9 +93,16 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json([
-            'theme' => $theme,
-        ], Response::HTTP_OK);
+        $json = $serializer->serialize(
+            $theme,
+            'json',
+            [
+                'groups' => ['theme:read', 'accommodation:read', 'owner:summary'],
+                'enable_max_depth' => true,
+            ]
+        );
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{slug}', name: 'show', methods: ['GET'])]
@@ -104,7 +132,7 @@ final class ThemeController extends AbstractController
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
-            if (!isset($data[$field])) {
+            if (!isset($data[$field]) || empty(trim($data[$field]))) {
                 $missingFields[] = $field;
             }
         }
@@ -116,14 +144,31 @@ final class ThemeController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $theme = new Theme();
-        $theme->setName($data['name']);
-        $theme->setDescription($data['description']);
+        $name = trim($data['name']);
+        $description = trim($data['description']);
 
-        if (isset($data['slug'])) {
-            $theme->setSlug($data['slug']);
+        if (strlen($name) < 2) {
+            return $this->json([
+                'message' => 'Le nom doit contenir au moins 2 caractères',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (strlen($description) < 10) {
+            return $this->json([
+                'message' => 'La description doit contenir au moins 10 caractères',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $theme = new Theme();
+        $theme->setName($name);
+        $theme->setDescription($description);
+
+        if (isset($data['slug']) && !empty(trim($data['slug']))) {
+            $theme->setSlug(trim($data['slug']));
         } else {
-            $theme->setSlug(strtolower(str_replace(' ', '-', $data['name'])));
+            $slug = strtolower(str_replace(' ', '-', $name));
+            $slug = preg_replace('/[^a-z0-9\-]/', '', $slug); // Nettoyer le slug
+            $theme->setSlug($slug);
         }
 
         $errors = $this->validator->validate($theme);
@@ -131,8 +176,17 @@ final class ThemeController extends AbstractController
             return $this->errorFormatter->createValidationErrorResponse($errors);
         }
 
-        $this->entityManager->persist($theme);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($theme);
+            $this->entityManager->flush();
+
+            $this->entityManager->refresh($theme);
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la sauvegarde',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully created',
@@ -156,11 +210,32 @@ final class ThemeController extends AbstractController
         }
 
         if (isset($data['name'])) {
-            $theme->setName($data['name']);
+            $name = trim($data['name']);
+            if (strlen($name) < 2) {
+                return $this->json([
+                    'message' => 'Le nom doit contenir au moins 2 caractères',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            $theme->setName($name);
         }
 
         if (isset($data['description'])) {
-            $theme->setDescription($data['description']);
+            $description = trim($data['description']);
+            if (strlen($description) < 10) {
+                return $this->json([
+                    'message' => 'La description doit contenir au moins 10 caractères',
+                ], Response::HTTP_BAD_REQUEST);
+            }
+            $theme->setDescription($description);
+        }
+
+        if (isset($data['slug'])) {
+            $slug = trim($data['slug']);
+            if (!empty($slug)) {
+                $slug = strtolower(str_replace(' ', '-', $slug));
+                $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+                $theme->setSlug($slug);
+            }
         }
 
         $errors = $this->validator->validate($theme);
@@ -168,7 +243,14 @@ final class ThemeController extends AbstractController
             return $this->errorFormatter->createValidationErrorResponse($errors);
         }
 
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la mise à jour',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully updated',
@@ -185,8 +267,21 @@ final class ThemeController extends AbstractController
             return $this->json(['message' => 'Theme not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $this->entityManager->remove($theme);
-        $this->entityManager->flush();
+        if (count($theme->getAccommodations()) > 0) {
+            return $this->json([
+                'message' => 'Impossible de supprimer ce thème car il possède encore des logements associés.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $this->entityManager->remove($theme);
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            return $this->json([
+                'message' => 'Erreur lors de la suppression',
+                'error' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json([
             'message' => 'Theme successfully deleted',

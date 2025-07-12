@@ -8,7 +8,9 @@
     import EyeView from '~/components/atoms/icons/EyeView.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
     import type { Client } from '~/types/client';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -21,8 +23,7 @@
 
     const clientData = ref<Client[]>([]);
     const pending = ref(false);
-    const errorMsg = ref('');
-    const successMsg = ref('');
+    const toast = useToast();
 
     const columns = [
         { key: 'client', label: 'Client', sortable: true },
@@ -60,12 +61,13 @@
 
     async function loadClients() {
         pending.value = true;
-        errorMsg.value = '';
         try {
             const { data } = await useAuthFetch('/api/clients', { baseURL: apiUrl });
             clientData.value = data.value || [];
         } catch (error: unknown) {
-            errorMsg.value = error?.data?.message || 'Erreur lors du chargement des clients.';
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement des clients.');
         } finally {
             pending.value = false;
         }
@@ -76,8 +78,6 @@
     }
 
     async function deleteClient(id: string) {
-        successMsg.value = '';
-        errorMsg.value = '';
         pending.value = true;
         try {
             await $fetch(`/api/clients/${id}`, {
@@ -85,14 +85,11 @@
                 baseURL: apiUrl,
             });
             await refreshClients();
-            successMsg.value = 'Client supprimé avec succès.';
+            toast.success('Succès', 'Client supprimé avec succès.');
         } catch (error: unknown) {
-            if (error?.data?.message) {
-                errorMsg.value = error.data.message;
-            } else {
-                errorMsg.value = 'Erreur lors de la suppression.';
-            }
-            console.error(error);
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de la suppression.');
         } finally {
             pending.value = false;
         }
@@ -109,9 +106,6 @@
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else>
-            <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-            <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
-
             <UTable :columns="columns" :data="clientsData">
                 <template #cell-status="{ value }">
                     <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-fit">

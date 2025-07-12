@@ -6,7 +6,10 @@
     import UTable from '~/components/organisms/UTable.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
     import type { Accommodation } from '~/types/accommodation';
+    import type { Booking } from '~/types/booking';
+    import type { ApiError } from '~/types/apiError';
 
     definePageMeta({
         layout: 'backoffice',
@@ -20,53 +23,28 @@
     const id = route.params.id as string;
 
     const pending = ref(false);
-    const errorMsg = ref('');
     const accommodation = ref<Accommodation | null>(null);
 
     const showImageModal = ref(false);
     const selectedImageUrl = ref('');
-
-    interface Client {
-        firstName?: string;
-        lastName?: string;
-    }
-
-    interface Booking {
-        id: number;
-        client: Client;
-        startDate: string;
-        endDate: string;
-        status: string;
-    }
+    const toast = useToast();
 
     async function loadAccommodation() {
         if (!id) {
-            errorMsg.value = "ID manquant dans l'URL.";
+            toast.error('Erreur', "ID manquant dans l'URL.");
             return;
         }
 
         pending.value = true;
-        errorMsg.value = '';
         try {
-            const { data, error } = await useAuthFetch(`/api/accommodations/${id}`, {
+            const { data } = await useAuthFetch(`/api/accommodations/${id}`, {
                 baseURL: apiUrl,
             });
-            if (error.value) {
-                throw error.value;
-            }
             accommodation.value = data.value ?? null;
-        } catch (err: unknown) {
-            if (
-                typeof err === 'object' &&
-                err &&
-                'data' in err &&
-                (err as { data?: { message?: string } }).data?.message
-            ) {
-                errorMsg.value = (err as { data?: { message?: string } }).data!.message!;
-            } else {
-                errorMsg.value = 'Erreur lors du chargement du logement.';
-            }
+        } catch (error: unknown) {
+            const err = error as ApiError;
             console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement du logement.');
         } finally {
             pending.value = false;
         }
