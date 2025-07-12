@@ -2,33 +2,35 @@
 
 namespace App\Controller;
 
+use App\Repository\AccommodationRepository;
+use App\Repository\BookingRepository;
 use App\Repository\ClientRepository;
 use App\Repository\OwnerRepository;
-use App\Repository\BookingRepository;
-use App\Repository\AccommodationRepository;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use OpenApi\Attributes as OA;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[OA\Tag(name: 'Dashboard')]
-#[OA\Security(name: 'bearer')]
 #[IsGranted('ROLE_ADMIN')]
 #[Route('/api/dashboard', name: 'api_dashboard_')]
 final class DashboardController extends AbstractController
 {
     public function __construct(
+        private EntityManagerInterface $em,
         private ClientRepository $clientRepository,
         private OwnerRepository $ownerRepository,
         private BookingRepository $bookingRepository,
-        private AccommodationRepository $accommodationRepository
+        private AccommodationRepository $accommodationRepository,
     ) {
     }
 
     #[Route('/stats', name: 'stats', methods: ['GET'])]
     public function stats(): JsonResponse
     {
+        $conn = $this->em->getConnection();
         // Count entities
         $clients = $this->clientRepository->count(['isDeleted' => false]);
         $owners = $this->ownerRepository->count(['isDeleted' => false]);
@@ -43,7 +45,7 @@ final class DashboardController extends AbstractController
         }
 
         // Bookings per month for the last 12 months
-        $conn = $this->bookingRepository->getEntityManager()->getConnection();
+        $conn = $this->em->getConnection();
         $sql = "
             SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(*) AS count
             FROM booking

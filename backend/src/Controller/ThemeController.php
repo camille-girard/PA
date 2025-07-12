@@ -142,7 +142,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la sauvegarde',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -206,7 +206,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la mise à jour',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -231,7 +231,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la suppression',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

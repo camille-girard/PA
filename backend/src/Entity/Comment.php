@@ -51,6 +51,7 @@ class Comment
     public function setClient(?User $client): static
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -62,6 +63,7 @@ class Comment
     public function setAccommodation(?Accommodation $accommodation): static
     {
         $this->accommodation = $accommodation;
+
         return $this;
     }
 
@@ -73,6 +75,7 @@ class Comment
     public function setContent(string $content): static
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class Comment
     public function setRating(int $rating): static
     {
         $this->rating = $rating;
+
         return $this;
     }
 
@@ -95,6 +99,7 @@ class Comment
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 }

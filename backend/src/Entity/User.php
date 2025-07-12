@@ -40,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(['me:read', 'admin:read', 'message:read', 'conversation:read', 'client:read' ])]
+    #[Groups(['me:read', 'admin:read', 'message:read', 'conversation:read', 'client:read'])]
     private array $roles = [];
 
     /**
@@ -71,11 +71,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $avatar = null;
 
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read',])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read'])]
     private ?bool $isVerified = null;
 
     #[ORM\Column]
-    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read',])]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Ticket::class)]

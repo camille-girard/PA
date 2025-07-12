@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\OwnerRequest;
-use App\Entity\Owner;
 use App\Entity\Client;
+use App\Entity\OwnerRequest;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,7 +49,7 @@ class OwnerRequestController extends AbstractController
 
             if ($existing) {
                 return $this->json([
-                    'error' => 'Vous avez déjà une demande en attente. Merci d\'attendre qu\'elle soit traitée.'
+                    'error' => 'Vous avez déjà une demande en attente. Merci d\'attendre qu\'elle soit traitée.',
                 ], 409);
             }
 
@@ -92,14 +91,15 @@ class OwnerRequestController extends AbstractController
                         'id' => $request->getUser()->getId(),
                         'firstName' => $request->getUser()->getFirstName(),
                         'lastName' => $request->getUser()->getLastName(),
-                        'email' => $request->getUser()->getEmail()
-                    ]
+                        'email' => $request->getUser()->getEmail(),
+                    ],
                 ];
             }
 
             return $this->json($data);
         } catch (\Exception $e) {
-            error_log('Erreur owner requests index: ' . $e->getMessage());
+            error_log('Erreur owner requests index: '.$e->getMessage());
+
             return $this->json(['error' => 'Erreur lors du chargement des demandes.'], 500);
         }
     }
@@ -126,9 +126,9 @@ class OwnerRequestController extends AbstractController
                 return $this->json(['error' => 'L\'utilisateur doit être un client pour devenir propriétaire.'], 400);
             }
 
-            if (method_exists($client, 'getBookings') && count($client->getBookings()) > 0) {
+            if (count($client->getBookings()) > 0) {
                 return $this->json([
-                    'error' => 'Impossible de promouvoir en propriétaire : le client possède des réservations en cours.'
+                    'error' => 'Impossible de promouvoir en propriétaire : le client possède des réservations en cours.',
                 ], 409);
             }
 
@@ -148,7 +148,7 @@ class OwnerRequestController extends AbstractController
                     [
                         'discr' => 'owner',
                         'roles' => json_encode(['ROLE_OWNER']),
-                        'id' => $user->getId()
+                        'id' => $user->getId(),
                     ]
                 );
 
@@ -159,17 +159,17 @@ class OwnerRequestController extends AbstractController
 
                 return $this->json([
                     'success' => true,
-                    'message' => 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.'
+                    'message' => 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.',
                 ]);
-
             } catch (\Exception $e) {
                 $conn->rollBack();
-                error_log('Erreur transaction owner request accept: ' . $e->getMessage());
+                error_log('Erreur transaction owner request accept: '.$e->getMessage());
+
                 return $this->json(['error' => 'Erreur lors du traitement de la demande.'], 500);
             }
-
         } catch (\Exception $e) {
-            error_log('Erreur owner request accept: ' . $e->getMessage());
+            error_log('Erreur owner request accept: '.$e->getMessage());
+
             return $this->json(['error' => 'Erreur lors de l\'acceptation de la demande.'], 500);
         }
     }
@@ -194,11 +194,11 @@ class OwnerRequestController extends AbstractController
 
             return $this->json([
                 'success' => true,
-                'message' => 'Demande rejetée avec succès.'
+                'message' => 'Demande rejetée avec succès.',
             ]);
-
         } catch (\Exception $e) {
-            error_log('Erreur owner request reject: ' . $e->getMessage());
+            error_log('Erreur owner request reject: '.$e->getMessage());
+
             return $this->json(['error' => 'Erreur lors du rejet de la demande.'], 500);
         }
     }
@@ -226,14 +226,14 @@ class OwnerRequestController extends AbstractController
                     'email' => $ownerRequest->getUser()->getEmail(),
                     'phone' => $ownerRequest->getUser()->getPhone(),
                     'isVerified' => $ownerRequest->getUser()->isVerified(),
-                    'createdAt' => $ownerRequest->getUser()->getCreatedAt()->format('Y-m-d H:i:s')
-                ]
+                    'createdAt' => $ownerRequest->getUser()->getCreatedAt()->format('Y-m-d H:i:s'),
+                ],
             ];
 
             return $this->json($data);
-
         } catch (\Exception $e) {
-            error_log('Erreur owner request show: ' . $e->getMessage());
+            error_log('Erreur owner request show: '.$e->getMessage());
+
             return $this->json(['error' => 'Erreur lors du chargement du détail.'], 500);
         }
     }

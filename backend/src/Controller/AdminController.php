@@ -7,11 +7,11 @@ use App\Repository\AdminRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/admins', name: 'api_admins_')]
@@ -20,7 +20,7 @@ final class AdminController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private AdminRepository $adminRepository,
-        private SerializerInterface $serializer
+        private SerializerInterface $serializer,
     ) {
     }
 
@@ -102,7 +102,7 @@ final class AdminController extends AbstractController
         if (count($errors) > 0) {
             return $this->json([
                 'message' => 'Erreur de validation',
-                'errors' => (string) $errors
+                'errors' => (string) $errors,
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -114,7 +114,6 @@ final class AdminController extends AbstractController
 
         return JsonResponse::fromJsonString($json, Response::HTTP_CREATED);
     }
-
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
@@ -157,7 +156,6 @@ final class AdminController extends AbstractController
 
         return $this->json(['message' => 'Admin mis à jour avec succès'], Response::HTTP_OK);
     }
-
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse
