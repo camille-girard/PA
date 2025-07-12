@@ -34,7 +34,6 @@
 
     const toast = useToast();
 
-
     async function refreshOwners() {
         const { data } = await useAuthFetch('/api/owners', { baseURL: apiUrl });
         ownerData.value = data.value;
@@ -54,7 +53,6 @@
             toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors de la suppression.');
         }
     }
-
 
     const columns = [
         { key: 'owner', label: 'Hôte', sortable: true },

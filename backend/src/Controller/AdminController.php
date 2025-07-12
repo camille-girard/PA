@@ -35,7 +35,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(int $id, #[CurrentUser] ?Admin $currentUser ): JsonResponse
+    public function show(int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse
     {
         if (!$currentUser) {
             return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
@@ -43,7 +43,7 @@ final class AdminController extends AbstractController
 
         if ($currentUser->getId() === $id) {
             return $this->json([
-                'message' => 'Impossible de consulter ses propres informations via cette interface'
+                'message' => 'Impossible de consulter ses propres informations via cette interface',
             ], Response::HTTP_FORBIDDEN);
         }
 
@@ -170,7 +170,6 @@ final class AdminController extends AbstractController
 
         return $this->json(['message' => 'Admin mis à jour avec succès'], Response::HTTP_OK);
     }
-
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse

@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Admin;
 use App\Entity\Client;
-use App\Entity\Owner;
 use App\Repository\ClientRepository;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;

@@ -33,7 +33,6 @@
         totalPrice: number;
     }
 
-
     const client = ref<Client | null>(null);
     const pending = ref(false);
     const errorMsg = ref('');

@@ -1,105 +1,105 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { ref, computed, onMounted } from 'vue';
-import UCard from '~/components/molecules/UCard.vue';
-import UBadge from '~/components/atoms/UBadge.vue';
-import UTable from '~/components/organisms/UTable.vue';
-import { useRuntimeConfig } from '#app';
-import { useAuthFetch } from '~/composables/useAuthFetch';
-import { useToast } from '~/composables/useToast';
-import type { Accommodation } from '~/types/accommodation';
-import type { Booking } from '~/types/booking';
-import type { ApiError } from '~/types/apiError';
+    import { useRoute } from 'vue-router';
+    import { ref, computed, onMounted } from 'vue';
+    import UCard from '~/components/molecules/UCard.vue';
+    import UBadge from '~/components/atoms/UBadge.vue';
+    import UTable from '~/components/organisms/UTable.vue';
+    import { useRuntimeConfig } from '#app';
+    import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
+    import type { Accommodation } from '~/types/accommodation';
+    import type { Booking } from '~/types/booking';
+    import type { ApiError } from '~/types/apiError';
 
-definePageMeta({
-    layout: 'backoffice',
-    middleware: 'admin',
-});
-
-const {
-    public: { apiUrl },
-} = useRuntimeConfig();
-const route = useRoute();
-const id = route.params.id as string;
-
-const pending = ref(false);
-const accommodation = ref<Accommodation | null>(null);
-
-const showImageModal = ref(false);
-const selectedImageUrl = ref('');
-const toast = useToast();
-
-async function loadAccommodation() {
-    if (!id) {
-        toast.error('Erreur', "ID manquant dans l'URL.");
-        return;
-    }
-
-    pending.value = true;
-    try {
-        const { data } = await useAuthFetch(`/api/accommodations/${id}`, {
-            baseURL: apiUrl,
-        });
-        accommodation.value = data.value ?? null;
-    } catch (error: unknown) {
-        const err = error as ApiError;
-        console.error(err);
-        toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement du logement.');
-    } finally {
-        pending.value = false;
-    }
-}
-
-onMounted(() => {
-    loadAccommodation();
-});
-
-const bookings = computed(() =>
-    accommodation.value?.bookings?.map((b: Booking) => ({
-        id: b.id,
-        client: `${b.client?.firstName ?? ''} ${b.client?.lastName ?? ''}`,
-        startDate: new Date(b.startDate).toLocaleDateString(),
-        endDate: new Date(b.endDate).toLocaleDateString(),
-        status: b.status.toLowerCase(),
-    })) ?? []
-);
-
-const columns = [
-    { key: 'client', label: 'Client' },
-    { key: 'startDate', label: 'Début' },
-    { key: 'endDate', label: 'Fin' },
-    { key: 'status', label: 'Statut' },
-];
-
-function getStatusProps(status: string) {
-    switch (status) {
-        case 'accepted':
-            return { label: 'Acceptée', color: 'success' };
-        case 'pending':
-            return { label: 'En attente', color: 'warning' };
-        case 'refused':
-            return { label: 'Refusée', color: 'error' };
-        default:
-            return { label: status, color: 'gray' };
-    }
-}
-
-const isOccupiedNow = computed(() => {
-    if (!accommodation.value?.bookings) return false;
-    const today = new Date();
-    return accommodation.value.bookings.some((b: Booking) => {
-        const start = new Date(b.startDate);
-        const end = new Date(b.endDate);
-        return start <= today && today <= end;
+    definePageMeta({
+        layout: 'backoffice',
+        middleware: 'admin',
     });
-});
 
-function openImageModal(url: string) {
-    selectedImageUrl.value = url;
-    showImageModal.value = true;
-}
+    const {
+        public: { apiUrl },
+    } = useRuntimeConfig();
+    const route = useRoute();
+    const id = route.params.id as string;
+
+    const pending = ref(false);
+    const accommodation = ref<Accommodation | null>(null);
+
+    const showImageModal = ref(false);
+    const selectedImageUrl = ref('');
+    const toast = useToast();
+
+    async function loadAccommodation() {
+        if (!id) {
+            toast.error('Erreur', "ID manquant dans l'URL.");
+            return;
+        }
+
+        pending.value = true;
+        try {
+            const { data } = await useAuthFetch(`/api/accommodations/${id}`, {
+                baseURL: apiUrl,
+            });
+            accommodation.value = data.value ?? null;
+        } catch (error: unknown) {
+            const err = error as ApiError;
+            console.error(err);
+            toast.error('Erreur', err?.data?.message || err?.message || 'Erreur lors du chargement du logement.');
+        } finally {
+            pending.value = false;
+        }
+    }
+
+    onMounted(() => {
+        loadAccommodation();
+    });
+
+    const bookings = computed(
+        () =>
+            accommodation.value?.bookings?.map((b: Booking) => ({
+                id: b.id,
+                client: `${b.client?.firstName ?? ''} ${b.client?.lastName ?? ''}`,
+                startDate: new Date(b.startDate).toLocaleDateString(),
+                endDate: new Date(b.endDate).toLocaleDateString(),
+                status: b.status.toLowerCase(),
+            })) ?? []
+    );
+
+    const columns = [
+        { key: 'client', label: 'Client' },
+        { key: 'startDate', label: 'Début' },
+        { key: 'endDate', label: 'Fin' },
+        { key: 'status', label: 'Statut' },
+    ];
+
+    function getStatusProps(status: string) {
+        switch (status) {
+            case 'accepted':
+                return { label: 'Acceptée', color: 'success' };
+            case 'pending':
+                return { label: 'En attente', color: 'warning' };
+            case 'refused':
+                return { label: 'Refusée', color: 'error' };
+            default:
+                return { label: status, color: 'gray' };
+        }
+    }
+
+    const isOccupiedNow = computed(() => {
+        if (!accommodation.value?.bookings) return false;
+        const today = new Date();
+        return accommodation.value.bookings.some((b: Booking) => {
+            const start = new Date(b.startDate);
+            const end = new Date(b.endDate);
+            return start <= today && today <= end;
+        });
+    });
+
+    function openImageModal(url: string) {
+        selectedImageUrl.value = url;
+        showImageModal.value = true;
+    }
 </script>
-
 
 <template>
     <div>

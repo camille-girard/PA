@@ -1,106 +1,106 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import UTable from '~/components/organisms/UTable.vue';
-import UBadge from '~/components/atoms/UBadge.vue';
-import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
-import ConfirmPopover from '~/components/ConfirmPopover.vue';
-import { useRuntimeConfig } from '#app';
-import { useAuthFetch } from '~/composables/useAuthFetch';
-import { useToast } from '~/composables/useToast';
-import type { Booking } from '~/types/booking';
+    import { ref, computed, onMounted } from 'vue';
+    import UTable from '~/components/organisms/UTable.vue';
+    import UBadge from '~/components/atoms/UBadge.vue';
+    import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
+    import ConfirmPopover from '~/components/ConfirmPopover.vue';
+    import { useRuntimeConfig } from '#app';
+    import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
+    import type { Booking } from '~/types/booking';
 
-definePageMeta({
-    layout: 'backoffice',
-    middleware: 'admin',
-});
+    definePageMeta({
+        layout: 'backoffice',
+        middleware: 'admin',
+    });
 
-const {
-    public: { apiUrl },
-} = useRuntimeConfig();
+    const {
+        public: { apiUrl },
+    } = useRuntimeConfig();
 
-const toast = useToast();
+    const toast = useToast();
 
-const bookingData = ref<Booking[]>([]);
-const pending = ref(false);
+    const bookingData = ref<Booking[]>([]);
+    const pending = ref(false);
 
-const columns = [
-    { key: 'client', label: 'Client', sortable: true },
-    { key: 'owner', label: 'Hôte' },
-    { key: 'accommodation', label: 'Hébergement' },
-    { key: 'address', label: 'Adresse' },
-    { key: 'startDate', label: 'Début' },
-    { key: 'endDate', label: 'Fin' },
-    { key: 'totalPrice', label: 'Prix' },
-    { key: 'status', label: 'Statut' },
-    { key: 'actions', label: '' },
-];
+    const columns = [
+        { key: 'client', label: 'Client', sortable: true },
+        { key: 'owner', label: 'Hôte' },
+        { key: 'accommodation', label: 'Hébergement' },
+        { key: 'address', label: 'Adresse' },
+        { key: 'startDate', label: 'Début' },
+        { key: 'endDate', label: 'Fin' },
+        { key: 'totalPrice', label: 'Prix' },
+        { key: 'status', label: 'Statut' },
+        { key: 'actions', label: '' },
+    ];
 
-const bookings = computed(() => bookingData.value || []);
+    const bookings = computed(() => bookingData.value || []);
 
-const bookingsData = computed(() =>
-    bookings.value.map((b) => ({
-        id: b.id,
-        client: `${b.client?.firstName || ''} ${b.client?.lastName || ''}`,
-        owner: `${b.accommodation?.owner?.firstName || ''} ${b.accommodation?.owner?.lastName || ''}`,
-        accommodation: b.accommodation?.name,
-        address: b.accommodation?.address,
-        startDate: new Date(b.startDate).toLocaleDateString(),
-        endDate: new Date(b.endDate).toLocaleDateString(),
-        totalPrice: `${b.totalPrice.toFixed(2)} €`,
-        status: b.status?.toLowerCase() ?? '',
-    }))
-);
+    const bookingsData = computed(() =>
+        bookings.value.map((b) => ({
+            id: b.id,
+            client: `${b.client?.firstName || ''} ${b.client?.lastName || ''}`,
+            owner: `${b.accommodation?.owner?.firstName || ''} ${b.accommodation?.owner?.lastName || ''}`,
+            accommodation: b.accommodation?.name,
+            address: b.accommodation?.address,
+            startDate: new Date(b.startDate).toLocaleDateString(),
+            endDate: new Date(b.endDate).toLocaleDateString(),
+            totalPrice: `${b.totalPrice.toFixed(2)} €`,
+            status: b.status?.toLowerCase() ?? '',
+        }))
+    );
 
-function getStatusProps(status: string) {
-    switch (status) {
-        case 'accepted':
-            return { label: 'Acceptée', color: 'success' };
-        case 'pending':
-            return { label: 'En attente', color: 'warning' };
-        case 'refused':
-            return { label: 'Refusée', color: 'error' };
-        default:
-            return { label: status, color: 'gray' };
+    function getStatusProps(status: string) {
+        switch (status) {
+            case 'accepted':
+                return { label: 'Acceptée', color: 'success' };
+            case 'pending':
+                return { label: 'En attente', color: 'warning' };
+            case 'refused':
+                return { label: 'Refusée', color: 'error' };
+            default:
+                return { label: status, color: 'gray' };
+        }
     }
-}
 
-async function loadBookings() {
-    pending.value = true;
-    try {
-        const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl });
-        bookingData.value = data.value || [];
-    } catch (error: unknown) {
-        toast.error('Erreur', error?.data?.message || 'Erreur lors du chargement des réservations.');
-        console.error(error);
-    } finally {
-        pending.value = false;
+    async function loadBookings() {
+        pending.value = true;
+        try {
+            const { data } = await useAuthFetch('/api/bookings', { baseURL: apiUrl });
+            bookingData.value = data.value || [];
+        } catch (error: unknown) {
+            toast.error('Erreur', error?.data?.message || 'Erreur lors du chargement des réservations.');
+            console.error(error);
+        } finally {
+            pending.value = false;
+        }
     }
-}
 
-async function refreshBookings() {
-    await loadBookings();
-}
-
-async function deleteBooking(id: number) {
-    pending.value = true;
-    try {
-        await $fetch(`/api/bookings/${id}`, {
-            method: 'DELETE',
-            baseURL: apiUrl,
-        });
-        await refreshBookings();
-        toast.success('Succès', 'Réservation supprimée avec succès.');
-    } catch (error: unknown) {
-        toast.error('Erreur', error?.data?.message || 'Erreur lors de la suppression.');
-        console.error(error);
-    } finally {
-        pending.value = false;
+    async function refreshBookings() {
+        await loadBookings();
     }
-}
 
-onMounted(() => {
-    loadBookings();
-});
+    async function deleteBooking(id: number) {
+        pending.value = true;
+        try {
+            await $fetch(`/api/bookings/${id}`, {
+                method: 'DELETE',
+                baseURL: apiUrl,
+            });
+            await refreshBookings();
+            toast.success('Succès', 'Réservation supprimée avec succès.');
+        } catch (error: unknown) {
+            toast.error('Erreur', error?.data?.message || 'Erreur lors de la suppression.');
+            console.error(error);
+        } finally {
+            pending.value = false;
+        }
+    }
+
+    onMounted(() => {
+        loadBookings();
+    });
 </script>
 
 <template>

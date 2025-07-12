@@ -6,12 +6,12 @@ use App\Repository\AccommodationRepository;
 use App\Repository\BookingRepository;
 use App\Repository\ClientRepository;
 use App\Repository\OwnerRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Doctrine\ORM\EntityManagerInterface;
 
 #[OA\Tag(name: 'Dashboard')]
 #[IsGranted('ROLE_ADMIN')]

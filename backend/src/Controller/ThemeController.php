@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/themes', name: 'api_themes_')]
 #[OA\Tag(name: 'Themes')]
@@ -43,7 +43,6 @@ final class ThemeController extends AbstractController
         return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
-
     #[Route('/accommodation', name: 'accommodation', methods: ['GET'])]
     public function getThemesWithAccommodations(SerializerInterface $serializer): JsonResponse
     {
@@ -58,7 +57,7 @@ final class ThemeController extends AbstractController
             'json',
             [
                 'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
-                'enable_max_depth' => true
+                'enable_max_depth' => true,
             ]
         );
 
@@ -78,7 +77,7 @@ final class ThemeController extends AbstractController
             'json',
             [
                 'groups' => ['theme:read', 'accommodation:summary', 'owner:summary'],
-                'enable_max_depth' => true
+                'enable_max_depth' => true,
             ]
         );
 
@@ -99,7 +98,7 @@ final class ThemeController extends AbstractController
             'json',
             [
                 'groups' => ['theme:read', 'accommodation:read', 'owner:summary'],
-                'enable_max_depth' => true
+                'enable_max_depth' => true,
             ]
         );
 
@@ -185,7 +184,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la sauvegarde',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -249,7 +248,7 @@ final class ThemeController extends AbstractController
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de la mise à jour',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -270,7 +269,7 @@ final class ThemeController extends AbstractController
 
         if (count($theme->getAccommodations()) > 0) {
             return $this->json([
-                'message' => 'Impossible de supprimer ce thème car il possède encore des logements associés.'
+                'message' => 'Impossible de supprimer ce thème car il possède encore des logements associés.',
             ], Response::HTTP_BAD_REQUEST);
         }
 
