@@ -100,6 +100,8 @@ class AccommodationController extends AbstractController
                 'firstName' => $accommodation->getOwner()?->getFirstName(),
                 'bio' => $accommodation->getOwner()?->getBio(),
                 'email' => $accommodation->getOwner()?->getEmail(),
+                'avatar' => $accommodation->getOwner()?->getAvatar(),
+                'rating' => $accommodation->getOwner()?->getNotation() ?? 4.5,
             ],
             'bookings' => array_map(fn ($booking) => [
                 'id' => $booking->getId(),

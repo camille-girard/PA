@@ -3,12 +3,13 @@ App\Entity\Owner:
     email: 'owner@example.com'
     roles: ['ROLE_OWNER']
     password: 'password123'
-    first_name: 'RICHARD'
-    last_name: 'PASTIS'
+    first_name: 'Richard'
+    last_name: 'Pastis'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
     notation: '5'
-    avatar: 'https://picsum.photos/200/300'
+    avatar: '/User/Richard.webp'
+    address: '10 rue de la Fédération, 75015 Paris, France'
     bio: 'Passionné de voyages et de découvertes, j‘aime partager des expériences uniques avec mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'
 
   owner_2:
@@ -20,7 +21,8 @@ App\Entity\Owner:
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
     notation: '3'
-    avatar: 'https://picsum.photos/200/300'
+    avatar: '/User/michel_p.webp'
+    address: '1 rue des Charmilles, 95150 Taverny, France'
     bio: 'Chanteur et compositeur passionné, j‘aime créer des espaces uniques pour mes hôtes. Je suis ravi de vous accueillir dans mes logements inspirés de vos univers préférés !'
 
   owner_3:
@@ -32,7 +34,8 @@ App\Entity\Owner:
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
     notation: '4'
-    avatar: 'https://picsum.photos/200/300'
+    avatar: '/User/francis_cabrel.webp'
+    address: '1 place masséna, 06000 Nice, France'
     bio: 'Nostalgie dans l‘air, j‘aime partager des moments authentiques avec mes hôtes. Mes logements sont conçus pour vous offrir une expérience inoubliable, inspirée de vos univers préférés !'
 
   owner_4:
@@ -40,9 +43,10 @@ App\Entity\Owner:
     roles: ['ROLE_OWNER']
     password: 'password123'
     first_name: 'Johnny'
-    last_name: 'Haliday'
+    last_name: 'Hallyday'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
     notation: '3'
-    avatar: 'https://picsum.photos/200/300'
+    avatar: '/User/Johnny_H.webp'
+    address: '1 rue Léon Noël, 06150 Cannes, France'
     bio: 'Allumer le feu ne fait pas tout, il faut financer les bijoux de Laeticia. Je propose donc mes différents logement, je peux même brader les prix et je fais le ménage !'
