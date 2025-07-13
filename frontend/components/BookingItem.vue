@@ -63,9 +63,7 @@
 
             showRatingModal.value = false;
             
-            props.booking.hasRated = true;
-            
-            emit('rate', { bookingId: props.booking.id, ratingData });
+            emit('rate', { bookingId: props.booking.id, ratingData, hasRated: true });
             
         } catch (error) {
             console.error('Erreur lors de la soumission de la notation:', error);

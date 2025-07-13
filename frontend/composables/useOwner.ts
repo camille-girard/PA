@@ -127,11 +127,9 @@ export const useOwner = () => {
         const createdDate = new Date(owner.value.createdAt);
         const now = new Date();
         
-        // Calcul de la différence en millisecondes
         const diffTime = Math.abs(now.getTime() - createdDate.getTime());
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         
-        // Si c'est moins d'un mois (30 jours)
         if (diffDays < 30) {
             if (diffDays === 0) {
                 return 'aujourd\'hui';
