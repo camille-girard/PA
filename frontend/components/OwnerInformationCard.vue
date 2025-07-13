@@ -15,7 +15,12 @@
 <template>
     <div class="space-y-8">
         <div class="bg-orange-100 rounded-2xl shadow-md p-6 flex flex-col items-center text-center">
-            <img :src="host.image" alt="Photo hôte" class="w-24 h-24 rounded-full object-cover mb-4" />
+            <UAvatar 
+                :image-src="host.image" 
+                :text="host.name.split(' ').map(n => n[0]).join('')" 
+                size="2xl" 
+                class="mb-4"
+            />
 
             <div>
                 <h3 class="text-h3 text-gray-800">{{ host.name }}</h3>

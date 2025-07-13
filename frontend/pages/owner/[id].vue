@@ -24,7 +24,7 @@
         rentals,
         isOwnerLoading,
         fetchOwnerById,
-        getAverageRating,
+        getOwnerRating,
         getFullName,
         getMembershipDuration,
     } = useOwner();
@@ -37,9 +37,9 @@
     // Propriétaire adapté pour le composant OwnerInformationCard
     const hostData = computed<Host>(() => ({
         name: getFullName.value,
-        image: 'https://via.placeholder.com/150', // Remplacer par l'image du propriétaire si disponible
+        image: owner.value?.avatar || '',
         verified: true,
-        note: getAverageRating.value,
+        note: getOwnerRating.value,
         evaluations: comments.value?.length || 0,
         experienceYears: parseInt(getMembershipDuration.value) || 1,
         verifications: ['Email', 'Téléphone'],

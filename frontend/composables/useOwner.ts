@@ -13,6 +13,8 @@ export interface OwnerDetail {
     roles?: string[];
     bio?: string;
     createdAt: string;
+    avatar?: string;
+    notation: number;
     comments?: Array<{
         id: string;
         content: string;
@@ -93,6 +95,14 @@ export const useOwner = () => {
     });
 
     /**
+     * Récupère la notation directe du propriétaire
+     * @returns La notation du propriétaire ou 0 par défaut
+     */
+    const getOwnerRating = computed((): number => {
+        return owner.value?.notation || 0;
+    });
+
+    /**
      * Formate le nom complet du propriétaire
      * @returns Le nom complet formaté
      */
@@ -137,6 +147,7 @@ export const useOwner = () => {
         error,
         fetchOwnerById,
         getAverageRating,
+        getOwnerRating,
         getFullName,
         isOwnerLoading,
         getMembershipDuration,
