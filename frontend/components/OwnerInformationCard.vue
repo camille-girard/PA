@@ -3,10 +3,17 @@
         name: string;
         image: string;
         verified: boolean;
-        note: number;
+        rating: number;
         evaluations: number;
-        experienceYears: number;
+        membershipDuration: string;
         verifications: string[];
+        accommodationCount: number;
+        location?: string;
+        profession?: string;
+        languages?: string;
+        responseRate?: number;
+        responseTime?: string;
+        joinDate: string;
     }
 
     defineProps<{ host: Host }>();
@@ -29,10 +36,9 @@
 
             <div class="mt-6 text-gray-700 space-y-1">
                 <p>
-                    Notes : <span class="text-body-md font-semibold">{{ host.note }}/5</span>
+                    Notes : <span class="text-body-md font-semibold">{{ host.rating }}/5</span>
                 </p>
-                <p>{{ host.evaluations }} Evaluations</p>
-                <p>Hôte passionné<br />depuis {{ host.experienceYears }} ans</p>
+                <p>Hôte passionné<br />depuis {{ host.membershipDuration }}</p>
             </div>
         </div>
 

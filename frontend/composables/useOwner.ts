@@ -121,22 +121,49 @@ export const useOwner = () => {
 
     /**
      * Récupère la durée depuis laquelle le propriétaire est inscrit
-     * @returns La durée en années ou mois
+     * @returns La durée en années, mois ou jours selon la période
      */
     const getMembershipDuration = computed((): string => {
         if (!owner.value || !owner.value.createdAt) return '';
 
         const createdDate = new Date(owner.value.createdAt);
         const now = new Date();
+        
+        // Calcul de la différence en millisecondes
+        const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Si c'est moins d'un mois (30 jours)
+        if (diffDays < 30) {
+            if (diffDays === 0) {
+                return 'aujourd\'hui';
+            } else if (diffDays === 1) {
+                return '1 jour';
+            } else {
+                return `${diffDays} jours`;
+            }
+        }
+        
+        // Calcul plus précis pour les mois et années
         const diffMonths =
             (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
 
-        if (diffMonths >= 12) {
-            const years = Math.floor(diffMonths / 12);
-            return `${years} ${years === 1 ? 'an' : 'ans'}`;
+        // Si c'est moins d'un an
+        if (diffMonths < 12) {
+            return diffMonths === 1 ? '1 mois' : `${diffMonths} mois`;
         }
-
-        return `${diffMonths} mois`;
+        
+        // Pour les années
+        const years = Math.floor(diffMonths / 12);
+        const remainingMonths = diffMonths % 12;
+        
+        if (remainingMonths === 0) {
+            return years === 1 ? '1 an' : `${years} ans`;
+        } else {
+            const yearText = years === 1 ? '1 an' : `${years} ans`;
+            const monthText = remainingMonths === 1 ? '1 mois' : `${remainingMonths} mois`;
+            return `${yearText} et ${monthText}`;
+        }
     });
 
     return {
