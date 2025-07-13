@@ -1,6 +1,5 @@
 import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
 
-// Type étendu pour l'Owner avec tous les champs nécessaires
 export interface OwnerDetail {
     id: string;
     firstName: string;
@@ -14,7 +13,7 @@ export interface OwnerDetail {
     bio?: string;
     createdAt: string;
     avatar?: string;
-    notation: number;
+    rating: number;
     comments?: Array<{
         id: string;
         content: string;
@@ -62,7 +61,6 @@ export const useOwner = () => {
                 owner.value = response.data.value;
                 comments.value = response.data.value.comments || [];
 
-                // Transformation des hébergements pour l'affichage
                 if (response.data.value.accommodations) {
                     rentals.value = response.data.value.accommodations.map((accommodation) => ({
                         id: accommodation.id,
@@ -99,7 +97,7 @@ export const useOwner = () => {
      * @returns La notation du propriétaire ou 0 par défaut
      */
     const getOwnerRating = computed((): number => {
-        return owner.value?.notation || 0;
+        return owner.value?.rating || 0;
     });
 
     /**
@@ -144,16 +142,13 @@ export const useOwner = () => {
             }
         }
         
-        // Calcul plus précis pour les mois et années
         const diffMonths =
             (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
 
-        // Si c'est moins d'un an
         if (diffMonths < 12) {
             return diffMonths === 1 ? '1 mois' : `${diffMonths} mois`;
         }
         
-        // Pour les années
         const years = Math.floor(diffMonths / 12);
         const remainingMonths = diffMonths % 12;
         

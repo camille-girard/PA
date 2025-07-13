@@ -28,12 +28,10 @@
                 size="2xl" 
                 class="mb-4"
             />
-
             <div>
                 <h3 class="text-h3 text-gray-800">{{ host.name }}</h3>
                 <p class="text-body-md text-gray-600">{{ host.verified ? 'Hôte vérifié' : 'Non vérifié' }}</p>
             </div>
-
             <div class="mt-6 text-gray-700 space-y-1">
                 <p>
                     Notes : <span class="text-body-md font-semibold">{{ host.rating }}/5</span>
@@ -41,7 +39,6 @@
                 <p>Hôte passionné<br />depuis {{ host.membershipDuration }}</p>
             </div>
         </div>
-
         <div class="border border-orange-300 rounded-2xl p-6 space-y-4">
             <h4 class="text-h4 text-gray-800">Vérifications effectuées par {{ host.name }}</h4>
             <ul class="space-y-2">
@@ -59,7 +56,6 @@
                 </li>
             </ul>
         </div>
-
         <div class="flex items-center gap-2">
             <img src="/signal.svg" alt="signal" class="w-6 h-6" />
             <a href="#" class="underline text-body-md font-semibold text-black">Signaler ce profil</a>

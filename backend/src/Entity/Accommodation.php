@@ -77,6 +77,10 @@ class Accommodation
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $practicalInformations = null;
 
+    #[ORM\Column(type: 'float', options: ['default' => 0])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
+    private float $rating = 0;
+
     #[ORM\Column]
     #[Groups(['owner:read'])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -299,6 +303,18 @@ class Accommodation
     public function setPracticalInformations(string $practicalInformations): static
     {
         $this->practicalInformations = $practicalInformations;
+
+        return $this;
+    }
+
+    public function getRating(): float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(float $rating): static
+    {
+        $this->rating = $rating;
 
         return $this;
     }

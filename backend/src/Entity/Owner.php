@@ -34,7 +34,7 @@ class Owner extends User
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     #[Groups(['owner:read'])]
-    private float $notation = 0;
+    private float $rating = 0;
 
     public function __construct()
     {
@@ -109,14 +109,14 @@ class Owner extends User
     }
 
     #[Groups(['owner:read'])]
-    public function getNotation(): float
+    public function getRating(): float
     {
-        return $this->notation;
+        return $this->rating;
     }
 
-    public function setNotation(float $notation): static
+    public function setRating(float $rating): static
     {
-        $this->notation = $notation;
+        $this->rating = $rating;
 
         return $this;
     }

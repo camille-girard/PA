@@ -84,6 +84,7 @@ class AccommodationController extends AbstractController
             'bathrooms' => $accommodation->getBathrooms(),
             'capacity' => $accommodation->getCapacity(),
             'price' => $accommodation->getPrice(),
+            'rating' => $accommodation->getRating(),
             'advantage' => $accommodation->getAdvantage(),
             'practicalInformations' => $accommodation->getPracticalInformations(),
             'latitude' => $accommodation->getLatitude(),
@@ -101,7 +102,7 @@ class AccommodationController extends AbstractController
                 'bio' => $accommodation->getOwner()?->getBio(),
                 'email' => $accommodation->getOwner()?->getEmail(),
                 'avatar' => $accommodation->getOwner()?->getAvatar(),
-                'rating' => $accommodation->getOwner()?->getNotation() ?? 4.5,
+                'rating' => $accommodation->getOwner()?->getRating() ?? 0,
             ],
             'bookings' => array_map(fn ($booking) => [
                 'id' => $booking->getId(),
