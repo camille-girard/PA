@@ -7,7 +7,6 @@
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import ULink from '~/components/atoms/ULink.vue';
-    import ArrowLeftIcon from '~/components/atoms/icons/ArrowLeftIcon.vue';
     import type { ApiError } from '~/types/apiError';
     import type { Client } from '~/types/client';
 

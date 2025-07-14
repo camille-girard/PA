@@ -94,7 +94,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Hôtes
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Hôtes
             <UBadge variant="pill" color="brand" size="md">
                 {{ owners.length }}
             </UBadge>

@@ -159,7 +159,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Demandes de propriétaire
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Demandes de propriétaire
             <UBadge variant="pill" color="brand" size="md">
                 {{ ownerRequests.length }}
             </UBadge>
@@ -259,7 +260,7 @@
                                         size="sm"
                                         variant="pill"
                                         :color="getStatusProps(selectedRequest.reviewed ? 'reviewed' : 'pending').color"
-                                        class="ml-2 w-fit "
+                                        class="ml-2 w-fit"
                                     >
                                         {{ getStatusProps(selectedRequest.reviewed ? 'reviewed' : 'pending').label }}
                                     </UBadge>

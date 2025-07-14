@@ -170,7 +170,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Thèmes
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Thèmes
             <UBadge variant="pill" color="brand" size="md">
                 {{ themes.length }}
             </UBadge>

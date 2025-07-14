@@ -126,30 +126,30 @@ export const useOwner = () => {
 
         const createdDate = new Date(owner.value.createdAt);
         const now = new Date();
-        
+
         const diffTime = Math.abs(now.getTime() - createdDate.getTime());
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (diffDays < 30) {
             if (diffDays === 0) {
-                return 'aujourd\'hui';
+                return "aujourd'hui";
             } else if (diffDays === 1) {
                 return '1 jour';
             } else {
                 return `${diffDays} jours`;
             }
         }
-        
+
         const diffMonths =
             (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
 
         if (diffMonths < 12) {
             return diffMonths === 1 ? '1 mois' : `${diffMonths} mois`;
         }
-        
+
         const years = Math.floor(diffMonths / 12);
         const remainingMonths = diffMonths % 12;
-        
+
         if (remainingMonths === 0) {
             return years === 1 ? '1 an' : `${years} ans`;
         } else {

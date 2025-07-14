@@ -126,7 +126,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Administrateurs
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Administrateurs
             <UBadge variant="pill" color="brand" size="md">
                 {{ admins.length }}
             </UBadge>

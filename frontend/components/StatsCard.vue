@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { Component } from 'vue';
+    import type { Component } from 'vue';
 
-defineProps<{
-    stats: {
-        label: string;
-        value: string | number;
-        icon: Component;
-    }[];
-}>();
+    defineProps<{
+        stats: {
+            label: string;
+            value: string | number;
+            icon: Component;
+        }[];
+    }>();
 </script>
 
 <template>
@@ -32,11 +32,11 @@ defineProps<{
 </template>
 
 <style scoped>
-.shadow-custom {
-    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
-}
+    .shadow-custom {
+        box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    }
 
-.icon-circle {
-    background: linear-gradient(201deg, #ffd2b9 3.14%, #ffe8db 86.04%);
-}
+    .icon-circle {
+        background: linear-gradient(201deg, #ffd2b9 3.14%, #ffe8db 86.04%);
+    }
 </style>

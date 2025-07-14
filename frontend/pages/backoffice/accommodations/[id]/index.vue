@@ -110,7 +110,7 @@
                 size="lg"
                 class="flex flex-row gap-2 w-fit focus:border-none focus:ring-0"
             >
-                Modifier l'hôte {{ accommodation.name}} <ArrowRightIcon />
+                Modifier l'hôte {{ accommodation.name }} <ArrowRightIcon />
             </ULink>
             <h1 class="text-2xl font-semibold">Détail de l'hébergement</h1>
 

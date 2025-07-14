@@ -58,7 +58,6 @@
 
 <template>
     <div class="space-y-6 sm:space-y-8">
-
         <div class="flex flex-row justify-between">
             <h2 class="text-xl sm:text-2xl font-semibold">Tableau de Bord</h2>
             <ULink
@@ -71,7 +70,6 @@
                 Voir plus de statistiques sur Matomo
             </ULink>
         </div>
-
 
         <StatsCard :stats="stats" :loading="loading" />
 

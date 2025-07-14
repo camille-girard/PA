@@ -126,7 +126,6 @@
             </UBadge>
         </h2>
 
-
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>

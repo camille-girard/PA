@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
     import { useRoute } from 'vue-router';
 
     const route = useRoute();
@@ -57,15 +56,15 @@
         :target="isExternal ? '_blank' : undefined"
         :rel="isExternal ? 'noopener noreferrer' : undefined"
         :class="[
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        disabled ? 'opacity-50 cursor-not-allowed' : '',
-        isActive ? props.activeClass : ''
-    ]"
+            baseClasses,
+            variantClasses[variant],
+            sizeClasses[size],
+            disabled ? 'opacity-50 cursor-not-allowed' : '',
+            isActive ? props.activeClass : '',
+        ]"
         @click="!disabled && $emit('click', $event)"
     >
-    <slot />
+        <slot />
         <svg
             v-if="isExternal ? showExternalIcon : false"
             class="size-4 hidden group-hover:block"

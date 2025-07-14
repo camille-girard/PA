@@ -105,7 +105,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Réservations
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Réservations
             <UBadge variant="pill" color="brand" size="md">
                 {{ bookings.length }}
             </UBadge>

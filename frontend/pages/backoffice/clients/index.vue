@@ -102,7 +102,8 @@
 
 <template>
     <div class="space-y-6">
-        <h2 class="text-2xl font-semibold flex items-center gap-2">Clients
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Clients
             <UBadge variant="pill" color="brand" size="md">
                 {{ clients.length }}
             </UBadge>

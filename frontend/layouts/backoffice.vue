@@ -1,74 +1,72 @@
 <script setup lang="ts">
-import BreadcrumbElement from '~/components/BreadcrumbElement.vue';
-import XIcon from '~/components/atoms/icons/XIcon.vue';
-import MenuIcon from '~/components/atoms/icons/MenuIcon.vue';
-import ULogo from '~/components/atoms/ULogo.vue';
-import ULink from '~/components/atoms/ULink.vue';
-import HomeIcon from '~/components/atoms/icons/HomeIcon.vue';
-import UserIcon from '~/components/atoms/icons/UserIcon.vue';
-import BuildingIcon from '~/components/atoms/icons/BuildingIcon.vue';
-import CoinsHandIcon from '~/components/atoms/icons/CoinsHandIcon.vue';
-import PinIcon from '~/components/atoms/icons/PinIcon.vue';
-import LightningIcon from '~/components/atoms/icons/LightningIcon.vue';
-import TicketIcon from '~/components/atoms/icons/TicketIcon.vue';
-import MessageIcon from '~/components/atoms/icons/MessageIcon.vue';
-import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
-import { useRoute } from 'vue-router';
+    import BreadcrumbElement from '~/components/BreadcrumbElement.vue';
+    import XIcon from '~/components/atoms/icons/XIcon.vue';
+    import MenuIcon from '~/components/atoms/icons/MenuIcon.vue';
+    import ULogo from '~/components/atoms/ULogo.vue';
+    import ULink from '~/components/atoms/ULink.vue';
+    import HomeIcon from '~/components/atoms/icons/HomeIcon.vue';
+    import UserIcon from '~/components/atoms/icons/UserIcon.vue';
+    import BuildingIcon from '~/components/atoms/icons/BuildingIcon.vue';
+    import CoinsHandIcon from '~/components/atoms/icons/CoinsHandIcon.vue';
+    import PinIcon from '~/components/atoms/icons/PinIcon.vue';
+    import LightningIcon from '~/components/atoms/icons/LightningIcon.vue';
+    import TicketIcon from '~/components/atoms/icons/TicketIcon.vue';
+    import MessageIcon from '~/components/atoms/icons/MessageIcon.vue';
+    import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
+    import { useRoute } from 'vue-router';
 
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
+    const authStore = useAuthStore();
+    const user = computed(() => authStore.user);
 
-const router = useRouter();
+    const router = useRouter();
 
-const route = useRoute();
+    const route = useRoute();
 
-const isSidebarOpen = ref(false);
+    const isSidebarOpen = ref(false);
 
-function isActiveNavItem(itemPath: string) {
-    if (itemPath === '/backoffice') {
-        return route.path === '/backoffice' || route.path === '/backoffice/';
+    function isActiveNavItem(itemPath: string) {
+        if (itemPath === '/backoffice') {
+            return route.path === '/backoffice' || route.path === '/backoffice/';
+        }
+        return route.path.startsWith(itemPath);
     }
-    return route.path.startsWith(itemPath);
-}
 
-const logout = async () => {
-    await authStore.logout();
-    router.push('/login');
-};
+    const logout = async () => {
+        await authStore.logout();
+        router.push('/login');
+    };
 
-const goToProfile = () => {
-    router.push('/backoffice/profile');
-};
+    const goToProfile = () => {
+        router.push('/backoffice/profile');
+    };
 
-const formattedRole = computed(() => {
-    if (!user.value?.roles?.length) return 'User';
-    return user.value.roles[0]
-        .replace('ROLE_', '')
-        .toLowerCase()
-        .replace(/^\w/, (c) => c.toUpperCase());
-});
+    const formattedRole = computed(() => {
+        if (!user.value?.roles?.length) return 'User';
+        return user.value.roles[0]
+            .replace('ROLE_', '')
+            .toLowerCase()
+            .replace(/^\w/, (c) => c.toUpperCase());
+    });
 
-function toggleSidebar() {
-    isSidebarOpen.value = !isSidebarOpen.value;
-}
+    function toggleSidebar() {
+        isSidebarOpen.value = !isSidebarOpen.value;
+    }
 
-function closeSidebar() {
-    isSidebarOpen.value = false;
-}
+    function closeSidebar() {
+        isSidebarOpen.value = false;
+    }
 
-const navItems = [
-    { to: '/backoffice', icon: HomeIcon, label: 'Tableau de bord' },
-    { to: '/backoffice/owners', icon: BuildingIcon, label: 'Hôtes' },
-    { to: '/backoffice/clients', icon: UserIcon, label: 'Clients' },
-    { to: '/backoffice/admins', icon: BuildingIcon, label: 'Administrateurs' },
-    { to: '/backoffice/bookings', icon: CoinsHandIcon, label: 'Réservations' },
-    { to: '/backoffice/themes', icon: LightningIcon, label: 'Thèmes' },
-    { to: '/backoffice/accommodations', icon: PinIcon, label: 'Logements' },
-    { to: '/backoffice/tickets', icon: TicketIcon, label: 'Tickets' },
-    { to: '/backoffice/owner-requests', icon: MessageIcon, label: 'Demandes Propriétaires' },
-];
-
-
+    const navItems = [
+        { to: '/backoffice', icon: HomeIcon, label: 'Tableau de bord' },
+        { to: '/backoffice/owners', icon: BuildingIcon, label: 'Hôtes' },
+        { to: '/backoffice/clients', icon: UserIcon, label: 'Clients' },
+        { to: '/backoffice/admins', icon: BuildingIcon, label: 'Administrateurs' },
+        { to: '/backoffice/bookings', icon: CoinsHandIcon, label: 'Réservations' },
+        { to: '/backoffice/themes', icon: LightningIcon, label: 'Thèmes' },
+        { to: '/backoffice/accommodations', icon: PinIcon, label: 'Logements' },
+        { to: '/backoffice/tickets', icon: TicketIcon, label: 'Tickets' },
+        { to: '/backoffice/owner-requests', icon: MessageIcon, label: 'Demandes Propriétaires' },
+    ];
 </script>
 
 <template>
@@ -84,10 +82,10 @@ const navItems = [
             <!-- Sidebar -->
             <aside
                 :class="[
-          'fixed top-0 bottom-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 flex flex-col justify-between border-r',
-          isSidebarOpen ? 'w-80' : 'w-16',
-          'md:w-80 md:translate-x-0'
-        ]"
+                    'fixed top-0 bottom-0 left-0 z-50 bg-white shadow-lg transition-all duration-300 flex flex-col justify-between border-r',
+                    isSidebarOpen ? 'w-80' : 'w-16',
+                    'md:w-80 md:translate-x-0',
+                ]"
             >
                 <!-- Top Logo + Burger -->
                 <div class="flex flex-col items-center pt-4 pb-4 px-3 space-y-3">
@@ -98,7 +96,7 @@ const navItems = [
                         <component :is="isSidebarOpen ? XIcon : MenuIcon" class="w-6 h-6" />
                     </button>
 
-                    <NuxtLink to="/" class=" pb-4 flex items-center justify-center space-x-2">
+                    <NuxtLink to="/" class="pb-4 flex items-center justify-center space-x-2">
                         <ULogo class="w-10 h-10" />
                         <span class="hidden md:inline text-xl font-semibold">PopnBed</span>
                         <span v-if="isSidebarOpen" class="inline md:hidden text-xl font-semibold">PopnBed</span>
@@ -113,16 +111,15 @@ const navItems = [
                                 :to="item.to"
                                 variant="tertiary"
                                 :class="[
-    'flex items-center px-3 py-3 rounded-lg hover:no-underline hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0',
-    isActiveNavItem(item.to) ? 'bg-brand-600 text-white' : ''
-  ]"
+                                    'flex items-center px-3 py-3 rounded-lg hover:no-underline hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0',
+                                    isActiveNavItem(item.to) ? 'bg-brand-600 text-white' : '',
+                                ]"
                             >
                                 <component :is="item.icon" class="w-6 h-6" />
                                 <span :class="[isSidebarOpen ? 'inline' : 'hidden', 'md:inline ml-3']">
-    {{ item.label }}
-  </span>
+                                    {{ item.label }}
+                                </span>
                             </ULink>
-
                         </li>
                     </ul>
                 </nav>
@@ -149,15 +146,19 @@ const navItems = [
                         @click="logout"
                     >
                         <LogoutIcon class="w-6 h-6" />
-                        <span :class="[isSidebarOpen ? 'inline' : 'hidden', 'md:inline ml-3']">
-              Déconnexion
-            </span>
+                        <span :class="[isSidebarOpen ? 'inline' : 'hidden', 'md:inline ml-3']"> Déconnexion </span>
                     </button>
                 </div>
             </aside>
 
             <!-- Content -->
-            <div :class="['flex-1 overflow-x-hidden transition-all duration-300', isSidebarOpen ? 'ml-64' : 'ml-16', 'md:ml-80']">
+            <div
+                :class="[
+                    'flex-1 overflow-x-hidden transition-all duration-300',
+                    isSidebarOpen ? 'ml-64' : 'ml-16',
+                    'md:ml-80',
+                ]"
+            >
                 <main class="py-6 px-4 md:px-8 flex flex-col gap-10">
                     <BreadcrumbElement />
                     <slot />
@@ -166,4 +167,3 @@ const navItems = [
         </div>
     </NuxtLayout>
 </template>
-
