@@ -20,7 +20,7 @@ class UpdateAllRatingsCommand extends Command
     public function __construct(
         private AccommodationRepository $accommodationRepository,
         private RatingService $ratingService,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
     }
@@ -32,9 +32,10 @@ class UpdateAllRatingsCommand extends Command
         $io->title('Mise à jour de toutes les notes');
 
         $accommodations = $this->accommodationRepository->findAll();
-        
+
         if (empty($accommodations)) {
             $io->warning('Aucun hébergement trouvé dans la base de données.');
+
             return Command::SUCCESS;
         }
 
@@ -45,7 +46,7 @@ class UpdateAllRatingsCommand extends Command
 
         foreach ($accommodations as $accommodation) {
             $this->ratingService->updateAccommodationRating($accommodation);
-            $updatedAccommodations++;
+            ++$updatedAccommodations;
 
             $owner = $accommodation->getOwner();
             if ($owner && !in_array($owner->getId(), $updatedOwners)) {

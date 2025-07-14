@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Repository\BookingRepository;
-use App\Repository\OwnerRepository;
 use App\Repository\CommentRepository;
-use App\Service\ValidationErrorFormatterService;
 use App\Service\RatingService;
+use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +25,6 @@ final class BookingController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private BookingRepository $bookingRepository,
-        private OwnerRepository $ownerRepository,
         private CommentRepository $commentRepository,
         private ValidatorInterface $validator,
         private ValidationErrorFormatterService $errorFormatter,
@@ -53,11 +51,11 @@ final class BookingController extends AbstractController
         }
 
         $bookings = $this->bookingRepository->findBy(['client' => $user]);
-        
+
         $bookingsData = [];
         foreach ($bookings as $booking) {
             $bookingData = json_decode($serializer->serialize($booking, 'json', ['groups' => 'booking:read']), true);
-            
+
             $hasRated = false;
             if ($booking->getAccommodation()) {
                 $hasRated = $this->commentRepository->hasUserRatedAccommodation(
@@ -65,7 +63,7 @@ final class BookingController extends AbstractController
                     $booking->getAccommodation()->getId()
                 );
             }
-            
+
             $bookingData['hasRated'] = $hasRated;
             $bookingsData[] = $bookingData;
         }
@@ -142,7 +140,7 @@ final class BookingController extends AbstractController
                 properties: [
                     'accommodationRating' => new OA\Property(type: 'integer', minimum: 1, maximum: 5),
                     'accommodationComment' => new OA\Property(type: 'string', minLength: 1, maxLength: 500),
-                    'ownerRating' => new OA\Property(type: 'integer', minimum: 1, maximum: 5)
+                    'ownerRating' => new OA\Property(type: 'integer', minimum: 1, maximum: 5),
                 ],
                 required: ['accommodationRating', 'accommodationComment', 'ownerRating']
             )
@@ -151,57 +149,62 @@ final class BookingController extends AbstractController
             new OA\Response(response: 200, description: 'Notation enregistrée avec succès'),
             new OA\Response(response: 403, description: 'Accès non autorisé'),
             new OA\Response(response: 404, description: 'Réservation non trouvée'),
-            new OA\Response(response: 400, description: 'Données invalides')
+            new OA\Response(response: 400, description: 'Données invalides'),
         ]
     )]
     public function rate(int $id, Request $request): JsonResponse
     {
         /** @var User|null $user */
         $user = $this->getUser();
-        
-        error_log("📝 Rate endpoint called - User: " . ($user ? $user->getEmail() : 'null') . " - Booking ID: " . $id);
-        
+
+        error_log('📝 Rate endpoint called - User: '.($user ? $user->getEmail() : 'null').' - Booking ID: '.$id);
+
         if (!$user || !in_array('ROLE_CLIENT', $user->getRoles(), true)) {
-            error_log("Access denied - User roles: " . ($user ? implode(', ', $user->getRoles()) : 'null'));
+            error_log('Access denied - User roles: '.($user ? implode(', ', $user->getRoles()) : 'null'));
+
             return $this->json(['message' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
         }
 
         $booking = $this->bookingRepository->find($id);
         if (!$booking) {
-            error_log("Booking not found with ID: " . $id);
+            error_log('Booking not found with ID: '.$id);
+
             return $this->json(['message' => 'Réservation non trouvée'], Response::HTTP_NOT_FOUND);
         }
 
-        error_log("Booking found - Client ID: " . ($booking->getClient() ? $booking->getClient()->getId() : 'null') . " - Current user ID: " . $user->getId());
+        error_log('Booking found - Client ID: '.($booking->getClient() ? $booking->getClient()->getId() : 'null').' - Current user ID: '.$user->getId());
 
         if ($booking->getClient() !== $user) {
-            error_log("Booking does not belong to current user");
+            error_log('Booking does not belong to current user');
+
             return $this->json(['message' => 'Accès non autorisé - Cette réservation ne vous appartient pas'], Response::HTTP_FORBIDDEN);
         }
 
-        error_log("Booking belongs to user");
+        error_log('Booking belongs to user');
 
         $now = new \DateTimeImmutable();
-        error_log("Checking dates - End date: " . $booking->getEndDate()->format('Y-m-d H:i:s') . " - Now: " . $now->format('Y-m-d H:i:s'));
-        
+        error_log('Checking dates - End date: '.$booking->getEndDate()->format('Y-m-d H:i:s').' - Now: '.$now->format('Y-m-d H:i:s'));
+
         if ($booking->getEndDate() > $now) {
-            error_log("Booking not yet finished");
+            error_log('Booking not yet finished');
+
             return $this->json(['message' => 'La réservation n\'est pas encore terminée'], Response::HTTP_BAD_REQUEST);
         }
 
-        error_log("Booking is finished, proceeding with rating");
+        error_log('Booking is finished, proceeding with rating');
 
         $hasAlreadyRated = $this->commentRepository->hasUserRatedAccommodation(
             $user->getId(),
             $booking->getAccommodation()->getId()
         );
-        
+
         if ($hasAlreadyRated) {
-            error_log("User has already rated this accommodation");
+            error_log('User has already rated this accommodation');
+
             return $this->json(['message' => 'Vous avez déjà noté cette accommodation'], Response::HTTP_BAD_REQUEST);
         }
 
-        error_log("User has not rated this accommodation yet");
+        error_log('User has not rated this accommodation yet');
 
         $data = json_decode($request->getContent(), true);
         if (!is_array($data)) {
@@ -238,21 +241,20 @@ final class BookingController extends AbstractController
             $accommodation = $booking->getAccommodation();
             $this->ratingService->updateRatingsAfterComment($accommodation);
 
-            error_log("Ratings updated - Accommodation: " . $accommodation->getRating() . " - Owner: " . ($accommodation->getOwner() ? $accommodation->getOwner()->getRating() : 'null'));
+            error_log('Ratings updated - Accommodation: '.$accommodation->getRating().' - Owner: '.($accommodation->getOwner() ? $accommodation->getOwner()->getRating() : 'null'));
 
             return $this->json([
                 'message' => 'Notation enregistrée avec succès',
                 'comment' => [
                     'id' => $comment->getId(),
                     'rating' => $comment->getRating(),
-                    'content' => $comment->getContent()
-                ]
+                    'content' => $comment->getContent(),
+                ],
             ], Response::HTTP_OK);
-
         } catch (\Exception $e) {
             return $this->json([
                 'message' => 'Erreur lors de l\'enregistrement de la notation',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

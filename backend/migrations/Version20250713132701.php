@@ -24,9 +24,6 @@ final class Version20250713132701 extends AbstractMigration
             ALTER TABLE accommodation ADD rating DOUBLE PRECISION DEFAULT '0' NOT NULL
         SQL);
         $this->addSql(<<<'SQL'
-            ALTER TABLE booking ADD CONSTRAINT FK_E00CEDDE19EB6921 FOREIGN KEY (client_id) REFERENCES client (id)
-        SQL);
-        $this->addSql(<<<'SQL'
             ALTER TABLE comment DROP FOREIGN KEY FK_9474526C19EB6921
         SQL);
         $this->addSql(<<<'SQL'

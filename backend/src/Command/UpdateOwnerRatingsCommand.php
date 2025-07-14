@@ -18,7 +18,7 @@ class UpdateOwnerRatingsCommand extends Command
 {
     public function __construct(
         private OwnerRepository $ownerRepository,
-        private RatingService $ratingService
+        private RatingService $ratingService,
     ) {
         parent::__construct();
     }
@@ -30,9 +30,10 @@ class UpdateOwnerRatingsCommand extends Command
         $io->title('Mise à jour des notes des propriétaires');
 
         $owners = $this->ownerRepository->findAll();
-        
+
         if (empty($owners)) {
             $io->warning('Aucun propriétaire trouvé dans la base de données.');
+
             return Command::SUCCESS;
         }
 
@@ -41,7 +42,7 @@ class UpdateOwnerRatingsCommand extends Command
         $updatedCount = 0;
         foreach ($owners as $owner) {
             $this->ratingService->updateOwnerRating($owner);
-            $updatedCount++;
+            ++$updatedCount;
             $io->progressAdvance();
         }
 

@@ -17,9 +17,9 @@ class CommentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Vérifie si un utilisateur a déjà commenté un accommodation spécifique
+     * Vérifie si un utilisateur a déjà commenté un accommodation spécifique.
      */
-    public function hasUserRatedAccommodation($userId, $accommodationId): bool
+    public function hasUserRatedAccommodation(int $userId, int $accommodationId): bool
     {
         $result = $this->createQueryBuilder('c')
             ->select('COUNT(c.id)')

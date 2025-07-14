@@ -11,19 +11,20 @@ class RatingService
 {
     public function __construct(
         private CommentRepository $commentRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
     /**
-     * Calcule et met à jour la note moyenne d'un accommodation
+     * Calcule et met à jour la note moyenne d'un accommodation.
      */
     public function updateAccommodationRating(Accommodation $accommodation): void
     {
         $comments = $this->commentRepository->findBy(['accommodation' => $accommodation]);
-        
+
         if (empty($comments)) {
             $accommodation->setRating(0);
+
             return;
         }
 
@@ -40,7 +41,7 @@ class RatingService
 
     /**
      * Calcule et met à jour la note moyenne d'un owner
-     * basée sur toutes les notes reçues via ses accommodations
+     * basée sur toutes les notes reçues via ses accommodations.
      */
     public function updateOwnerRating(Owner $owner): void
     {
@@ -55,6 +56,7 @@ class RatingService
 
         if (empty($allComments)) {
             $owner->setRating(0);
+
             return;
         }
 
@@ -70,13 +72,13 @@ class RatingService
     }
 
     /**
-     * Met à jour les ratings après l'ajout d'une nouvelle notation
+     * Met à jour les ratings après l'ajout d'une nouvelle notation.
      */
     public function updateRatingsAfterComment(Accommodation $accommodation): void
     {
         // Mettre à jour le rating de l'accommodation
         $this->updateAccommodationRating($accommodation);
-        
+
         // Mettre à jour le rating de l'owner
         $owner = $accommodation->getOwner();
         if ($owner) {
