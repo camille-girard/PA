@@ -34,6 +34,7 @@
         "swagger-ui-dist": "^5.21.0",
         "vue": "^3.5.13",
         "vue-chartjs": "^5.3.2",
+        "vue-matomo": "^4.2.0",
         "vue-router": "^4.5.0",
         "vuedraggable": "^4.1.0"
     },

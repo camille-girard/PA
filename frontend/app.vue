@@ -1,17 +1,14 @@
-<script setup>
+<script setup lang="ts">
     useSeoMeta({
         title: 'PopnBed',
         description: "PopnBed - Un site de réservation d'hébergements inspirés de films",
         ogDescription: "PopnBed - Un site de réservation d'hébergements inspirés de films",
-        meta: [
-            {
-                name: 'robots',
-                content: 'index, follow',
-            },
-        ],
+        robots: 'index, follow',
     });
+    if (import.meta.client && window._paq) {
+        window._paq.push(['trackPageView']);
+    }
 </script>
-
 <template>
     <NuxtLayout>
         <NuxtPage />
