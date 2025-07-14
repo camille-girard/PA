@@ -16,6 +16,23 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    /**
+     * Vérifie si un utilisateur a déjà commenté un accommodation spécifique.
+     */
+    public function hasUserRatedAccommodation(int $userId, int $accommodationId): bool
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->andWhere('c.client = :userId')
+            ->andWhere('c.accommodation = :accommodationId')
+            ->setParameter('userId', $userId)
+            ->setParameter('accommodationId', $accommodationId)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result > 0;
+    }
+
     //    /**
     //     * @return Comment[] Returns an array of Comment objects
     //     */

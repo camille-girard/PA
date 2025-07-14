@@ -17,7 +17,7 @@ App\Entity\Admin:
     last_name: 'DB'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
-    avatar: 'https://picsum.photos/200/300'
+    avatar: '/User/maria.webp'
     phone: '123-456-7890'
     address: '123 Admin St, Admin City, AD 12345'
 

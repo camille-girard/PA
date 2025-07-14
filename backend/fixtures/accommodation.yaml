@@ -20,6 +20,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8686
     longitude: 2.3320
+    rating: 4
 
   accommodation_2:
     owner: '@owner_1'
@@ -42,6 +43,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.1988
     longitude: 7.3209
+    rating: 0
 
   accommodation_3:
     owner: '@owner_1'
@@ -64,6 +66,8 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 44.8378
     longitude: -0.5792
+    rating: 3
+
 
   accommodation_4:
     owner: '@owner_2'
@@ -86,6 +90,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8465388
     longitude: 2.4290596
+    rating: 0
 
   accommodation_5:
     owner: '@owner_3'
@@ -108,6 +113,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 45.6185934
     longitude: 4.6717498
+    rating: 0
 
   accommodation_6:
     owner: '@owner_4'
@@ -130,6 +136,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.296607971191406
     longitude: 5.373908042907715
+    rating: 0
 
   accommodation_7:
     owner: '@owner_1'
@@ -152,6 +159,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.6005834
     longitude: 1.4425023
+    rating: 0
 
   accommodation_8:
     owner: '@owner_2'
@@ -174,6 +182,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.109169006347656
     longitude: -1.6811187267303467
+    rating: 0
 
   accommodation_9:
     owner: '@owner_1'
@@ -196,6 +205,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 47.21492004394531
     longitude: -1.5545382499694824
+    rating: 0
 
   accommodation_10:
     owner: '@owner_1'
@@ -218,6 +228,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.452082
     longitude: 1.488866
+    rating: 0
 
   accommodation_11:
     owner: '@owner_4'
@@ -240,6 +251,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 50.6553101
     longitude: 3.0730889
+    rating: 0
 
   accommodation_12:
     owner: '@owner_1'
@@ -262,6 +274,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 46.1585323
     longitude: -1.1291496
+    rating: 0
 
   accommodation_13:
     owner: '@owner_1'
@@ -284,6 +297,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.713096618652344
     longitude: 7.296810626983643
+    rating: 0
 
   accommodation_14:
     owner: '@owner_2'
@@ -306,6 +320,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.582218170166016
     longitude: 7.747225761413574
+    rating: 0
 
   accommodation_15:
     owner: '@owner_3'
@@ -328,6 +343,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8492134
     longitude: 2.3895753
+    rating: 0
 
   accommodation_16:
     owner: '@owner_4'
@@ -350,6 +366,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 49.4415397644043
     longitude: 1.0912612676620483
+    rating: 0
 
   accommodation_17:
     owner: '@owner_1'
@@ -372,6 +389,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.3729046
     longitude: 2.8065889
+    rating: 0
 
   accommodation_18:
     owner: '@owner_2'
@@ -394,6 +412,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 49.421033
     longitude: 0.231189
+    rating: 0
 
   accommodation_19:
     owner: '@owner_3'
@@ -416,6 +435,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.879326
     longitude: 2.254647
+    rating: 0
 
   accommodation_20:
     owner: '@owner_4'
@@ -438,6 +458,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.493106
     longitude: -1.475044
+    rating: 0
 
   accommodation_21:
     owner: '@owner_1'
@@ -460,3 +481,4 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 42.6979658
     longitude: 9.4498854
+    rating: 0

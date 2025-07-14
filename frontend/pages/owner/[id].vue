@@ -5,14 +5,13 @@
     import { useAuthStore } from '~/stores/auth';
     import { useToast } from '~/composables/useToast';
 
-    // Interface pour adapter les données du propriétaire au format attendu par OwnerInformationCard
     interface Host {
         name: string;
         image: string;
         verified: boolean;
-        note: number;
+        rating: number;
         evaluations: number;
-        experienceYears: number;
+        membershipDuration: string;
         verifications: string[];
     }
 
@@ -24,7 +23,7 @@
         rentals,
         isOwnerLoading,
         fetchOwnerById,
-        getAverageRating,
+        getOwnerRating,
         getFullName,
         getMembershipDuration,
     } = useOwner();
@@ -34,14 +33,26 @@
     const toast = useToast();
     const isCreatingConversation = ref(false);
 
-    // Propriétaire adapté pour le composant OwnerInformationCard
+    // Fonction pour extraire le code postal et la ville de l'adresse complète
+    const getShortAddress = computed(() => {
+        if (!owner.value?.address) return '';
+        
+        // Format attendu: "10 rue de la Fédération, 75015 Paris, France"
+        // On veut récupérer: "75015 Paris"
+        const parts = owner.value.address.split(', ');
+        if (parts.length >= 2) {
+            return parts[1]; // Retourne "75015 Paris"
+        }
+        return owner.value.address; // Fallback vers l'adresse complète
+    });
+
     const hostData = computed<Host>(() => ({
         name: getFullName.value,
-        image: 'https://via.placeholder.com/150', // Remplacer par l'image du propriétaire si disponible
+        image: owner.value?.avatar || '',
         verified: true,
-        note: getAverageRating.value,
+        rating: getOwnerRating.value,
         evaluations: comments.value?.length || 0,
-        experienceYears: parseInt(getMembershipDuration.value) || 1,
+        membershipDuration: getMembershipDuration.value,
         verifications: ['Email', 'Téléphone'],
     }));
 
@@ -121,25 +132,15 @@
                     <section id="owner-information" class="space-y-6 pb-10 border-b border-gray-300">
                         <h2 class="text-3xl font-bold mb-6">Informations sur {{ owner.firstName }}</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700">
-                            <div class="flex items-center gap-3">
-                                <img src="/work.svg" alt="Profession" class="w-8 h-8" />
-                                <span class="font-medium"
-                                    >Profession : {{ owner.profession || 'Gérant de Maple Hill Retreats' }}</span
-                                >
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <img src="/world.svg" alt="Langues parlées" class="w-8 h-8" />
-                                <span class="font-medium">Langues parlées : {{ owner.languages || 'Anglais' }}</span>
+                            <div v-if="getOwnerRating >= 4" class="flex items-center gap-3">
+                                <img src="/badge_icon.svg" alt="Badge Super Hote" class="w-8 h-8" />
+                                <span class="font-medium">Qualification :  Super Hôte</span>
                             </div>
                             <div class="flex items-center gap-3">
                                 <img src="/location.svg" alt="Localisation" class="w-8 h-8" />
                                 <span class="font-medium"
-                                    >Je vis ici : {{ owner.adress || 'Elsworth, Royaume-Uni' }}</span
+                                    >Je vis ici : {{ getShortAddress }}</span
                                 >
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <img src="" alt="Rôles" class="w-8 h-8" />
-                                <span class="font-medium">Rôles : {{ owner.roles?.join(', ') }}</span>
                             </div>
                         </div>
                         <div class="text-gray-800 text-base leading-relaxed mt-6">
@@ -148,19 +149,6 @@
                                 'Je vis avec ma femme, Caroline, et nos deux enfants, Jasper (16 ans) et Emilia (13 ans). Nous sommes tombés amoureux de cette région paisible entourée de forêts et de collines douces. Le Cambridgeshire regorge de petits trésors : chemins de randonnée, marchés fermiers et jolis pubs campagnards. Nous adorons les activités en plein air comme le jardinage, les balades à vélo, le kayak et les soirées feu de camp.'
                             }}
                         </div>
-                        <div class="mt-4">
-                            <p><strong>Email :</strong> {{ owner.email }}</p>
-                            <p v-if="owner.phone"><strong>Téléphone :</strong> {{ owner.phone }}</p>
-                            <p>
-                                <strong>Compte créé le :</strong> {{ new Date(owner.createdAt).toLocaleDateString() }}
-                            </p>
-                        </div>
-                    </section>
-                    <section id="owner-comment" class="space-y-6 pb-10 border-b border-gray-300">
-                        <h2 class="text-3xl font-bold mb-6">Commentaires pour {{ owner.firstName }}</h2>
-                        <CommentCards :items="comments" />
-                        <p v-if="!comments || !comments.length" class="text-gray-500">Aucun commentaire disponible</p>
-                        <a href="#" class="underline font-semibold mt-6 inline-block">Afficher les commentaires</a>
                     </section>
                     <section id="owner-rentals" class="space-y-6">
                         <h2 class="text-3xl font-bold mb-10">Annonces publiées par {{ owner.firstName }}</h2>

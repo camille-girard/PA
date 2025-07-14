@@ -4,6 +4,7 @@ export interface Booking {
     endDate: string;
     status: string;
     totalPrice: number;
+    hasRated?: boolean;
     accommodation: {
         id: number;
         name: string;

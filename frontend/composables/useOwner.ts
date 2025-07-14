@@ -1,6 +1,5 @@
 import type { AccommodationItemDto } from '~/types/dtos/accommodation_item.dto';
 
-// Type étendu pour l'Owner avec tous les champs nécessaires
 export interface OwnerDetail {
     id: string;
     firstName: string;
@@ -13,6 +12,8 @@ export interface OwnerDetail {
     roles?: string[];
     bio?: string;
     createdAt: string;
+    avatar?: string;
+    rating: number;
     comments?: Array<{
         id: string;
         content: string;
@@ -60,7 +61,6 @@ export const useOwner = () => {
                 owner.value = response.data.value;
                 comments.value = response.data.value.comments || [];
 
-                // Transformation des hébergements pour l'affichage
                 if (response.data.value.accommodations) {
                     rentals.value = response.data.value.accommodations.map((accommodation) => ({
                         id: accommodation.id,
@@ -93,6 +93,14 @@ export const useOwner = () => {
     });
 
     /**
+     * Récupère la notation directe du propriétaire
+     * @returns La notation du propriétaire ou 0 par défaut
+     */
+    const getOwnerRating = computed((): number => {
+        return owner.value?.rating || 0;
+    });
+
+    /**
      * Formate le nom complet du propriétaire
      * @returns Le nom complet formaté
      */
@@ -111,22 +119,44 @@ export const useOwner = () => {
 
     /**
      * Récupère la durée depuis laquelle le propriétaire est inscrit
-     * @returns La durée en années ou mois
+     * @returns La durée en années, mois ou jours selon la période
      */
     const getMembershipDuration = computed((): string => {
         if (!owner.value || !owner.value.createdAt) return '';
 
         const createdDate = new Date(owner.value.createdAt);
         const now = new Date();
+        
+        const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays < 30) {
+            if (diffDays === 0) {
+                return 'aujourd\'hui';
+            } else if (diffDays === 1) {
+                return '1 jour';
+            } else {
+                return `${diffDays} jours`;
+            }
+        }
+        
         const diffMonths =
             (now.getFullYear() - createdDate.getFullYear()) * 12 + now.getMonth() - createdDate.getMonth();
 
-        if (diffMonths >= 12) {
-            const years = Math.floor(diffMonths / 12);
-            return `${years} ${years === 1 ? 'an' : 'ans'}`;
+        if (diffMonths < 12) {
+            return diffMonths === 1 ? '1 mois' : `${diffMonths} mois`;
         }
-
-        return `${diffMonths} mois`;
+        
+        const years = Math.floor(diffMonths / 12);
+        const remainingMonths = diffMonths % 12;
+        
+        if (remainingMonths === 0) {
+            return years === 1 ? '1 an' : `${years} ans`;
+        } else {
+            const yearText = years === 1 ? '1 an' : `${years} ans`;
+            const monthText = remainingMonths === 1 ? '1 mois' : `${remainingMonths} mois`;
+            return `${yearText} et ${monthText}`;
+        }
     });
 
     return {
@@ -137,6 +167,7 @@ export const useOwner = () => {
         error,
         fetchOwnerById,
         getAverageRating,
+        getOwnerRating,
         getFullName,
         isOwnerLoading,
         getMembershipDuration,
