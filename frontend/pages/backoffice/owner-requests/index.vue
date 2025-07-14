@@ -159,13 +159,17 @@
 
 <template>
     <div class="space-y-6">
-        <p class="text-2xl font-semibold">Demandes de propriétaires</p>
+        <h2 class="text-2xl font-semibold flex items-center gap-2">Demandes de propriétaire
+            <UBadge variant="pill" color="brand" size="md">
+                {{ ownerRequests.length }}
+            </UBadge>
+        </h2>
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else>
             <UTable :columns="columns" :data="ownerRequestsData">
                 <template #cell-status="{ value }">
-                    <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-fit">
+                    <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-fit text-center">
                         {{ getStatusProps(value).label }}
                     </UBadge>
                 </template>
@@ -255,7 +259,7 @@
                                         size="sm"
                                         variant="pill"
                                         :color="getStatusProps(selectedRequest.reviewed ? 'reviewed' : 'pending').color"
-                                        class="ml-2"
+                                        class="ml-2 w-fit "
                                     >
                                         {{ getStatusProps(selectedRequest.reviewed ? 'reviewed' : 'pending').label }}
                                     </UBadge>

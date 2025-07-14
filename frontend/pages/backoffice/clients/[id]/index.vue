@@ -90,8 +90,13 @@
 
 <template>
     <div class="space-y-6">
-        <ULink to="/backoffice/clients" size="lg" class="flex flex-row gap-2">
-            <ArrowLeftIcon /> Retour à la liste
+        <ULink
+            v-if="client"
+            :to="`/backoffice/clients/${id}/edit`"
+            size="lg"
+            class="flex flex-row gap-2 w-fit focus:border-none focus:ring-0"
+        >
+            Modifier le client {{ client.firstName }} {{ client.lastName }} <ArrowRightIcon />
         </ULink>
 
         <h1 class="text-2xl font-semibold">Fiche client</h1>
@@ -103,19 +108,19 @@
             <UCard>
                 <template #header>
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-                        <div class="flex items-center gap-6">
+                        <div class="flex items-center md:gap-6 gap-3">
                             <img
                                 v-if="client.avatar"
                                 :src="client.avatar"
                                 alt="Avatar du client"
-                                class="w-24 h-24 rounded-full object-cover border shadow"
+                                class="md:w-32 md:h-32 w-16 h-16 rounded-full object-cover border shadow"
                             />
                             <div>
                                 <div class="text-xl font-semibold">{{ client.firstName }} {{ client.lastName }}</div>
                                 <div class="text-gray-500">{{ client.email }}</div>
                             </div>
                         </div>
-                        <UBadge :color="getStatusProps(client.isVerified).color" variant="pill">
+                        <UBadge :color="getStatusProps(client.isVerified).color" variant="pill" class="w-fit">
                             {{ getStatusProps(client.isVerified).label }}
                         </UBadge>
                     </div>

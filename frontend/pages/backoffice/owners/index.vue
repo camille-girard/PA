@@ -59,7 +59,7 @@
         { key: 'phone', label: 'Téléphone' },
         { key: 'email', label: 'Email' },
         { key: 'accommodationCount', label: 'Logements' },
-        { key: 'notation', label: 'Note' },
+        { key: 'rating', label: 'Note' },
         { key: 'status', label: 'Status' },
         { key: 'actions', label: '' },
     ];
@@ -71,7 +71,7 @@
             phone: owner.phone || 'Non renseigné',
             email: owner.email,
             accommodationCount: owner.accommodationCount ?? 0,
-            notation: owner.notation ?? 0,
+            rating: owner.rating ?? 0,
             status: owner.isVerified ? 'active' : 'inactive',
             _original: owner,
         }))
@@ -94,7 +94,11 @@
 
 <template>
     <div class="space-y-6">
-        <p class="text-2xl font-semibold">Hôtes</p>
+        <h2 class="text-2xl font-semibold flex items-center gap-2">Hôtes
+            <UBadge variant="pill" color="brand" size="md">
+                {{ owners.length }}
+            </UBadge>
+        </h2>
 
         <UTable :columns="columns" :data="ownersData">
             <template #cell-status="{ value }">
@@ -103,7 +107,7 @@
                 </UBadge>
             </template>
 
-            <template #cell-notation="{ value }">
+            <template #cell-rating="{ value }">
                 <div class="flex items-center gap-0.5">
                     <component
                         :is="value >= i ? FullStarIcon : value >= i - 0.5 ? HalfStarIcon : EmptyStarIcon"

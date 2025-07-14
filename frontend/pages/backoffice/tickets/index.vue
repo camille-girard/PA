@@ -81,7 +81,11 @@
 
 <template>
     <div class="space-y-8">
-        <h1 class="text-2xl font-semibold">Tickets Support</h1>
+        <h2 class="text-2xl font-semibold flex items-center gap-2">Tickets de Support
+            <UBadge variant="pill" color="brand" size="md">
+                {{ ticketsData.length }}
+            </UBadge>
+        </h2>
 
         <div class="flex gap-3">
             <UButton :variant="selectedStatus === 'ALL' ? 'primary' : 'ghost'" @click="selectedStatus = 'ALL'"
