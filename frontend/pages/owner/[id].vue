@@ -33,17 +33,14 @@
     const toast = useToast();
     const isCreatingConversation = ref(false);
 
-    // Fonction pour extraire le code postal et la ville de l'adresse complète
     const getShortAddress = computed(() => {
         if (!owner.value?.address) return '';
 
-        // Format attendu: "10 rue de la Fédération, 75015 Paris, France"
-        // On veut récupérer: "75015 Paris"
         const parts = owner.value.address.split(', ');
         if (parts.length >= 2) {
-            return parts[1]; // Retourne "75015 Paris"
+            return parts[1];
         }
-        return owner.value.address; // Fallback vers l'adresse complète
+        return owner.value.address;
     });
 
     const hostData = computed<Host>(() => ({
