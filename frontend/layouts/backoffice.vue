@@ -13,14 +13,23 @@ import LightningIcon from '~/components/atoms/icons/LightningIcon.vue';
 import TicketIcon from '~/components/atoms/icons/TicketIcon.vue';
 import MessageIcon from '~/components/atoms/icons/MessageIcon.vue';
 import LogoutIcon from '~/components/atoms/icons/LogoutIcon.vue';
-
+import { useRoute } from 'vue-router';
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 
 const router = useRouter();
 
+const route = useRoute();
+
 const isSidebarOpen = ref(false);
+
+function isActiveNavItem(itemPath: string) {
+    if (itemPath === '/backoffice') {
+        return route.path === '/backoffice' || route.path === '/backoffice/';
+    }
+    return route.path.startsWith(itemPath);
+}
 
 const logout = async () => {
     await authStore.logout();
@@ -98,20 +107,22 @@ const navItems = [
 
                 <!-- Navigation -->
                 <nav class="flex-1 overflow-y-auto">
-                    <ul class="space-y-1 px-2 md:px-6">
+                    <ul class="space-y-1 p-2 md:px-6">
                         <li v-for="item in navItems" :key="item.to">
                             <ULink
                                 :to="item.to"
                                 variant="tertiary"
-                                class="flex items-center px-3 py-3 rounded-lg hover:no-underline hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0"
-                                exact-active-class="bg-brand-600 text-white"
+                                :class="[
+    'flex items-center px-3 py-3 rounded-lg hover:no-underline hover:bg-brand-600 hover:text-white focus:outline-none focus:ring-0',
+    isActiveNavItem(item.to) ? 'bg-brand-600 text-white' : ''
+  ]"
                             >
                                 <component :is="item.icon" class="w-6 h-6" />
                                 <span :class="[isSidebarOpen ? 'inline' : 'hidden', 'md:inline ml-3']">
-                                  {{ item.label }}
-                                </span>
-
+    {{ item.label }}
+  </span>
                             </ULink>
+
                         </li>
                     </ul>
                 </nav>
