@@ -32,11 +32,7 @@
         </div>
         <div v-if="props.host" class="flex items-center gap-4 mt-8">
             <NuxtLink :to="`/owner/${props.host.id}`" class="flex items-center gap-4">
-                <img 
-                    :src="props.host.avatar"
-                    alt="Photo Hôte" 
-                    class="w-12 h-12 rounded-full object-cover"
-                />
+                <img :src="props.host.avatar" alt="Photo Hôte" class="w-12 h-12 rounded-full object-cover" />
             </NuxtLink>
             <div class="w-[90%]">
                 <div class="flex items-center gap-2">
