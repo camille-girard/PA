@@ -12,6 +12,7 @@
     import EditIcon from '~/components/atoms/icons/EditIcon.vue';
     import type { ThemeDto } from '~/types/dtos/theme.dto';
     import type { ApiError } from '~/types/apiError';
+    import UBadge from '~/components/atoms/UBadge.vue';
 
     definePageMeta({
         layout: 'backoffice',
@@ -169,7 +170,12 @@
 
 <template>
     <div class="space-y-6">
-        <h1 class="text-2xl font-semibold">Gestion des thèmes</h1>
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Thèmes
+            <UBadge variant="pill" color="brand" size="md">
+                {{ themes.length }}
+            </UBadge>
+        </h2>
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else>
             <div v-if="successMsg" class="text-green-600 text-sm mb-4">{{ successMsg }}</div>
@@ -193,7 +199,7 @@
             </UCard>
             <div>
                 <h2 class="text-lg font-semibold my-4">Tous les thèmes</h2>
-                <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <UCard v-for="theme in themes" :key="theme.id">
                         <template #header>
                             <div class="flex justify-between items-center">

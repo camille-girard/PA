@@ -104,6 +104,14 @@
 <template>
     <div>
         <div class="space-y-8 max-w-6xl mx-auto">
+            <ULink
+                v-if="accommodation"
+                :to="`/backoffice/accommodations/${id}/edit`"
+                size="lg"
+                class="flex flex-row gap-2 w-fit focus:border-none focus:ring-0"
+            >
+                Modifier l'hôte {{ accommodation.name }} <ArrowRightIcon />
+            </ULink>
             <h1 class="text-2xl font-semibold">Détail de l'hébergement</h1>
 
             <div v-if="accommodation" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -111,7 +119,7 @@
                     <div class="space-y-4">
                         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                             <h2 class="text-lg font-semibold text-brand-500">{{ accommodation.name }}</h2>
-                            <UBadge :color="isOccupiedNow ? 'warning' : 'success'" variant="pill">
+                            <UBadge :color="isOccupiedNow ? 'warning' : 'success'" variant="pill" class="w-fit">
                                 {{ isOccupiedNow ? 'Occupé' : 'Disponible' }}
                             </UBadge>
                         </div>

@@ -57,8 +57,19 @@
 </script>
 
 <template>
-    <div class="space-y-8 sm:space-y-10">
-        <p class="text-xl sm:text-2xl font-semibold">Tableau de Bord</p>
+    <div class="space-y-6 sm:space-y-8">
+        <div class="flex flex-row justify-between">
+            <h2 class="text-xl sm:text-2xl font-semibold">Tableau de Bord</h2>
+            <ULink
+                to="http://localhost:8082/index.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="tertiary"
+                class="text-sm text-brand-600 hover:text-brand-800 underline focus:ring-0 focus:border-none w-fit"
+            >
+                Voir plus de statistiques sur Matomo
+            </ULink>
+        </div>
 
         <StatsCard :stats="stats" :loading="loading" />
 

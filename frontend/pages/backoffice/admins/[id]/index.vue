@@ -60,6 +60,14 @@
 
 <template>
     <div class="space-y-6">
+        <ULink
+            v-if="admin"
+            :to="`/backoffice/admins/${id}/edit`"
+            size="lg"
+            class="flex flex-row gap-2 w-fit focus:border-none focus:ring-0"
+        >
+            Modifier l'admin {{ admin.firstName }} {{ admin.lastName }} <ArrowRightIcon />
+        </ULink>
         <h1 class="text-2xl font-semibold">Fiche administrateur</h1>
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
@@ -69,19 +77,19 @@
             <UCard>
                 <template #header>
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-                        <div class="flex items-center gap-6">
+                        <div class="flex items-center md:gap-6 gap-3">
                             <img
                                 v-if="admin.avatar"
                                 :src="admin.avatar"
                                 alt="Avatar administrateur"
-                                class="w-32 h-32 rounded-full object-cover border shadow"
+                                class="md:w-32 md:h-32 w-16 h-16 rounded-full object-cover border shadow"
                             />
                             <div>
                                 <div class="text-xl font-semibold">{{ admin.firstName }} {{ admin.lastName }}</div>
                                 <div class="text-gray-500">{{ admin.email }}</div>
                             </div>
                         </div>
-                        <UBadge :color="getStatusProps(admin.isVerified).color" variant="pill">
+                        <UBadge :color="getStatusProps(admin.isVerified).color" variant="pill" class="w-fit">
                             {{ getStatusProps(admin.isVerified).label }}
                         </UBadge>
                     </div>

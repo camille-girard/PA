@@ -1,10 +1,20 @@
 <script setup lang="ts">
+    import { useRoute } from 'vue-router';
+
+    const route = useRoute();
+
+    const isActive = computed(() => {
+        return route.path === props.to || route.path.startsWith(props.to + '/');
+    });
+
     interface Props {
         to: string;
         variant?: 'primary' | 'secondary' | 'tertiary';
         size?: 'sm' | 'md';
         disabled?: boolean;
         showExternalIcon?: boolean;
+        activeClass?: string;
+        exact?: boolean;
     }
 
     const props = withDefaults(defineProps<Props>(), {
@@ -12,6 +22,8 @@
         size: 'md',
         disabled: false,
         showExternalIcon: true,
+        activeClass: '',
+        exact: false,
     });
 
     const _emit = defineEmits(['click']);
@@ -48,6 +60,7 @@
             variantClasses[variant],
             sizeClasses[size],
             disabled ? 'opacity-50 cursor-not-allowed' : '',
+            isActive ? props.activeClass : '',
         ]"
         @click="!disabled && $emit('click', $event)"
     >

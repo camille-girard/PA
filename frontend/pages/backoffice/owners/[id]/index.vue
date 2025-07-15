@@ -91,6 +91,14 @@
 
 <template>
     <div class="space-y-6">
+        <ULink
+            v-if="owner"
+            :to="`/backoffice/owners/${id}/edit`"
+            size="lg"
+            class="flex flex-row gap-2 w-fit focus:border-none focus:ring-0"
+        >
+            Modifier l'hôte {{ owner.firstName }} {{ owner.lastName }} <ArrowRightIcon />
+        </ULink>
         <h1 class="text-2xl font-semibold">Fiche hôte</h1>
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
@@ -99,19 +107,19 @@
             <UCard>
                 <template #header>
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-                        <div class="flex items-center gap-6">
+                        <div class="flex items-center md:gap-6 gap-3">
                             <img
                                 v-if="owner.avatar"
                                 :src="owner.avatar"
                                 alt="Avatar hôte"
-                                class="w-32 h-32 rounded-full object-cover border shadow"
+                                class="md:w-32 md:h-32 w-16 h-16 rounded-full object-cover border shadow"
                             />
                             <div>
                                 <div class="text-xl font-semibold">{{ owner.firstName }} {{ owner.lastName }}</div>
                                 <div class="text-gray-500">{{ owner.email }}</div>
                             </div>
                         </div>
-                        <UBadge :color="owner.isVerified ? 'success' : 'error'" variant="pill">
+                        <UBadge :color="owner.isVerified ? 'success' : 'error'" variant="pill" class="w-fit">
                             {{ owner.isVerified ? 'Vérifié' : 'Non vérifié' }}
                         </UBadge>
                     </div>
@@ -130,7 +138,7 @@
                     </div>
                     <div><strong>Bio :</strong> {{ owner.bio || 'Non renseignée' }}</div>
                     <div><strong>Nombre de logements :</strong> {{ owner.accommodationCount ?? 0 }}</div>
-                    <div><strong>Note :</strong> {{ owner.notation?.toFixed(1) ?? '0.0' }}/5</div>
+                    <div><strong>Note :</strong> {{ owner.rating?.toFixed(1) ?? '0' }}/5</div>
                 </div>
             </UCard>
 

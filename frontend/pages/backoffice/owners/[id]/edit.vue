@@ -41,7 +41,7 @@
         address: '',
         isVerified: false,
         bio: '',
-        notation: 0,
+        rating: 0,
     });
 
     async function loadOwner(ownerId: string) {
@@ -60,7 +60,7 @@
                 form.address = owner.value.address ?? '';
                 form.isVerified = owner.value.isVerified;
                 form.bio = owner.value.bio ?? '';
-                form.notation = owner.value.notation ?? 0;
+                form.rating = owner.value.rating ?? 0;
             } else {
                 errorMsg.value = 'Aucun hôte trouvé.';
                 toast.error('Erreur', errorMsg.value);
@@ -101,7 +101,7 @@
                     address: form.address,
                     isVerified: form.isVerified,
                     bio: form.bio,
-                    notation: form.notation,
+                    rating: form.rating,
                 },
             });
             toast.success('Succès', 'Modifications enregistrées avec succès.');

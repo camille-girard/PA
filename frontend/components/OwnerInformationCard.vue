@@ -22,10 +22,15 @@
 <template>
     <div class="space-y-8">
         <div class="bg-orange-100 rounded-2xl shadow-md p-6 flex flex-col items-center text-center">
-            <UAvatar 
-                :image-src="host.image" 
-                :text="host.name.split(' ').map(n => n[0]).join('')" 
-                size="2xl" 
+            <UAvatar
+                :image-src="host.image"
+                :text="
+                    host.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                "
+                size="2xl"
                 class="mb-4"
             />
             <div>

@@ -102,7 +102,12 @@
 
 <template>
     <div class="space-y-6">
-        <p class="text-2xl font-semibold">Clients</p>
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Clients
+            <UBadge variant="pill" color="brand" size="md">
+                {{ clients.length }}
+            </UBadge>
+        </h2>
 
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else>
