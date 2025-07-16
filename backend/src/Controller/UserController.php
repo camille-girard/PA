@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\CloudflareR2Service;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -114,5 +115,81 @@ final class UserController extends AbstractController
         $em->flush();
 
         return $this->json(['message' => 'Mot de passe mis à jour avec succès.']);
+    }
+
+    #[Route('/me/avatar', name: 'app_user_upload_avatar', methods: ['POST'])]
+    public function uploadAvatar(
+        Request $request,
+        CloudflareR2Service $r2Service,
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
+    ): JsonResponse {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $file = $request->files->get('file') ?: $request->files->get('avatar');
+
+        if (!$file) {
+            return $this->json(['message' => 'Aucun fichier fourni'], 400);
+        }
+
+        try {
+            // Delete old avatar if exists
+            if ($user->getAvatar()) {
+                $r2Service->deleteFile($user->getAvatar());
+            }
+
+            // Upload new avatar
+            $avatarUrl = $r2Service->uploadAvatar($file, $user->getId());
+
+            // Update user
+            $user->setAvatar($avatarUrl);
+            $em->flush();
+
+            // Return updated user data
+            $userSerialized = $serializer->serialize($user, 'json', [
+                'ignored_attributes' => ['password', 'userIdentifier'],
+                'groups' => ['me:read'],
+            ]);
+
+            return JsonResponse::fromJsonString($userSerialized);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['message' => $e->getMessage()], 400);
+        } catch (\RuntimeException $e) {
+            return $this->json(['message' => 'Erreur lors de l\'upload: '.$e->getMessage()], 500);
+        }
+    }
+
+    #[Route('/me/avatar', name: 'app_user_delete_avatar', methods: ['DELETE'])]
+    public function deleteAvatar(
+        CloudflareR2Service $r2Service,
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
+    ): JsonResponse {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (!$user->getAvatar()) {
+            return $this->json(['message' => 'Aucun avatar à supprimer'], 400);
+        }
+
+        try {
+            // Delete avatar from R2
+            $r2Service->deleteFile($user->getAvatar());
+
+            // Update user
+            $user->setAvatar(null);
+            $em->flush();
+
+            // Return updated user data
+            $userSerialized = $serializer->serialize($user, 'json', [
+                'ignored_attributes' => ['password', 'userIdentifier'],
+                'groups' => ['me:read'],
+            ]);
+
+            return JsonResponse::fromJsonString($userSerialized);
+        } catch (\RuntimeException $e) {
+            return $this->json(['message' => 'Erreur lors de la suppression: '.$e->getMessage()], 500);
+        }
     }
 }
