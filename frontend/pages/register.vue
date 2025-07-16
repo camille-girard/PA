@@ -4,12 +4,7 @@
     });
     useSeoMeta({
         title: 'Créer un compte - PopnBed',
-        meta: [
-            {
-                name: 'description',
-                content: 'Créez un compte sur PopnBed pour réserver des hébergements inspirés de films.',
-            },
-        ],
+        description: 'Créez un compte sur PopnBed pour réserver des hébergements inspirés de films.',
     });
     const authStore = useAuthStore();
     const router = useRouter();

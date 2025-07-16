@@ -1,289 +1,175 @@
 <script setup lang="ts">
-    import { ref, onMounted, watch, watchEffect, computed } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import { nanoid } from 'nanoid';
-    import { useAuthStore } from '~/stores/auth';
+    /**
+     * Composant de formulaire pour créer ou modifier un hébergement.
+     * Ce composant utilise les composables useAccommodationForm et useAddressSuggestions
+     * pour gérer la logique métier et l'interaction avec l'API.
+     */
+    import { ref, onMounted, watch, watchEffect } from 'vue';
+    import { useRoute } from 'vue-router';
+    import { ACCOMMODATION_TYPES } from '~/constants/accommodationTypes';
+    import type { MapSuggestion } from '~/composables/useAddressSuggestions';
+    import { useToast } from '~/composables/useToast';
+    import UBaseModal from '~/components/molecules/UBaseModal.vue';
 
     const route = useRoute();
-    const router = useRouter();
-    const config = useRuntimeConfig();
-    const auth = useAuthStore();
-
     const accommodationId = route.params.id;
-    const isEditing = computed(() => Boolean(accommodationId));
 
-    const title = ref('');
-    const theme = ref('');
-    const type = ref('');
-    const bedrooms = ref(0);
-    const bathrooms = ref(0);
-    const capacity = ref(1);
-    const description = ref('');
-    const practicalInformation = ref('');
-    const address = ref('');
-    const city = ref('');
-    const postalCode = ref('');
-    const country = ref('');
-    const pricePerNight = ref(0);
-    const minStay = ref(1);
-    const maxStay = ref(7);
-    const latitude = ref<number | null>(null);
-    const longitude = ref<number | null>(null);
-    const images = ref<{ id: string; url: string }[]>([]);
-
-    const suggestions = ref<any[]>([]);
     const fileInputRef = ref<HTMLInputElement | null>(null);
-    const showDeletePopup = ref(false);
-    const showSuccessMessage = ref(false);
+    const isDeleteModalOpen = ref(false);
 
-    const typeOptions = [
-        { label: 'Appartement', value: 'Appartement' },
-        { label: 'Maison', value: 'Maison' },
-        { label: 'Château', value: 'Château' },
-    ];
+    const {
+        formState,
+        isEditing,
+        isLoading,
+        error,
+        themeOptions,
+        fetchAccommodationData,
+        fetchThemes,
+        handleSubmit,
+        deleteAccommodation,
+        addImages,
+        removeImage,
+    } = useAccommodationForm({ accommodationId });
 
-    const themeOptions = ref<{ value: number; label: string }[]>([]);
+    const { suggestions, fetchSuggestions, selectSuggestion } = useAddressSuggestions();
 
-    const isLoading = ref(true);
-    const error = ref(null);
-    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    /**
+     * Initialisation des données au montage du composant
+     */
+    const toast = useToast();
 
     onMounted(async () => {
-        const { $api } = useNuxtApp();
-        const rawThemes = await useAuthFetch<any>($api('/api/themes/'));
-
-        themeOptions.value = rawThemes.data.value.themes.map((t: any) => ({
-            value: t.id,
-            label: t.name,
-        }));
-
-        if (!isEditing.value) {
-            isLoading.value = false;
-            return;
-        }
-
-        isLoading.value = true;
-
         try {
-            const res = await fetch(`${config.public.apiUrl}/api/accommodations/${accommodationId}`, {
-                credentials: 'include',
-            });
-
-            if (!res.ok) throw new Error('Erreur serveur');
-
-            const data = await res.json();
-
-            title.value = data.name;
-            description.value = data.description;
-            address.value = data.address;
-            city.value = data.city;
-            postalCode.value = data.postalCode;
-            country.value = data.country || 'France';
-            theme.value = data.theme || '';
-            type.value = data.type;
-            practicalInformation.value = data.practicalInformation;
-            capacity.value = data.capacity;
-            pricePerNight.value = data.price;
-            latitude.value = data.latitude;
-            longitude.value = data.longitude;
-            bedrooms.value = data.bedrooms || 0;
-            bathrooms.value = data.bathrooms || 0;
-
-            images.value =
-                data.images?.map((img: any) => ({
-                    id: nanoid(),
-                    url: img.url,
-                })) || [];
-        } catch (err: any) {
-            error.value = err.message;
-        } finally {
-            isLoading.value = false;
+            await Promise.all([fetchThemes(), fetchAccommodationData()]);
+        } catch (err) {
+            console.error('Erreur lors du chargement des données:', err);
+            toast.error('Erreur de chargement', "Impossible de charger les données de l'hébergement.");
         }
     });
 
+    /**
+     * Gestion des thèmes pour résoudre les cas où le thème est un objet au lieu d'un ID
+     */
     watchEffect(() => {
-        const found = themeOptions.value.find((option) => option.value === theme.value);
-        if (!found && typeof theme.value === 'object' && theme.value !== null) {
-            theme.value = theme.value.name || '';
+        const found = themeOptions.value.find((option) => option.value === formState.value.theme);
+        if (!found && typeof formState.value.theme === 'object' && formState.value.theme !== null) {
+            // @ts-expect-error - Gestion du cas où le thème est un objet au lieu d'un ID
+            formState.value.theme = formState.value.theme.name || '';
         }
     });
 
-    watch(address, (newVal) => {
-        if (debounceTimer) clearTimeout(debounceTimer);
-        if (!newVal) return;
-        debounceTimer = setTimeout(fetchSuggestions, 400);
-    });
-
-    async function fetchSuggestions() {
-        const query = encodeURIComponent(address.value);
-        const accessToken = config.public.mapboxToken;
-
-        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${accessToken}&country=fr&autocomplete=true&limit=5`;
-
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            suggestions.value = data.features;
-        } catch (e) {
-            suggestions.value = [];
+    /**
+     * Observer les changements d'adresse pour mettre à jour les suggestions
+     */
+    watch(
+        () => formState.value.address,
+        async (newVal) => {
+            if (!newVal) return;
+            await fetchSuggestions(newVal);
         }
+    );
+
+    /**
+     * Sélectionne une suggestion d'adresse et met à jour le formulaire
+     */
+    function handleSelectSuggestion(suggestion: MapSuggestion): void {
+        const { address, latitude, longitude } = selectSuggestion(suggestion);
+        formState.value.address = address;
+        formState.value.latitude = latitude;
+        formState.value.longitude = longitude;
+        formState.value.country = 'France';
+
+        toast.info('Adresse sélectionnée', 'Les coordonnées géographiques ont été mises à jour.');
     }
 
-    function selectSuggestion(suggestion: any) {
-        address.value = suggestion.place_name;
-        latitude.value = suggestion.geometry.coordinates[1];
-        longitude.value = suggestion.geometry.coordinates[0];
-        country.value = 'France';
-        suggestions.value = [];
-    }
-
-    function handleImageUpload(event: Event) {
+    /**
+     * Gère l'upload d'images et met à jour le formulaire
+     */
+    function handleImageUpload(event: Event): void {
         const files = (event.target as HTMLInputElement).files;
         if (!files) return;
 
-        const remainingSlots = 10 - images.value.length;
-        const selectedFiles = Array.from(files).slice(0, remainingSlots);
+        const fileArray = Array.from(files);
+        addImages(fileArray);
 
-        selectedFiles.forEach((file) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                images.value.push({
-                    id: nanoid(),
-                    url: reader.result as string,
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-
+        // Reset l'input file pour permettre de sélectionner à nouveau les mêmes fichiers
         if (fileInputRef.value) {
             fileInputRef.value.value = '';
         }
+
+        toast.success(
+            'Images ajoutées',
+            `${fileArray.length} image${fileArray.length > 1 ? 's' : ''} ajoutée${fileArray.length > 1 ? 's' : ''} avec succès.`
+        );
     }
 
-    function removeImage(id: string) {
-        images.value = images.value.filter((img) => img.id !== id);
+    /**
+     * Affiche la popup de confirmation de suppression
+     */
+    function confirmDelete(): void {
+        isDeleteModalOpen.value = true;
     }
 
-    async function handleSubmit() {
-        const payload: Record<string, any> = {
-            name: title.value,
-            description: description.value,
-            practicalInformation: practicalInformation.value,
-            address: address.value,
-            city: city.value,
-            postalCode: postalCode.value,
-            country: country.value,
-            type: type.value,
-            price: pricePerNight.value,
-            capacity: capacity.value,
-            bedrooms: bedrooms.value,
-            bathrooms: bathrooms.value,
-            latitude: latitude.value,
-            longitude: longitude.value,
-            minStay: minStay.value,
-            maxStay: maxStay.value,
-            theme: theme.value,
-            images: images.value.map((img) => ({
-                url: img.url,
-            })),
-        };
-
-        console.log('Payload:', payload);
-
-        if (!isEditing.value) {
-            payload.ownerId = auth.user?.id;
-        }
-
-        const method = isEditing.value ? 'PUT' : 'POST';
-        const url = isEditing.value
-            ? `${config.public.apiUrl}/api/accommodations/${accommodationId}`
-            : `${config.public.apiUrl}/api/accommodations`;
-
-        const res = await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(payload),
-        });
-
-        if (!res.ok) {
-            alert('Erreur lors de la sauvegarde');
-            return;
-        }
-
-        const json = await res.json();
-
-        if (!isEditing.value) {
-            router.push(`/accommodations/${json.accommodation.id}/edit`);
-        } else {
-            showSuccessMessage.value = true;
-            setTimeout(() => {
-                showSuccessMessage.value = false;
-            }, 4000);
-        }
+    /**
+     * Supprime l'hébergement après confirmation
+     */
+    function handleConfirmDelete(): void {
+        isDeleteModalOpen.value = false;
+        deleteAccommodation();
     }
 
-    function confirmDelete() {
-        showDeletePopup.value = true;
-    }
-
-    async function handleConfirmDelete() {
-        showDeletePopup.value = false;
-
-        try {
-            const res = await fetch(`${config.public.apiUrl}/api/accommodations/${accommodationId}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-
-            if (res.ok) {
-                router.push('/my-accommodation');
-            } else {
-                const errText = await res.text();
-                alert('Erreur lors de la suppression : ' + errText);
-            }
-        } catch (err) {
-            alert('Erreur réseau lors de la suppression');
-            console.error(err);
-        }
+    /**
+     * Ferme la modal de suppression
+     */
+    function closeDeleteModal(): void {
+        isDeleteModalOpen.value = false;
     }
 </script>
 
 <template>
-    <div
-        v-if="showSuccessMessage"
-        class="fixed top-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
-    >
-        Hébergement {{ isEditing ? 'modifié' : 'créé' }} avec succès !
-    </div>
-
-    <div v-if="showDeletePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+    <UBaseModal :is-open="isDeleteModalOpen" @close="closeDeleteModal">
+        <div class="p-6">
             <h3 class="text-lg font-semibold mb-4">Confirmer la suppression</h3>
             <p class="mb-6">Êtes-vous sûr de vouloir supprimer ce logement ?</p>
             <div class="flex justify-end gap-4">
-                <UButton variant="secondary" @click="showDeletePopup = false">Annuler</UButton>
-                <UButton variant="danger" @click="handleConfirmDelete">Supprimer</UButton>
+                <UButton variant="secondary" @click="closeDeleteModal">Annuler</UButton>
+                <UButton color="red" variant="primary" @click="handleConfirmDelete">Supprimer</UButton>
             </div>
         </div>
+    </UBaseModal>
+
+    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 max-w-4xl mx-auto">
+        <strong class="font-bold">Erreur:</strong>
+        <span class="block sm:inline">{{ error }}</span>
     </div>
 
-    <form class="space-y-16 max-w-4xl mx-auto" @submit.prevent="handleSubmit">
+    <div v-if="isLoading" class="flex justify-center items-center py-12">
+        <ULoading />
+        <span class="ml-2">Chargement...</span>
+    </div>
+
+    <form v-else class="space-y-16 max-w-4xl mx-auto" @submit.prevent="handleSubmit">
         <section>
             <h2 class="text-h2 font-bold mb-6">Informations du logement</h2>
-            <UInput v-model="title" label="Titre de l'annonce" placeholder="Titre de l'annonce" required />
+            <UInput
+                v-model="formState.title"
+                label="Titre de l'annonce"
+                placeholder="Titre de l'annonce"
+                type="text"
+                required
+            />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                 <USelectBox
-                    v-model="theme"
+                    v-model="formState.theme"
                     :options="themeOptions"
                     label="Thème"
                     placeholder="Sélectionner..."
                     required
                 />
                 <USelectBox
-                    v-model="type"
-                    :options="typeOptions"
+                    v-model="formState.type"
+                    :options="ACCOMMODATION_TYPES"
                     label="Type de location"
                     placeholder="Sélectionner..."
                     required
@@ -291,16 +177,16 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <UInputNumber v-model="bedrooms" label="Chambres" :min="0" />
-                <UInputNumber v-model="bathrooms" label="Salles de bain" :min="0" />
-                <UInputNumber v-model="capacity" label="Capacité" :min="1" required />
+                <UInputNumber v-model="formState.bedrooms" label="Chambres" :min="0" />
+                <UInputNumber v-model="formState.bathrooms" label="Salles de bain" :min="0" />
+                <UInputNumber v-model="formState.capacity" label="Capacité" :min="1" required />
             </div>
 
             <div class="mt-4">
                 <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Description *</label>
                 <textarea
                     id="description"
-                    v-model="description"
+                    v-model="formState.description"
                     rows="6"
                     maxlength="20000"
                     placeholder="Décrivez votre logement"
@@ -314,7 +200,7 @@
                 </label>
                 <textarea
                     id="practicalInformation"
-                    v-model="practicalInformation"
+                    v-model="formState.practicalInformation"
                     rows="4"
                     maxlength="20000"
                     placeholder="Informations pratiques pour les voyageurs"
@@ -323,26 +209,40 @@
                 <p class="text-sm text-gray-400 mt-1">Séparez par des virgules ex: Wi-Fi gratuit, cuisine équipée</p>
             </div>
         </section>
+
         <section>
             <h2 class="text-h2 mb-6">Adresse</h2>
-            <UInput v-model="address" label="Adresse complète" placeholder="Adresse complète" required />
-            <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow relative z-10">
+            <UInput
+                v-model="formState.address"
+                label="Adresse complète"
+                placeholder="Adresse complète"
+                type="text"
+                required
+            />
+            <ul v-if="suggestions.length" class="border mt-2 rounded-md bg-white shadow relative">
                 <li
                     v-for="s in suggestions"
                     :key="s.id"
                     class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    @click="selectSuggestion(s)"
+                    @click="handleSelectSuggestion(s)"
                 >
                     {{ s.place_name }}
                 </li>
             </ul>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <UInput v-model="city" label="Ville" placeholder="Ville" required />
-                <UInput v-model="postalCode" label="Code postal" placeholder="Code postal" required />
+                <UInput v-model="formState.city" label="Ville" placeholder="Ville" type="text" required />
+                <UInput
+                    v-model="formState.postalCode"
+                    label="Code postal"
+                    placeholder="Code postal"
+                    type="text"
+                    required
+                />
             </div>
-            <UInput v-model="country" label="Pays" placeholder="Pays" class="mt-4" required />
+            <UInput v-model="formState.country" label="Pays" placeholder="Pays" type="text" class="mt-4" required />
         </section>
+
         <section>
             <h2 class="text-h2 mb-6">Ajouter vos photos</h2>
             <input
@@ -364,30 +264,37 @@
                 <p class="mt-2 text-sm text-gray-400 text-center">Cliquez ou glissez jusqu'à 10 images ici</p>
             </div>
 
-            <div v-if="images.length" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-                <div v-for="img in images" :key="img.id" class="relative group">
+            <div v-if="formState.images.length" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                <div v-for="img in formState.images" :key="img.id" class="relative group">
                     <img :src="img.url" class="w-full h-40 object-cover rounded-xl" />
                     <button
                         type="button"
                         class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm opacity-0 group-hover:opacity-100 transition"
-                        @click="removeImage(img.id)"
+                        @click="
+                            () => {
+                                removeImage(img.id);
+                                toast.info('Image supprimée', 'L\'image a été supprimée de votre hébergement.');
+                            }
+                        "
                     >
                         ×
                     </button>
                 </div>
             </div>
         </section>
+
         <section>
             <h2 class="text-h2 mb-6">Prix et disponibilité</h2>
-            <UInputNumber v-model="pricePerNight" label="Prix par nuit" :min="1" required />
+            <UInputNumber v-model="formState.pricePerNight" label="Prix par nuit" :min="1" required />
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <UInputNumber v-model="minStay" label="Séjour minimum" :min="1" />
-                <UInputNumber v-model="maxStay" label="Séjour maximum" :min="1" />
+                <UInputNumber v-model="formState.minStay" label="Séjour minimum" :min="1" />
+                <UInputNumber v-model="formState.maxStay" label="Séjour maximum" :min="1" />
             </div>
         </section>
+
         <div class="flex justify-between pt-10 gap-6">
-            <UButton type="submit" variant="primary" class="w-full max-w-md">Enregistrer et continuer</UButton>
-            <UButton v-if="isEditing" type="button" variant="danger" class="w-full max-w-md" @click="confirmDelete">
+            <UButton type="submit" variant="primary" class="w-full"> Enregistrer et continuer </UButton>
+            <UButton v-if="isEditing" type="button" variant="primary" color="red" class="w-full" @click="confirmDelete">
                 Supprimer
             </UButton>
         </div>

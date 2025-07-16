@@ -7,7 +7,9 @@ type User = {
     email: string;
     phone?: string;
     address?: string;
+    preferences?: string[];
     roles: string[];
+    avatar: string;
 };
 
 export const useAuthStore = defineStore('auth', {
@@ -218,6 +220,12 @@ export const useAuthStore = defineStore('auth', {
             } catch {
                 return false;
             }
+        },
+    },
+
+    getters: {
+        isAdmin(state) {
+            return state.user?.roles?.includes('ROLE_ADMIN') ?? false;
         },
     },
 

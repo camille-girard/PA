@@ -3,7 +3,7 @@
         size?: 'sm' | 'md' | 'lg';
         variant?: 'pill' | 'badge' | 'modern';
         color?: 'brand' | 'error' | 'warning' | 'success';
-        icon?: 'false' | 'dot';
+        icon?: 'false' | 'dot' | Component;
     }
 
     const _props = withDefaults(defineProps<BadgeProps>(), {
@@ -58,6 +58,13 @@
         warning: 'bg-utility-warning-500',
         success: 'bg-utility-success-500',
     };
+
+    const iconClasses = {
+        brand: 'text-fg-brand-secondary',
+        error: 'text-fg-error-secondary',
+        warning: 'text-fg-warning-secondary',
+        success: 'text-fg-success-secondary',
+    };
 </script>
 
 <template>
@@ -70,7 +77,9 @@
             roundedClasses[size][variant],
         ]"
     >
+        <div v-if="icon === 'dot'" :class="['rounded-full m-px size-1.5 animate-ping absolute', dotClasses[color]]" />
         <div v-if="icon === 'dot'" :class="['rounded-full m-px size-1.5', dotClasses[color]]" />
+        <component :is="icon" v-if="icon !== 'false' && icon !== 'dot'" :class="['size-3', iconClasses[color]]" />
         <slot />
     </div>
 </template>

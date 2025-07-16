@@ -2,7 +2,7 @@ App\Entity\Accommodation:
   accommodation_1:
     owner: '@owner_1'
     theme: '@theme_1'
-    name: 'Logement dans la série Friends à Paris'
+    name: 'Appartement Série Friends'
     description: 'Séjournez dans un appartement inspiré de la série Friends, avec vue sur la Tour Eiffel.'
     address: '32 Avenue de l’Opéra, 75002 Paris, France'
     city: 'Paris'
@@ -16,15 +16,16 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: ['Goûter', 'Petit-déjeuner offert']
-    practicalInformations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée.'
+    practicalInformations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8686
     longitude: 2.3320
+    rating: 4
 
   accommodation_2:
     owner: '@owner_1'
     theme: '@theme_2'
-    name: 'Château version Harry Potter en Alsace'
+    name: 'Château version Harry Potter'
     description: 'Un château magique en Alsace avec ambiance Gryffondor.'
     address: '1 Rue de la Liberté, 68150 Ribeauvillé, France'
     city: 'Ribeauvillé'
@@ -38,16 +39,17 @@ App\Entity\Accommodation:
     minStay: 2
     maxStay: 10
     advantage: ['Accès à la salle commune', 'Visite du château']
-    practicalInformations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard.'
+    practicalInformations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.1988
     longitude: 7.3209
+    rating: 0
 
   accommodation_3:
     owner: '@owner_1'
     theme: '@theme_3'
-    name: 'Maison Toy Story à Bordeaux'
-    description: 'Une maison ludique inspirée de Toy Story avec jardin plein de jouets.'
+    name: 'Maison Shrek'
+    description: 'Une maison ludique inspirée de Shrek avec son marais.'
     address: '45 Rue Sainte-Catherine, 33000 Bordeaux, France'
     city: 'Bordeaux'
     postalCode: '33000'
@@ -60,7 +62,423 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: ['Jardin', 'Salle de jeux']
-    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire.'
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 44.8378
     longitude: -0.5792
+    rating: 3
+
+
+  accommodation_4:
+    owner: '@owner_2'
+    theme: '@theme_1'
+    name: 'Appartement de la maison Winterfel Game of Thrones'
+    description: 'Un appartement inspiré de la maison Winterfel de Game of Thrones, avec une vue imprenable sur le château.'
+    address: '5 avenue de la République, 94300 Vincennes, France'
+    city: 'Vincennes'
+    postalCode: '94300'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 3
+    bathrooms: 1
+    capacity: 9
+    price: 370.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Terrasse', 'Visite du château',  ]
+    practicalInformations: 'Wi-Fi, salle de jeux, cafetière/thériaire, machine à laver'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.8465388
+    longitude: 2.4290596
+    rating: 0
+
+  accommodation_5:
+    owner: '@owner_3'
+    theme: '@theme_1'
+    name: 'Appartement Stranger Things'
+    description: 'Un appartement inspiré de Stranger Things, avec une ambiance rétro des années 80.'
+    address: '12 Rue de la République, 69440 Mornant, France'
+    city: 'Mornant'
+    postalCode: '69440'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 60.00
+    minStay: 1
+    maxStay: 7
+    advantage: ['Balcon', 'Salle de jeux']
+    practicalInformations: 'Wi-Fi, salle de jeux, cafetière, TV'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 45.6185934
+    longitude: 4.6717498
+    rating: 0
+
+  accommodation_6:
+    owner: '@owner_4'
+    theme: '@theme_1'
+    name: 'Maisons de la famille Simpson'
+    description: 'Une maison inspirée de la famille Simpson, avec une ambiance familiale et chaleureuse.'
+    address: '10 Rue de la République, 13001 Marseille, France'
+    city: 'Marseille'
+    postalCode: '13001'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 3
+    bathrooms: 1
+    capacity: 6
+    price: 290.00
+    minStay: 1
+    maxStay: 7
+    advantage: ['Jardin', 'Salle de jeux', 'Barbecue']
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 43.296607971191406
+    longitude: 5.373908042907715
+    rating: 0
+
+  accommodation_7:
+    owner: '@owner_1'
+    theme: '@theme_1'
+    name: 'Maison de Jesse Breaking Bad'
+    description: 'Une maison inspirée de Jesse de Breaking Bad, avec une ambiance de chimie et de mystère.'
+    address: '10 rue de la Bourse, 31000 Toulouse, France'
+    city: 'Toulouse'
+    postalCode: '31000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 6
+    price: 180.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, barbecue, Sono, TV'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 43.6005834
+    longitude: 1.4425023
+    rating: 0
+
+  accommodation_8:
+    owner: '@owner_2'
+    theme: '@theme_2'
+    name: 'Domaine Seigneur des anneaux'
+    description: 'Un domaine inspiré du Seigneur des Anneaux.'
+    address: '45 Rue de la Parcheminerie, 35000 Rennes, France'
+    city: 'Rennes'
+    postalCode: '35000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 6
+    bathrooms: 1
+    capacity: 15
+    price: 2500.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire, TV'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.109169006347656
+    longitude: -1.6811187267303467
+    rating: 0
+
+  accommodation_9:
+    owner: '@owner_1'
+    theme: '@theme_2'
+    name: 'Appartement Twilight'
+    description: 'Un appartement inspiré de Twilight, avec une ambiance romantique et mystérieuse.'
+    address: '10 Rue de la Paix, 44000 Nantes, France'
+    city: 'Nantes'
+    postalCode: '44000'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 80.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, cafetière, TV, machine à laver, lave-vaiselle'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 47.21492004394531
+    longitude: -1.5545382499694824
+    rating: 0
+
+  accommodation_10:
+    owner: '@owner_1'
+    theme: '@theme_3'
+    name: 'Maison Cabanne Hurlante Harry Potter'
+    description: 'La Cabane Hurlante de Harry Potter, pour des soirées magiques et atypiques.'
+    address: '45 Rue de la Breche, 28000 Chartres, France'
+    city: 'Chartres'
+    postalCode: '33000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 1
+    bathrooms: 0
+    capacity: 2
+    price: 100.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Paysage', 'Atypique' ]
+    practicalInformations: 'Terrasse'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.452082
+    longitude: 1.488866
+    rating: 0
+
+  accommodation_11:
+    owner: '@owner_4'
+    theme: '@theme_3'
+    name: 'Maison Là-Haut'
+    description: 'La maison du célèbre dessin animé Là-Haut, vous propose des moments magiques et colorées.'
+    address: '10 rue Gambetta, 59000 Lille, France'
+    city: 'Lille'
+    postalCode: '59000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 560.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Terrasse', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, cafetière/théière'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 50.6553101
+    longitude: 3.0730889
+    rating: 0
+
+  accommodation_12:
+    owner: '@owner_1'
+    theme: '@theme_3'
+    name: 'Maison Bob l’Éponge'
+    description: 'La maison de Bob l’Éponge, tout près de la mer.'
+    address: '10 Rue de la Canebière, 17000 La Rochelle, France'
+    city: 'La Rochelle'
+    postalCode: '17000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 6
+    price: 300.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 46.1585323
+    longitude: -1.1291496
+    rating: 0
+
+  accommodation_13:
+    owner: '@owner_1'
+    theme: '@theme_3'
+    name: 'Villa Barbie'
+    description: 'Une Villa inspirée de l’univers de Barbie, avec une décoration rose et girly.'
+    address: '10 Chemin du Cal du Mont-Gros, 06300 Nice, France'
+    city: 'Nice'
+    postalCode: '06000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 5
+    bathrooms: 1
+    capacity: 10
+    price: 2600.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux', 'Piscine', 'Spa' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, machine à laver, lave-vaiselle'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 43.713096618652344
+    longitude: 7.296810626983643
+    rating: 0
+
+  accommodation_14:
+    owner: '@owner_2'
+    theme: '@theme_4'
+    name: 'Maison Alien'
+    description: 'l’univers d’Alien dans une maison. Ambiance futuriste et mystérieuse assurée.'
+    address: '10 Rue du Vieux-Marché-aux-Grains, 67000 Strasbourg, France'
+    city: 'Strasbourg'
+    postalCode: '67000'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 3
+    bathrooms: 1
+    capacity: 6
+    price: 110.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.582218170166016
+    longitude: 7.747225761413574
+    rating: 0
+
+  accommodation_15:
+    owner: '@owner_3'
+    theme: '@theme_4'
+    name: 'Appartement Star Wars'
+    description: 'Un appartement inspiré de Star Wars, avec une décoration futuriste et des références à la saga.'
+    address: '242 rue du faubourg Saint-Antoine, 75011 Paris, France'
+    city: 'Paris'
+    postalCode: '75011'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 750.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Balcon', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, cafetière/thérière, machine à laver'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.8492134
+    longitude: 2.3895753
+    rating: 0
+
+  accommodation_16:
+    owner: '@owner_4'
+    theme: '@theme_4'
+    name: 'Apparement Sunshine'
+    description: 'Un appartement Sunshine, avec une ambiance futuriste et lumineuse. Découvrez où se cache le Soleil en Normandie.'
+    address: '5 rue du Gros Horloge, 76000 Rouen, France'
+    city: 'Rouen'
+    postalCode: '76000'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 180.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Balcon', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, vue sur la grosse Horloge'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 49.4415397644043
+    longitude: 1.0912612676620483
+    rating: 0
+
+  accommodation_17:
+    owner: '@owner_1'
+    theme: '@theme_5'
+    name: 'Maison Scream'
+    description: 'Envie de frisson ? Découvrez la maison du film Scream, pour des soirées d’horreur en famille ou entre amis.'
+    address: '10 Rue de la Forêt, 77250 Moret-Loing-et-Orvanne, France'
+    city: 'Moret-Loing-et-Orvanne'
+    postalCode: '77250'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 5
+    bathrooms: 1
+    capacity: 10
+    price: 1600.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'Salle de jeux' ]
+    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire, TV, machine à laver, lave-vaiselle'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.3729046
+    longitude: 2.8065889
+    rating: 0
+
+  accommodation_18:
+    owner: '@owner_2'
+    theme: '@theme_8'
+    name: 'Maison Ghibli'
+    description: 'Petite maison inspirée des films Ghibli, avec une ambiance magique et féerique.'
+    address: '10 Rue des Capucins, 14600 Honfleur, France'
+    city: 'Honfleur'
+    postalCode: '14600'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 280.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'lac' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière, TV, lave-linge'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 49.421033
+    longitude: 0.231189
+    rating: 0
+
+  accommodation_19:
+    owner: '@owner_3'
+    theme: '@theme_9'
+    name: "Maison Maman j'ai raté l’avion"
+    description: 'Grande maison Maman j’ai raté l’avion, pour des vacances en famille ou entre amis.'
+    address: '10 Rue Delabordére, 92200 Neuilly-sur-Seine, France'
+    city: 'Neuilly-sur-Seine'
+    postalCode: '92200'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 4
+    bathrooms: 1
+    capacity: 8
+    price: 580.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Jardin', 'jeuxs pour enfants' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière, TV, lave-linge, sono, lave-vaiselle'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.879326
+    longitude: 2.254647
+    rating: 0
+
+  accommodation_20:
+    owner: '@owner_4'
+    theme: '@theme_6'
+    name: "Appartement IronMan"
+    description: 'Petit appartement IronMan, avec une ambiance futuriste et technologique'
+    address: '10 Place de la Liberté, 64100 Bayonne, France'
+    city: 'Bayonne'
+    postalCode: '64100'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 180.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'balcon' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière, TV, lave-vaiselle'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 43.493106
+    longitude: -1.475044
+    rating: 0
+
+  accommodation_21:
+    owner: '@owner_1'
+    theme: '@theme_7'
+    name: "Domaine Il était une fois dans l’Ouest"
+    description: 'Domaine du Far West, avec une ambiance western et des paysages à couper le souffle.'
+    address: '10 rue Napoléon, 20200 Bastia, France'
+    city: 'Bastia'
+    postalCode: '20200'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 4
+    price: 350.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Paysage', 'Atypique' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière, Barbecue, jardin'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 42.6979658
+    longitude: 9.4498854
+    rating: 0

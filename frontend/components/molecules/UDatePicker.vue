@@ -65,8 +65,8 @@
         },
     });
 
-    function formatDate(date: Date | null): string {
-        if (!date) return '';
+    function formatDate(date: unknown): string {
+        if (!(date instanceof Date)) return '';
 
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -85,8 +85,6 @@
             const day = parseInt(parts[0], 10);
             const month = parseInt(parts[1], 10) - 1;
             const year = parseInt(parts[2], 10);
-
-            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
 
             const date = new Date(year, month, day);
 
@@ -141,23 +139,6 @@
         },
         { immediate: true }
     );
-
-    // Ensure calendar closes when pressing escape
-    onMounted(() => {
-        document.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isOpen.value) {
-                isOpen.value = false;
-            }
-        });
-    });
-
-    onUnmounted(() => {
-        document.removeEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isOpen.value) {
-                isOpen.value = false;
-            }
-        });
-    });
 </script>
 
 <template>
@@ -173,8 +154,9 @@
                 :disabled="disabled"
                 class="!justify-start"
                 @click="toggleCalendar"
-                >{{ inputValue || placeholder }}</UButton
             >
+                {{ inputValue || placeholder }}
+            </UButton>
             <p v-if="hintText" :class="['text-body-sm', destructive ? 'text-error-primary' : 'text-body-md']">
                 {{ hintText }}
             </p>

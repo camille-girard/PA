@@ -4,7 +4,18 @@
     import 'mapbox-gl/dist/mapbox-gl.css';
 
     const mapContainer = ref<HTMLDivElement | null>(null);
-    const accommodations = ref<any[]>([]);
+    interface AccommodationMap {
+        id: number;
+        name: string;
+        latitude: string;
+        longitude: string;
+        price: number;
+        image?: string;
+        images?: { url: string }[];
+        theme: { slug: string };
+    }
+
+    const accommodations = ref<AccommodationMap[]>([]);
 
     const loadMap = async () => {
         if (import.meta.client && mapContainer.value) {
@@ -38,28 +49,42 @@
                 accommodations.value.forEach((acc) => {
                     const lat = parseFloat(acc.latitude);
                     const lng = parseFloat(acc.longitude);
+                    const theme = acc.theme.slug;
+                    const id = acc.id;
                     const image = acc.image || acc.images?.[0]?.url || 'https://via.placeholder.com/300x200?text=Photo';
                     if (!isNaN(lat) && !isNaN(lng)) {
                         const popupContent = `
-            <a href="/thematiques/${acc.theme.slug}/${acc.id}" target="_self"
-               class="relative block bg-white rounded-xl overflow-hidden max-w-xs shadow-xl text-sm no-underline transition outline-none focus:outline-none">
-              <button class="absolute top-2 right-2 text-gray-400 hover:text-orange-600 text-xl z-10 close-popup"
-                      type="button"
-                      onclick="event.stopPropagation(); event.preventDefault(); this.closest('.mapboxgl-popup').remove();">
-                &times;
-              </button>
-              <img src="${image}" alt="${acc.name}" class="w-full h-36 object-cover" />
-              <div class="p-4">
-                <div class="font-semibold text-gray-800 text-base">${acc.name}</div>
-                <div class="text-sm text-gray-500">${acc.price} €/nuit</div>
-              </div>
-            </a>
-          `;
+                          <div data-accommodation-id="${acc.id}"
+                             class="relative block bg-white rounded-xl overflow-hidden max-w-xs shadow-xl text-sm transition outline-none focus:outline-none cursor-pointer">
+                            <button class="absolute top-2 right-2 text-gray-400 hover:text-orange-600 text-xl z-10 close-popup"
+                                    type="button"
+                                    onclick="event.stopPropagation(); event.preventDefault(); this.closest('.mapboxgl-popup').remove();">
+                              &times;
+                            </button>
+                            <img src="${image}" alt="${acc.name}" class="w-full h-36 object-cover" />
+                            <div class="p-4">
+                              <div class="font-semibold text-gray-800 text-base">${acc.name}</div>
+                              <div class="text-sm text-gray-500">${acc.price} €/nuit</div>
+                            </div>
+                          </div>
+                        `;
 
                         const popup = new mapboxgl.Popup({
                             offset: 25,
                             closeButton: false,
                         }).setHTML(popupContent);
+
+                        popup.on('open', () => {
+                            const popupElement = popup.getElement();
+                            const accommodationDiv = popupElement.querySelector('[data-accommodation-id]');
+                            if (accommodationDiv) {
+                                accommodationDiv.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const _accommodationId = accommodationDiv.getAttribute('data-accommodation-id');
+                                    navigateTo(`/thematiques/${theme}/${id}`);
+                                });
+                            }
+                        });
 
                         new mapboxgl.Marker({ color: '#e04f16' }).setLngLat([lng, lat]).setPopup(popup).addTo(map);
                     } else {

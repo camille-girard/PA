@@ -1,40 +1,63 @@
 <script setup lang="ts">
     import '~/types/theme';
     import '~/types/accommodation';
+    import { useRecentlyViewedStore } from '~/stores/recentlyViewed';
+    import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
+    import type { CommentDto } from '~/types/dtos/comment.dto';
 
     const comment = ref([]);
-    const rental = [
-        { title: 'Friends', image: '/friends.png' },
-        { title: 'Star Wars', image: '/StarWars.png' },
-        { title: 'Le Seigneur des anneaux', image: '/Seingeur_des_anneaux.png' },
-    ];
-
+    const recentlyViewedStore = useRecentlyViewedStore();
     const { theme, id } = useRoute().params;
+
+    const currentId = typeof id === 'string' ? parseInt(id) : id;
+    const recentlyViewed = computed(() => {
+        return recentlyViewedStore.getRecentlyViewedExcept(currentId);
+    });
+
     const Location = ref<Accommodation | null>(null);
+
+    useSeoMeta({
+        title: () => (Location.value ? `${Location.value.name} - PopnBed` : 'Hébergement - PopnBed'),
+        description: () =>
+            Location.value
+                ? `Découvrez ${Location.value.name}, un hébergement unique à ${Location.value.price}€/nuit. Réservez maintenant votre séjour thématique.`
+                : 'Découvrez un hébergement unique pour votre séjour thématique',
+    });
 
     onMounted(async () => {
         const { $api } = useNuxtApp();
 
         try {
             const [accommodationResponse, commentsResponse] = await Promise.all([
-                useAuthFetch<any>($api(`/api/accommodations/${id}`)),
-                useAuthFetch<any[]>($api(`/api/comments/accommodation/${id}`)),
+                useAuthFetch<AccommodationDto>($api(`/api/accommodations/${id}`)),
+                useAuthFetch<CommentDto[]>($api(`/api/comments/accommodation/${id}`)),
             ]);
 
             if (accommodationResponse?.data?.value) {
                 Location.value = accommodationResponse.data.value;
+
+                const accommodationToAdd = {
+                    ...accommodationResponse.data.value,
+                    theme: {
+                        slug: theme,
+                    },
+                };
+
+                recentlyViewedStore.addAccommodation(accommodationToAdd);
             } else {
                 console.warn("Pas de données d'accommodation reçues");
             }
 
             if (commentsResponse?.data?.value) {
-                comment.value = commentsResponse.data.value.map((c: any) => ({
+                console.log('Debug commentaires reçus:', commentsResponse.data.value);
+                comment.value = commentsResponse.data.value.map((c: CommentDto) => ({
                     id: c.id,
                     name: `${c.client.firstName || 'Client'} ${c.client.lastName || ''}`.trim(),
                     userDetail: 'PopnBeder depuis ' + (1 + Math.floor(Math.random() * 5)) + ' ans',
                     comment: c.content,
                     rating: c.rating,
-                    userImage: 'https://via.placeholder.com/150',
+                    avatar: c.client.avatar,
+                    userImage: c.client.avatar || '/avatar-test.png',
                 }));
             } else {
                 console.warn('Aucun commentaire trouvé pour ce logement.');
@@ -65,13 +88,18 @@
                 </div>
                 <div class="relative w-full md:w-1/3">
                     <div class="sticky top-24">
-                        <BookingCard :price-per-night="Location?.price" />
+                        <BookingCard
+                            v-if="Location"
+                            :price-per-night="Location.price"
+                            :accommodation-id="Location.id"
+                            :title="Location.name"
+                        />
                     </div>
                 </div>
             </div>
-            <section id="consult-trending" class="w-full pt-32">
+            <section v-if="recentlyViewed.length > 0" id="consult-trending" class="w-full pt-32">
                 <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
-                <RentalCards :items="rental" />
+                <RentalCards :items="recentlyViewed" :link-prefix="`/thematiques/${theme}`" />
             </section>
         </div>
         <UFooter />

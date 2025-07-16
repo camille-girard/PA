@@ -12,9 +12,12 @@ class AccommodationImages
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    /**
+     * @phpstan-ignore-next-line
+     */
     private ?int $id = null;
 
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 

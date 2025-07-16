@@ -1,15 +1,46 @@
 App\Entity\Theme:
   theme_1:
     name: 'Série TV'
-    description: 'Séjournez dans votre série TV préférée'
+    description: 'Plongez dans vos séries préférées et vivez l’histoire comme si vous y étiez.'
     slug: 'serie-tv'
 
   theme_2:
-    name: 'Film fantastique'
-    description: 'Séjournez dans votre film préféré'
+    name: 'Fantastique'
+    description: 'Entrez dans un univers magique où créatures mythiques et légendes prennent vie.'
     slug: 'fantastique'
 
   theme_3:
     name: 'Dessin animé'
-    description: 'Séjournez dans votre jeu vidéo préféré'
+    description: 'Revivez vos souvenirs d’enfance ou découvrez de nouveaux héros attachants.'
     slug: 'dessin-anime'
+
+  theme_4:
+    name: 'Science-fiction'
+    description: "Vers l'infini est l'audelas ! Voyagez au-delà des étoiles et explorez des mondes où tout devient possible."
+    slug: 'science-fiction'
+
+  theme_5:
+    name: 'Horreur'
+    description: "Frissons garantis : préparez-vous à affronter vos pires cauchemars… si vous l’osez. Freddy n'a qu'à bien se tenir !"
+    slug: 'horreur'
+
+  theme_6:
+    name: 'Action'
+    description: 'Adrénaline, poursuites et explosions : vivez chaque instant à 100 à l’heure. Vous croiserez peut être
+    Bruce Willis.'
+    slug: 'dessin-anime'
+
+  theme_7:
+    name: 'Animation'
+    description: 'Un monde haut en couleur et en imagination pour petits et grands rêveurs.'
+    slug: 'animation'
+
+  theme_8:
+    name: 'Western'
+    description: 'Retour au Far West : chevauchées, duels et saloons vous attendent. Hi Ha !'
+    slug: 'western'
+
+  theme_9:
+    name: 'Comédie'
+    description: 'Rien de mieux qu’un bon film pour rire et se détendre. Préparez-vous à des moments hilarants !'
+    slug: 'comedie'

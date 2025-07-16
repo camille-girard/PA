@@ -1,120 +1,167 @@
 <script setup lang="ts">
-  import { useRoute } from 'vue-router'
-  import Input from '~/components/atoms/UInput.vue'
-  import Checkbox from '~/components/atoms/UCheckbox.vue'
+    import { ref, reactive, watch } from 'vue';
+    import { useRoute } from 'vue-router';
+    import Input from '~/components/atoms/UInput.vue';
+    import UTextarea from '~/components/atoms/UTextarea.vue';
+    import UCheckbox from '~/components/atoms/UCheckbox.vue';
+    import UButton from '~/components/atoms/UButton.vue';
+    import { useRuntimeConfig } from '#app';
+    import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
+    import type { OwnerDto } from '~/types/dtos/owner.dto';
+    import type { ApiError } from '~/types/apiError';
 
-  definePageMeta({
-    layout: 'backoffice',
-  })
+    definePageMeta({
+        layout: 'backoffice',
+        middleware: 'admin',
+    });
 
-  const route = useRoute()
-  const id = route.params.id
-
-  const { public: { apiUrl } } = useRuntimeConfig()
-
-  const { data: owner, refresh, pending } = await useFetch(`/api/owners/${id}`, {
-    baseURL: apiUrl,
-  })
-
-  const form = reactive({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    isVerified: false,
-  })
-
-  watch(owner, (newOwner) => {
-    if (newOwner) {
-      form.firstName = newOwner.firstName
-      form.lastName = newOwner.lastName
-      form.email = newOwner.email
-      form.phone = newOwner.phone
-      form.isVerified = newOwner.isVerified
+    function isApiError(error: unknown): error is ApiError {
+        return typeof error === 'object' && error !== null && 'data' in error;
     }
-  }, { immediate: true })
 
-  const saving = ref(false)
-  const success = ref(false)
-  const errorMsg = ref('')
+    const route = useRoute();
+    const id = ref<string | undefined>(undefined);
+    const owner = ref<OwnerDto | null>(null);
+    const pending = ref(false);
+    const errorMsg = ref('');
+    const saving = ref(false);
 
-  async function save() {
-    saving.value = true
-    success.value = false
-    errorMsg.value = ''
+    const {
+        public: { apiUrl },
+    } = useRuntimeConfig();
 
-    try {
-      await $fetch(`/api/owners/${id}`, {
-        method: 'PUT',
-        baseURL: apiUrl,
-        body: {
-          firstName: form.firstName,
-          lastName: form.lastName,
-          email: form.email,
-          phone: form.phone,
-          isVerified: form.isVerified,
+    const toast = useToast();
+
+    const form = reactive({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+        isVerified: false,
+        bio: '',
+        rating: 0,
+    });
+
+    async function loadOwner(ownerId: string) {
+        pending.value = true;
+        errorMsg.value = '';
+        try {
+            const response = await useAuthFetch(`/api/owners/${ownerId}`, {
+                baseURL: apiUrl,
+            });
+            owner.value = response.data.value;
+            if (owner.value) {
+                form.firstName = owner.value.firstName;
+                form.lastName = owner.value.lastName;
+                form.email = owner.value.email;
+                form.phone = owner.value.phone ?? '';
+                form.address = owner.value.address ?? '';
+                form.isVerified = owner.value.isVerified;
+                form.bio = owner.value.bio ?? '';
+                form.rating = owner.value.rating ?? 0;
+            } else {
+                errorMsg.value = 'Aucun hôte trouvé.';
+                toast.error('Erreur', errorMsg.value);
+            }
+        } catch (e: unknown) {
+            if (isApiError(e)) {
+                errorMsg.value = e.data?.message || 'Erreur lors du chargement.';
+            } else {
+                errorMsg.value = 'Erreur lors du chargement.';
+            }
+            toast.error('Erreur', errorMsg.value);
+        } finally {
+            pending.value = false;
+        }
+    }
+
+    async function refresh() {
+        if (id.value) {
+            await loadOwner(id.value);
+        }
+    }
+
+    async function save() {
+        if (!id.value) return;
+
+        saving.value = true;
+        errorMsg.value = '';
+
+        try {
+            await $fetch(`/api/owners/${id.value}`, {
+                method: 'PUT',
+                baseURL: apiUrl,
+                body: {
+                    firstName: form.firstName,
+                    lastName: form.lastName,
+                    email: form.email,
+                    phone: form.phone,
+                    address: form.address,
+                    isVerified: form.isVerified,
+                    bio: form.bio,
+                    rating: form.rating,
+                },
+            });
+            toast.success('Succès', 'Modifications enregistrées avec succès.');
+            await refresh();
+        } catch (error: unknown) {
+            if (isApiError(error)) {
+                errorMsg.value = error.data?.message || 'Erreur lors de l’enregistrement.';
+            } else {
+                errorMsg.value = 'Erreur lors de l’enregistrement.';
+            }
+            toast.error('Erreur', errorMsg.value);
+        } finally {
+            saving.value = false;
+        }
+    }
+
+    watch(
+        () => route.params.id,
+        (newId) => {
+            if (typeof newId === 'string' && newId !== '') {
+                id.value = newId;
+                loadOwner(newId);
+            }
         },
-      })
-
-      success.value = true
-      await refresh()
-    } catch (error: any) {
-      errorMsg.value = error?.data?.message || 'Erreur lors de l’enregistrement.'
-    } finally {
-      saving.value = false
-    }
-  }
+        { immediate: true }
+    );
 </script>
 
 <template>
-  <div class="max-w-3xl space-y-6">
-    <h1 class="text-2xl font-semibold">Modifier l’hôte</h1>
+    <div class="max-w-3xl space-y-6">
+        <ULink to="/backoffice/owners" size="lg" class="flex flex-row gap-2">
+            <ArrowLeftIcon /> Retour à la liste
+        </ULink>
+        <h1 class="text-2xl font-semibold">Modifier l’hôte</h1>
 
-    <form @submit.prevent="save" class="grid gap-6 pt-6 md:grid-cols-2" :aria-busy="saving || pending">
-      <Input
-          v-model="form.firstName"
-          label="Prénom"
-          name="firstName"
-          type="text"
-          required
-      />
-      <Input
-          v-model="form.lastName"
-          label="Nom"
-          name="lastName"
-          type="text"
-          required
-      />
-      <Input
-          class="md:col-span-2"
-          v-model="form.email"
-          label="Email"
-          name="email"
-          type="email"
-          required
-      />
-      <Input
-          class="md:col-span-2"
-          v-model="form.phone"
-          label="Téléphone"
-          name="phone"
-          type="tel"
-      />
+        <div v-if="pending" class="text-gray-600">Chargement…</div>
+        <div v-else-if="errorMsg" class="text-red-600">{{ errorMsg }}</div>
 
-      <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-        <UButton
-            :disabled="saving"
-            :isLoading="saving"
-            size="lg"
-            variant="primary"
-            type="submit"
-        >
-          {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
-        </UButton>
+        <form v-else class="grid gap-6 pt-6 md:grid-cols-2" :aria-busy="saving || pending" @submit.prevent="save">
+            <Input v-model="form.firstName" label="Prénom" name="firstName" type="text" required />
+            <Input v-model="form.lastName" label="Nom" name="lastName" type="text" required />
+            <Input v-model="form.email" class="md:col-span-2" label="Email" name="email" type="email" required />
+            <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
+            <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
 
-        <span v-if="success" class="text-green-600 text-sm">Modifications enregistrées</span>
-        <span v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</span>
-      </div>
-    </form>
-  </div>
+            <UTextarea
+                v-model="form.bio"
+                class="md:col-span-2"
+                label="Bio"
+                name="bio"
+                placeholder="Description ou présentation de l'hôte"
+            />
+
+            <UCheckbox v-model="form.isVerified" class="md:col-span-2" label="Compte vérifié" name="isVerified" />
+
+            <div class="md:col-span-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+                <UButton :disabled="saving" :is-loading="saving" size="lg" variant="primary" type="submit">
+                    {{ saving ? 'Enregistrement…' : 'Enregistrer' }}
+                </UButton>
+            </div>
+        </form>
+    </div>
 </template>

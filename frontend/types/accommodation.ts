@@ -1,15 +1,31 @@
-export type Accommodation = {
+import type { AccommodationImage } from './accommodationImage';
+import type { Comment } from './comment';
+import type { Owner } from './owner';
+import type { Theme } from './theme';
+
+export interface Accommodation {
     id: number;
     name: string;
     description: string;
     address: string;
+    city?: string;
+    postalCode?: string;
+    country?: string;
+    type?: string;
+    bedrooms?: number;
+    bathrooms?: number;
     capacity: number;
     price: number;
+    rating?: number;
     advantage: string[];
     practicalInformations: string;
-    images: any[];
+    images: AccommodationImage[];
     owner: Owner;
-    host: string[];
-    theme: Theme;
-    comments: any[];
-};
+    theme?: Theme;
+    comments?: Comment[];
+    latitude?: number;
+    longitude?: number;
+    minStay?: number;
+    maxStay?: number;
+    createdAt?: string;
+}

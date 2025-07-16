@@ -2,10 +2,9 @@
     import UButton from '~/components/atoms/UButton.vue';
     import EditableField from '@/components/EditableField.vue';
     import { useAuthStore } from '@/stores/auth';
-    import { onMounted } from 'vue';
-    import { useRouter } from 'vue-router';
 
     const auth = useAuthStore();
+    const router = useRouter();
 
     onMounted(() => {
         if (!auth.user) {
@@ -14,7 +13,15 @@
     });
 
     function saveField(field: string, value: string) {
-        auth.updateUser({ [field]: value });
+        if (field === 'preferences') {
+            const preferencesArray = value
+                .split(',')
+                .map((pref) => pref.trim())
+                .filter((pref) => pref.length > 0);
+            auth.updateUser({ [field]: preferencesArray });
+        } else {
+            auth.updateUser({ [field]: value });
+        }
     }
 
     function handleDelete() {
@@ -30,17 +37,66 @@
         });
     }
 
-    const router = useRouter();
-
     function goToNewAccommodation() {
         router.push('/newaccommodation');
     }
+
+    function goToBecomeOwner() {
+        router.push('/owner-request');
+    }
+
+    const isClientOnly = computed(
+        () => auth.user?.roles.includes('ROLE_CLIENT') && !auth.user?.roles.includes('ROLE_OWNER')
+    );
+
+    const preferencesString = computed(() => {
+        if (!auth.user?.preferences) {
+            return '';
+        }
+
+        if (!Array.isArray(auth.user.preferences)) {
+            if (typeof auth.user.preferences === 'string') {
+                try {
+                    const parsed = JSON.parse(auth.user.preferences);
+                    if (Array.isArray(parsed)) {
+                        return parsed.join(', ');
+                    }
+                } catch {
+                    return auth.user.preferences; // Retourner tel quel si c'est déjà une string
+                }
+            }
+            return '';
+        }
+
+        return auth.user.preferences.join(', ');
+    });
+
+    const userAvatarUrl = computed(() => {
+        return auth.user?.avatar || '';
+    });
+
+    const onAvatarUpdated = (avatarUrl: string) => {
+        console.log('Avatar updated:', avatarUrl);
+        // L'avatar sera automatiquement mis à jour via le store
+    };
+
+    const onAvatarDeleted = () => {
+        console.log('Avatar deleted');
+        // L'avatar sera automatiquement mis à jour via le store
+    };
 </script>
 
 <template>
     <div class="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10 items-start">
         <div class="bg-orange-100 rounded-3xl p-6 flex flex-col items-center w-full md:w-1/4">
-            <img src="/Patrick.jpg" alt="Avatar" class="w-24 h-24 rounded-full object-cover mb-4" />
+            <div class="mb-4">
+                <AvatarUpload
+                    size="2xl"
+                    :current-avatar="userAvatarUrl"
+                    @avatar-updated="onAvatarUpdated"
+                    @avatar-deleted="onAvatarDeleted"
+                />
+            </div>
             <p class="text-body-lg font-bold">{{ auth.user?.firstName }}</p>
         </div>
 
@@ -70,17 +126,35 @@
                     field="address"
                     @save="saveField"
                 />
+
+                <EditableField
+                    label="Préférences"
+                    :model-value="preferencesString"
+                    field="preferences"
+                    @save="saveField"
+                />
             </div>
         </div>
     </div>
 
     <div class="flex flex-col items-center mt-10 gap-2">
-        <UButton size="lg" variant="primary" class="w-full max-w-2xl" @click="goToNewAccommodation">
+        <UButton
+            v-if="auth.user?.roles.includes('ROLE_OWNER')"
+            size="lg"
+            variant="primary"
+            class="w-full max-w-2xl"
+            @click="goToNewAccommodation"
+        >
             Ajouter un nouveau bien
         </UButton>
+
+        <UButton v-else-if="isClientOnly" size="lg" variant="primary" class="w-full max-w-2xl" @click="goToBecomeOwner">
+            Devenir propriétaire
+        </UButton>
+
         <UButton
             size="sm"
-            variant="outline"
+            variant="secondary"
             class="text-red-600 border-orange-300 hover:bg-orange-50 hover:text-red-700"
             @click="handleDelete"
         >

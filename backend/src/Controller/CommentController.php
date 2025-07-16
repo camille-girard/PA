@@ -199,6 +199,7 @@ class CommentController extends AbstractController
                     'id' => $client->getId(),
                     'firstName' => $client->getFirstName(),
                     'lastName' => $client->getLastName(),
+                    'avatar' => $client->getAvatar(),
                 ],
             ];
         }

@@ -16,6 +16,9 @@ class AccommodationRepository extends ServiceEntityRepository
         parent::__construct($registry, Accommodation::class);
     }
 
+    /**
+     * @return array<Accommodation>
+     */
     public function findByOwnerId(int $ownerId): array
     {
         return $this->createQueryBuilder('a')
@@ -26,6 +29,10 @@ class AccommodationRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array<Accommodation>
+     *
      * @throws \Exception
      */
     public function searchAccommodations(array $criteria): array
@@ -127,6 +134,8 @@ class AccommodationRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<string, mixed> $criteria
+     *
      * @throws \Exception
      */
     public function countByCriteria(array $criteria): int
@@ -162,5 +171,58 @@ class AccommodationRepository extends ServiceEntityRepository
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @param array<string> $preferences
+     *
+     * @return Accommodation[]
+     */
+    public function findByPreferences(array $preferences, int $limit = 6): array
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if (empty($preferences)) {
+            return $qb->orderBy('a.createdAt', 'DESC')
+                      ->setMaxResults($limit)
+                      ->getQuery()
+                      ->getResult();
+        }
+
+        $orConditions = [];
+        $paramIndex = 0;
+
+        foreach ($preferences as $preference) {
+            $preference = trim(strtolower($preference));
+            if (!empty($preference)) {
+                $paramName = 'pref'.$paramIndex;
+                $orConditions[] = "(
+                    LOWER(a.practicalInformations) LIKE :$paramName OR 
+                    LOWER(a.description) LIKE :$paramName OR 
+                    LOWER(a.name) LIKE :$paramName
+                )";
+                $qb->setParameter($paramName, '%'.$preference.'%');
+                ++$paramIndex;
+            }
+        }
+
+        if (!empty($orConditions)) {
+            $qb->where(implode(' OR ', $orConditions));
+        }
+
+        $results = $qb->orderBy('a.createdAt', 'DESC')
+                      ->setMaxResults($limit)
+                      ->getQuery()
+                      ->getResult();
+
+        if (empty($results)) {
+            return $this->createQueryBuilder('a')
+                        ->orderBy('a.createdAt', 'DESC')
+                        ->setMaxResults($limit)
+                        ->getQuery()
+                        ->getResult();
+        }
+
+        return $results;
     }
 }

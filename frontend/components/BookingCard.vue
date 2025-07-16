@@ -1,18 +1,26 @@
 <script setup lang="ts">
+    import { ref, computed } from 'vue';
+    import { useRouter } from 'vue-router';
+    import { useAuthStore } from '~/stores/auth';
     import UDatePicker from '~/components/molecules/UDatePicker.vue';
     import UInputNumber from '~/components/atoms/UInputNumber.vue';
+    import UButton from '~/components/atoms/UButton.vue';
 
-    interface PricePerNight {
+    interface Props {
         pricePerNight: number;
+        accommodationId: number;
+        title: string;
     }
-    const pricePerNight = defineProps<PricePerNight>();
 
-    const arrival = ref('');
-    const departure = ref('');
-    const guests = ref('');
-    const arrivalDate = ref(null);
-    const departureDate = ref(null);
-    const amountTravelers = ref(0);
+    const props = defineProps<Props>();
+
+    const arrivalDate = ref<Date | null>(null);
+    const departureDate = ref<Date | null>(null);
+    const amountTravelers = ref<number>(0);
+    const showModal = ref(false);
+
+    const router = useRouter();
+    const auth = useAuthStore();
 
     const numberOfNights = computed(() => {
         if (!arrivalDate.value || !departureDate.value) return 0;
@@ -21,37 +29,79 @@
         return nights > 0 ? nights : 0;
     });
 
-    const total = computed(() => numberOfNights.value * pricePerNight.pricePerNight);
+    const total = computed(() => numberOfNights.value * props.pricePerNight);
+
+    const handleBooking = () => {
+        if (!arrivalDate.value || !departureDate.value || amountTravelers.value <= 0) {
+            showModal.value = true;
+            return;
+        }
+
+        if (!auth.isAuthenticated) {
+            router.push('/login');
+            return;
+        }
+
+        router.push({
+            path: '/booking/booking-request',
+            query: {
+                title: props.title,
+                arrival: arrivalDate.value.toISOString(),
+                departure: departureDate.value.toISOString(),
+                guests: amountTravelers.value.toString(),
+                price: total.value.toFixed(2),
+                pricePerNight: props.pricePerNight.toString(),
+                nights: numberOfNights.value.toString(),
+                accommodationId: props.accommodationId.toString(),
+            },
+        });
+    };
 </script>
 
 <template>
     <div class="w-full max-w-sm p-6 bg-white border border-gray-300 rounded-2xl shadow-sm space-y-4">
         <div class="text-center">
             <p class="font-bold text-lg">
-                {{ pricePerNight.pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span>
+                {{ props.pricePerNight }} € <span class="font-normal text-gray-500">/ nuit</span>
             </p>
         </div>
+
         <UDatePicker v-model="arrivalDate" placeholder="Arrivée" type="date" class="w-full" />
         <UDatePicker v-model="departureDate" placeholder="Départ" type="date" class="w-full" />
         <UInputNumber
             v-model="amountTravelers"
-            placeholder="Nombre de voyageur"
-            :min="0"
+            placeholder="Nombre de voyageurs"
+            :min="1"
             class="w-full"
             suffix="voyageur"
         />
+
         <div class="w-full rounded-md border border-gray-200 bg-gray-50 px-4 py-3 text-center">
             <p class="text-sm text-gray-500">Total du séjour</p>
-            <p class="text-lg font-semibold text-gray-800">{{ total > 0 ? `${total} €` : '—' }}</p>
+            <p class="text-lg font-semibold text-gray-800">
+                {{ total > 0 ? `${total} €` : '—' }}
+            </p>
         </div>
 
         <div class="flex space-x-2 pt-2">
-            <button class="w-1/2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md">
+            <button
+                class="w-1/2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-md"
+                @click="handleBooking"
+            >
                 Réserver
             </button>
             <button class="w-1/2 bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-md">
                 Contacter l'hôte
             </button>
+        </div>
+    </div>
+    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-xl shadow-lg max-w-sm text-center space-y-4">
+            <h2 class="text-xl font-bold">Champs manquants</h2>
+            <p class="text-gray-600">Merci de remplir les dates et le nombre de voyageurs avant de réserver.</p>
+            <div class="flex justify-center">
+                <UButton size="md" variant="primary" @click="showModal = false"> Fermer </UButton>
+            </div>
         </div>
     </div>
 </template>

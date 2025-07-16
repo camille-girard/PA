@@ -4,6 +4,13 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    frontend_url: '%env(FRONTEND_URL)%'
+    cloudflare_r2.region: '%env(CLOUDFLARE_R2_REGION)%'
+    cloudflare_r2.endpoint: '%env(CLOUDFLARE_R2_ENDPOINT)%'
+    cloudflare_r2.access_key: '%env(CLOUDFLARE_R2_ACCESS_KEY)%'
+    cloudflare_r2.secret_key: '%env(CLOUDFLARE_R2_SECRET_KEY)%'
+    cloudflare_r2.bucket_name: '%env(CLOUDFLARE_R2_BUCKET_NAME)%'
+    cloudflare_r2.public_url: '%env(CLOUDFLARE_R2_PUBLIC_URL)%'
 
 services:
     # default configuration for services in *this* file

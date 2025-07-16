@@ -42,7 +42,7 @@
 </script>
 
 <template>
-    <div class="flex gap-2">
+    <div class="flex gap-2 items-center">
         <button
             :class="[baseClasses, sizeClasses[size], { '!bg-brand-solid': isChecked, '!bg-disabled': disabled }]"
             @click="handleClick"
@@ -58,7 +58,7 @@
                 ]"
             />
         </button>
-        <div v-if="label" :class="size === 'sm' ? 'text-sm' : 'text-base'">
+        <div v-if="label" :class="[size === 'sm' ? 'text-sm' : 'text-base']">
             <label class="text-secondary font-medium" @click="handleClick">{{ label }}</label>
             <p v-if="supportingLabel" class="text-tertiary text-sm font-normal">
                 {{ supportingLabel }}

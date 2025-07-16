@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 class Owner extends User
@@ -17,20 +18,23 @@ class Owner extends User
      */
     #[ORM\OneToMany(targetEntity: Accommodation::class, mappedBy: 'owner', orphanRemoval: true)]
     #[Groups(['owner:read'])]
+    #[MaxDepth(1)]
     private Collection $accommodations;
 
     /**
      * @var Collection<int, Message>
      */
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'owner')]
+    #[Groups(['owner:read'])]
     private Collection $messages;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['owner:read'])]
     private ?string $bio = null;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]
     #[Groups(['owner:read'])]
-    private float $notation = 0;
+    private float $rating = 0;
 
     public function __construct()
     {
@@ -61,7 +65,6 @@ class Owner extends User
     public function removeAccommodation(Accommodation $accommodation): static
     {
         if ($this->accommodations->removeElement($accommodation)) {
-            // set the owning side to null (unless already changed)
             if ($accommodation->getOwner() === $this) {
                 $accommodation->setOwner(null);
             }
@@ -91,7 +94,6 @@ class Owner extends User
     public function removeMessage(Message $message): static
     {
         if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
             if ($message->getOwner() === $this) {
                 $message->setOwner(null);
             }
@@ -107,14 +109,15 @@ class Owner extends User
     }
 
     #[Groups(['owner:read'])]
-    public function getNotation(): float
+    public function getRating(): float
     {
-        return $this->notation;
+        return $this->rating;
     }
 
-    public function setNotation(float $notation): static
+    public function setRating(float $rating): static
     {
-        $this->notation = $notation;
+        $this->rating = $rating;
+
         return $this;
     }
 

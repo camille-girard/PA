@@ -9,6 +9,8 @@ export type Owner = {
     location?: string;
     roles?: string[];
     bio?: string;
+    avatar?: string;
+    rating?: number;
     createdAt: string;
     comments?: Comment[];
     accommodations?: Rental[];

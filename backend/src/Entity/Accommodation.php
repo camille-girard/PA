@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: AccommodationRepository::class)]
 class Accommodation
@@ -15,14 +16,14 @@ class Accommodation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['accommodation:read', 'booking:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read'])]
     /**
      * @phpstan-ignore-next-line
      */
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -62,7 +63,7 @@ class Accommodation
     private ?int $capacity = null;
 
     #[ORM\Column]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private ?float $price = null;
 
     /**
@@ -76,6 +77,10 @@ class Accommodation
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     private ?string $practicalInformations = null;
 
+    #[ORM\Column(type: 'float', options: ['default' => 0])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
+    private float $rating = 0;
+
     #[ORM\Column]
     #[Groups(['owner:read'])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -83,14 +88,19 @@ class Accommodation
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[MaxDepth(1)]
     private ?Owner $owner = null;
 
     #[ORM\ManyToOne(inversedBy: 'accommodation')]
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[MaxDepth(1)]
     private ?Theme $theme = null;
 
+    /**
+     * @var Collection<int, AccommodationImages>
+     */
     #[ORM\OneToMany(mappedBy: 'accommodation', targetEntity: AccommodationImages::class)]
-    #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
+    #[Groups(['accommodation:read', 'accommodation:summary', 'booking:read', 'owner:read'])]
     private Collection $images;
 
     /**
@@ -267,11 +277,17 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getAdvantage(): array
     {
         return $this->advantage;
     }
 
+    /**
+     * @param array<string> $advantage
+     */
     public function setAdvantage(array $advantage): static
     {
         $this->advantage = $advantage;
@@ -287,6 +303,18 @@ class Accommodation
     public function setPracticalInformations(string $practicalInformations): static
     {
         $this->practicalInformations = $practicalInformations;
+
+        return $this;
+    }
+
+    public function getRating(): float
+    {
+        return $this->rating;
+    }
+
+    public function setRating(float $rating): static
+    {
+        $this->rating = $rating;
 
         return $this;
     }
@@ -327,6 +355,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, AccommodationImages>
+     */
     #[Groups(['accommodation:read', 'booking:read', 'owner:read'])]
     public function getImages(): Collection
     {
@@ -354,6 +385,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Booking>
+     */
     public function getBookings(): Collection
     {
         return $this->bookings;
@@ -380,6 +414,9 @@ class Accommodation
         return $this;
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;

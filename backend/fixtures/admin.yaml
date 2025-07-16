@@ -7,3 +7,18 @@ App\Entity\Admin:
     last_name: 'Doe'
     is_verified: true
     created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/joe.webp'
+
+  admin_2:
+    email: 'admin2@example.com'
+    roles: [ 'ROLE_ADMIN' ]
+    password: 'password123'
+    first_name: 'maria'
+    last_name: 'DB'
+    is_verified: true
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/maria.webp'
+    phone: '123-456-7890'
+    address: '123 Admin St, Admin City, AD 12345'
+
+

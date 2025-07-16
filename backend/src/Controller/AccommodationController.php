@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Accommodation;
 use App\Entity\AccommodationImages;
+use App\Entity\Owner;
 use App\Repository\AccommodationRepository;
 use App\Repository\OwnerRepository;
 use App\Repository\ThemeRepository;
@@ -15,8 +16,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/api/accommodations', name: 'api_accommodation_')]
 #[OA\Tag(name: 'Accommodation')]
@@ -45,6 +46,7 @@ class AccommodationController extends AbstractController
     #[Route('/me', name: 'my-accommodation', methods: ['GET'])]
     public function myAccommodation(): JsonResponse
     {
+        /** @var Owner|null $user */
         $user = $this->getUser();
 
         if (!$user) {
@@ -57,7 +59,6 @@ class AccommodationController extends AbstractController
             'accommodations' => $accommodations,
         ], Response::HTTP_OK);
     }
-
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(int $id): JsonResponse
@@ -83,6 +84,7 @@ class AccommodationController extends AbstractController
             'bathrooms' => $accommodation->getBathrooms(),
             'capacity' => $accommodation->getCapacity(),
             'price' => $accommodation->getPrice(),
+            'rating' => $accommodation->getRating(),
             'advantage' => $accommodation->getAdvantage(),
             'practicalInformations' => $accommodation->getPracticalInformations(),
             'latitude' => $accommodation->getLatitude(),
@@ -99,13 +101,27 @@ class AccommodationController extends AbstractController
                 'firstName' => $accommodation->getOwner()?->getFirstName(),
                 'bio' => $accommodation->getOwner()?->getBio(),
                 'email' => $accommodation->getOwner()?->getEmail(),
+                'avatar' => $accommodation->getOwner()?->getAvatar(),
+                'rating' => $accommodation->getOwner()?->getRating() ?? 0,
             ],
+            'bookings' => array_map(fn ($booking) => [
+                'id' => $booking->getId(),
+                'startDate' => $booking->getStartDate()?->format('Y-m-d'),
+                'endDate' => $booking->getEndDate()?->format('Y-m-d'),
+                'status' => $booking->getStatus(),
+                'client' => [
+                    'id' => $booking->getClient()?->getId(),
+                    'firstName' => $booking->getClient()?->getFirstName(),
+                    'lastName' => $booking->getClient()?->getLastName(),
+                ],
+            ], $accommodation->getBookings()->toArray()),
         ]);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
+        /** @var Owner|null $user */
         $user = $this->getUser();
 
         if (!$user) {
@@ -250,6 +266,14 @@ class AccommodationController extends AbstractController
             $accommodation->setLongitude($data['longitude']);
         }
 
+        if (array_key_exists('practicalInformations', $data)) {
+            $accommodation->setPracticalInformations($data['practicalInformations'] ?? '');
+        }
+
+        if (array_key_exists('advantage', $data)) {
+            $accommodation->setAdvantage($data['advantage'] ?? []);
+        }
+
         if (isset($data['ownerId'])) {
             $owner = $this->ownerRepository->find($data['ownerId']);
             if (!$owner) {
@@ -258,8 +282,8 @@ class AccommodationController extends AbstractController
             $accommodation->setOwner($owner);
         }
 
-        if (isset($data['themeId'])) {
-            $theme = $this->themeRepository->find($data['themeId']);
+        if (isset($data['theme'])) {
+            $theme = $this->themeRepository->find($data['theme']);
             if (!$theme) {
                 return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
             }

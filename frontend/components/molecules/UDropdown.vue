@@ -1,19 +1,21 @@
 <script setup lang="ts">
     import ChrevronDownIcon from '~/components/atoms/icons/ChrevronDownIcon.vue';
 
-    interface MenuItem {
+    export interface MenuItem {
         label: string;
         icon: Component;
+        action?: () => void | Promise<void>;
     }
 
     interface DropdownProps {
-        label: string;
+        label?: string;
         menuItems: MenuItem[];
         position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     }
 
     const props = withDefaults(defineProps<DropdownProps>(), {
         position: 'bottom-left',
+        label: undefined,
     });
 
     const isOpen = ref(false);
@@ -23,27 +25,39 @@
         isOpen.value = !isOpen.value;
     }
 
+    defineExpose({
+        toggleDropdown,
+    });
+
+    const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (target && !target.closest('.dropdown-container')) {
+            isOpen.value = false;
+        }
+    };
+
     onMounted(() => {
-        document.addEventListener('click', (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if (target && !target.closest('.dropdown-container')) {
-                isOpen.value = false;
-            }
-        });
+        document.addEventListener('click', handleClickOutside);
+    });
+
+    onUnmounted(() => {
+        document.removeEventListener('click', handleClickOutside);
     });
 </script>
 
 <template>
     <div class="dropdown-container relative inline-block">
-        <UButton
-            size="sm"
-            :icon="ChrevronDownIcon"
-            icon-position="trailing"
-            variant="secondary"
-            @click="toggleDropdown"
-        >
-            {{ label }}
-        </UButton>
+        <slot name="trigger" :toggle="toggleDropdown">
+            <UButton
+                size="sm"
+                :icon="ChrevronDownIcon"
+                icon-position="trailing"
+                variant="secondary"
+                @click="toggleDropdown"
+            >
+                {{ label || 'Menu' }}
+            </UButton>
+        </slot>
 
         <Transition :name="`dropdown-${dropdownPosition}`">
             <div
@@ -59,7 +73,13 @@
                 <div class="py-1">
                     <div v-for="(item, index) in menuItems" :key="index" class="px-1.5 py-px">
                         <div
-                            class="px-3 py-2 flex items-center gap-3 group hover:bg-primary-hover transition-colors rounded-md"
+                            class="px-3 py-2 flex items-center gap-3 group hover:bg-primary-hover transition-colors rounded-md cursor-pointer"
+                            @click="
+                                () => {
+                                    item.action?.();
+                                    isOpen = false;
+                                }
+                            "
                         >
                             <div
                                 class="flex items-center gap-2 w-full text-secondary group-hover:text-secondary-hover [&_svg]:text-fg-quaternary [&_svg]:group-hover:text-fg-quaternary-hover [&_svg]:size-4 text-sm font-semibold"

@@ -4,23 +4,23 @@ App\Entity\Client:
     roles: ['ROLE_CLIENT']
     password: 'password123'
     first_name: 'Cyril'
-    last_name: 'MAMAN'
-    preferences: [
-      'pets_allowed',
-      'wifi',
-      'pool'
-    ]
+    last_name: 'Dupont'
+    preferences: ['pets_allowed','wifi','pool']
     is_verified: true
     phone: '+33612345678'
     created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/cyril.webp'
+    address: '123 Rue de Paris, 75001 Paris, France'
 
   client_2:
     email: 'client2@example.com'
     roles: ['ROLE_CLIENT']
     password: 'password123'
-    first_name: 'PATE'
-    last_name: 'En croute'
+    first_name: 'Jessica'
+    last_name: 'Lefevre'
     preferences: [ 'pets', 'smoking', 'wheelchair', 'pool', 'wifi' ]
     is_verified: true
     phone: '+33687654321'
     created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/jessica.webp'
+    address: '456 Avenue des Champs-Élysées, 75008 Paris, France'

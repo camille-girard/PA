@@ -1,168 +1,242 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useFetch } from '#app'
+    import { ref, reactive, onMounted } from 'vue';
+    import { useRuntimeConfig } from '#app';
+    import { useAuthFetch } from '~/composables/useAuthFetch';
+    import { useToast } from '~/composables/useToast';
+    import UCard from '~/components/molecules/UCard.vue';
+    import UInput from '~/components/atoms/UInput.vue';
+    import UTextarea from '~/components/atoms/UTextarea.vue';
+    import UButton from '~/components/atoms/UButton.vue';
+    import ConfirmPopover from '~/components/ConfirmPopover.vue';
+    import TrashIcon from '~/components/atoms/icons/TrashIcon.vue';
+    import EditIcon from '~/components/atoms/icons/EditIcon.vue';
+    import type { ThemeDto } from '~/types/dtos/theme.dto';
+    import type { ApiError } from '~/types/apiError';
+    import UBadge from '~/components/atoms/UBadge.vue';
 
-import UCard from '~/components/molecules/UCard.vue'
-import UInput from '~/components/atoms/UInput.vue'
-import UTextarea from '~/components/atoms/UTextarea.vue'
-import UButton from '~/components/atoms/UButton.vue'
-import ConfirmPopover from '~/components/ConfirmPopover.vue'
-import TrashIcon from '~/components/atoms/icons/TrashIcon.vue'
-import EditIcon from '~/components/atoms/icons/EditIcon.vue'
+    definePageMeta({
+        layout: 'backoffice',
+        middleware: 'admin',
+    });
 
-definePageMeta({ layout: 'backoffice' })
+    const toast = useToast();
+    const {
+        public: { apiUrl },
+    } = useRuntimeConfig();
 
-const { public: { apiUrl } } = useRuntimeConfig()
+    const themes = ref<ThemeDto[]>([]);
+    const pending = ref(false);
+    const isSaving = ref(false);
+    const editingTheme = ref<number | null>(null);
 
-const themes = ref([])
+    const editingThemeData = ref<Partial<ThemeDto>>({});
+    const originalThemeData = ref<Partial<ThemeDto>>({});
 
-async function loadThemes() {
-  const { data } = await useFetch('/api/themes', {
-    baseURL: apiUrl,
-    transform: res => res.themes,
-  })
-  themes.value = data.value || []
-}
+    const newTheme = reactive<{ name: string; description: string }>({
+        name: '',
+        description: '',
+    });
 
-await loadThemes()
+    async function loadThemes() {
+        pending.value = true;
+        try {
+            const { data } = await useAuthFetch<{ themes: ThemeDto[] }>('/api/themes', {
+                baseURL: apiUrl,
+                transform: (res) => res.themes,
+            });
 
-const newTheme = reactive({
-  name: '',
-  description: '',
-})
+            themes.value = (data.value || []).filter((theme) => theme && theme.id && theme.name && theme.description);
+        } catch (err: unknown) {
+            const error = err as ApiError;
+            toast.error('Erreur', error?.data?.message || 'Erreur lors du chargement des thèmes.');
+            console.error(err);
+        } finally {
+            pending.value = false;
+        }
+    }
 
-const isSaving = ref(false)
-const editingTheme = ref<number | null>(null)
+    async function refreshThemes() {
+        await loadThemes();
+    }
 
-const successMsg = ref('')
-const errorMsg = ref('')
+    async function saveNewTheme() {
+        if (isSaving.value) return;
 
-async function refreshThemes() {
-  await loadThemes()
-}
+        isSaving.value = true;
+        try {
+            if (!newTheme.name.trim() || !newTheme.description.trim()) {
+                toast.error('Erreur', 'Le nom et la description sont requis.');
+                return;
+            }
 
-async function saveNewTheme() {
-  isSaving.value = true
-  successMsg.value = ''
-  errorMsg.value = ''
-  try {
-    await $fetch('/api/themes', {
-      method: 'POST',
-      baseURL: apiUrl,
-      body: newTheme,
-    })
-    Object.assign(newTheme, { name: '', description: '' })
-    await refreshThemes()
-    successMsg.value = 'Thème ajouté avec succès.'
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de l’ajout du thème.'
-  } finally {
-    isSaving.value = false
-  }
-}
+            if (newTheme.description.trim().length < 10) {
+                toast.error('Erreur', 'La description doit faire au moins 10 caractères.');
+                return;
+            }
 
-async function updateTheme(theme: any) {
-  successMsg.value = ''
-  errorMsg.value = ''
-  try {
-    await $fetch(`/api/themes/${theme.id}`, {
-      method: 'PUT',
-      baseURL: apiUrl,
-      body: {
-        name: theme.name,
-        description: theme.description,
-      },
-    })
-    editingTheme.value = null
-    await refreshThemes()
-    successMsg.value = 'Thème mis à jour.'
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de la mise à jour.'
-  }
-}
+            await useAuthFetch('/api/themes', {
+                method: 'POST',
+                baseURL: apiUrl,
+                body: {
+                    name: newTheme.name.trim(),
+                    description: newTheme.description.trim(),
+                },
+            });
 
-function cancelEdit(themeId: number) {
-  editingTheme.value = null
-}
+            Object.assign(newTheme, { name: '', description: '' });
 
-async function deleteTheme(id: number) {
-  successMsg.value = ''
-  errorMsg.value = ''
-  try {
-    await $fetch(`/api/themes/${id}`, {
-      method: 'DELETE',
-      baseURL: apiUrl,
-    })
-    await refreshThemes()
-    successMsg.value = 'Thème supprimé avec succès.'
-  } catch (error: any) {
-    errorMsg.value = error?.data?.message || 'Erreur lors de la suppression du thème.'
-    console.error(error)
-  }
-}
+            await refreshThemes();
+            toast.success('Succès', 'Thème ajouté avec succès.');
+        } catch (err: unknown) {
+            const error = err as ApiError;
+            toast.error('Erreur', error?.data?.message || "Erreur lors de l'ajout du thème.");
+            console.error(err);
+        } finally {
+            isSaving.value = false;
+        }
+    }
+
+    function startEdit(theme: ThemeDto) {
+        editingTheme.value = theme.id;
+        originalThemeData.value = { ...theme };
+        editingThemeData.value = { ...theme };
+    }
+
+    async function updateTheme(themeId: number) {
+        try {
+            if (!editingThemeData.value.name?.trim() || !editingThemeData.value.description?.trim()) {
+                toast.error('Erreur', 'Le nom et la description sont requis.');
+                return;
+            }
+
+            if (editingThemeData.value.description.trim().length < 10) {
+                toast.error('Erreur', 'La description doit faire au moins 10 caractères.');
+                return;
+            }
+
+            await useAuthFetch(`/api/themes/${themeId}`, {
+                method: 'PUT',
+                baseURL: apiUrl,
+                body: {
+                    name: editingThemeData.value.name,
+                    description: editingThemeData.value.description,
+                },
+            });
+
+            editingTheme.value = null;
+            editingThemeData.value = {};
+            originalThemeData.value = {};
+
+            await refreshThemes();
+            toast.success('Succès', 'Thème mis à jour.');
+        } catch (err: unknown) {
+            const error = err as ApiError;
+            toast.error('Erreur', error?.data?.message || 'Erreur lors de la mise à jour.');
+            console.error(err);
+        }
+    }
+
+    function cancelEdit() {
+        editingTheme.value = null;
+        editingThemeData.value = {};
+        originalThemeData.value = {};
+    }
+
+    async function deleteTheme(id: number) {
+        try {
+            const { error, status } = await useAuthFetch(`/api/themes/${id}`, {
+                method: 'DELETE',
+                baseURL: apiUrl,
+            });
+
+            if (error.value || (status.value && status.value >= 400)) {
+                const message = error.value?.data?.message || 'Erreur lors de la suppression du thème.';
+                throw new Error(message);
+            }
+
+            themes.value = themes.value.filter((theme) => theme.id !== id);
+            toast.success('Succès', 'Thème supprimé avec succès.');
+        } catch (err: unknown) {
+            console.error(err);
+            const error = err as Error;
+            toast.error('Erreur', error?.message || 'Erreur lors de la suppression du thème.');
+        }
+    }
+
+    onMounted(() => {
+        loadThemes();
+    });
 </script>
 
 <template>
-  <div class="space-y-6">
-    <h1 class="text-2xl font-semibold">Gestion des thèmes</h1>
-
-    <div v-if="successMsg" class="text-green-600 text-sm">{{ successMsg }}</div>
-    <div v-if="errorMsg" class="text-red-600 text-sm">{{ errorMsg }}</div>
-
-    <UCard>
-      <template  #header> <span class=" text-lg font-medium"> Ajouter un nouveau thème</span> </template>
-      <div class="flex flex-col gap-4">
-        <UInput v-model="newTheme.name" label="Nom" type="text" required />
-        <UTextarea v-model="newTheme.description" label="Description" class="md:col-span-2" required />
-        <UButton
-            :isLoading="isSaving"
-            :disabled="!newTheme.name || !newTheme.description"
-            class="md:col-span-2 justify-self-start"
-            @click="saveNewTheme"
-        >
-          Ajouter
-        </UButton>
-      </div>
-    </UCard>
-
-    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-      <UCard v-for="theme in themes" :key="theme.id">
-        <template #header>
-          <div class="flex justify-between items-center">
-            <div class="font-semibold">{{ theme.name }}</div>
-            <div class="flex items-center gap-2">
-              <button @click="editingTheme = theme.id">
-                <EditIcon class="w-5 h-5 text-blue-500 hover:text-blue-700" />
-              </button>
-              <ConfirmPopover :itemName="theme.name" @confirm="deleteTheme(theme.id)">
-                <template #trigger>
-                  <button class="text-red-500 hover:text-red-700">
-                    <TrashIcon class="w-5 h-5" />
-                  </button>
+    <div class="space-y-6">
+        <h2 class="text-2xl font-semibold flex items-center gap-2">
+            Thèmes
+            <UBadge variant="pill" color="brand" size="md">
+                {{ themes.length }}
+            </UBadge>
+        </h2>
+        <div v-if="pending" class="text-gray-600">Chargement…</div>
+        <div v-else>
+            <div v-if="successMsg" class="text-green-600 text-sm mb-4">{{ successMsg }}</div>
+            <div v-if="errorMsg" class="text-red-600 text-sm mb-4">{{ errorMsg }}</div>
+            <UCard>
+                <template #header>
+                    <span class="text-lg font-medium">Ajouter un nouveau thème</span>
                 </template>
-              </ConfirmPopover>
+                <div class="flex flex-col gap-4">
+                    <UInput v-model="newTheme.name" label="Nom" type="text" required />
+                    <UTextarea v-model="newTheme.description" label="Description" required />
+                    <UButton
+                        :is-loading="isSaving"
+                        :disabled="isSaving || !newTheme.name.trim() || !newTheme.description.trim()"
+                        class="w-fit justify-self-start"
+                        @click="saveNewTheme"
+                    >
+                        {{ isSaving ? 'Ajout en cours...' : 'Ajouter' }}
+                    </UButton>
+                </div>
+            </UCard>
+            <div>
+                <h2 class="text-lg font-semibold my-4">Tous les thèmes</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <UCard v-for="theme in themes" :key="theme.id">
+                        <template #header>
+                            <div class="flex justify-between items-center">
+                                <div class="font-semibold">{{ theme.name }}</div>
+                                <div class="flex items-center gap-2">
+                                    <button @click="startEdit(theme)">
+                                        <EditIcon class="w-5 h-5 text-blue-500 hover:text-blue-700" />
+                                    </button>
+                                    <ConfirmPopover :item-name="theme.name" @confirm="deleteTheme(theme.id)">
+                                        <template #trigger>
+                                            <button class="text-red-500 hover:text-red-700">
+                                                <TrashIcon class="w-5 h-5" />
+                                            </button>
+                                        </template>
+                                    </ConfirmPopover>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-if="editingTheme === theme.id">
+                            <div class="space-y-3">
+                                <UInput v-model="editingThemeData.name" label="Nom" type="text" />
+                                <UTextarea v-model="editingThemeData.description" label="Description" />
+                                <div class="flex gap-2">
+                                    <UButton @click="updateTheme(theme.id)">Enregistrer</UButton>
+                                    <UButton variant="ghost" @click="cancelEdit()">Annuler</UButton>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="space-y-2">
+                                <p><strong>Nom :</strong> {{ theme.name }}</p>
+                                <p><strong>Description :</strong> {{ theme.description }}</p>
+                            </div>
+                        </template>
+                    </UCard>
+                </div>
             </div>
-          </div>
-        </template>
-
-        <template v-if="editingTheme === theme.id">
-          <div class="space-y-3">
-            <UInput v-model="theme.name" label="Nom" type="text" />
-            <UTextarea v-model="theme.description" label="Description" />
-            <div class="flex gap-2">
-              <UButton @click="updateTheme(theme)">Enregistrer</UButton>
-              <UButton variant="ghost" @click="cancelEdit(theme.id)">Annuler</UButton>
-            </div>
-          </div>
-        </template>
-
-        <template v-else>
-          <div class="space-y-2">
-            <p><strong>Nom :</strong> {{ theme.name }}</p>
-            <p><strong>Description :</strong> {{ theme.description }}</p>
-          </div>
-        </template>
-      </UCard>
+        </div>
     </div>
-  </div>
 </template>
