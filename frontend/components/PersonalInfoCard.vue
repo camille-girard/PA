@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import UButton from '~/components/atoms/UButton.vue';
-    import UAvatar from '~/components/atoms/UAvatar.vue';
     import EditableField from '@/components/EditableField.vue';
     import { useAuthStore } from '@/stores/auth';
 
@@ -72,32 +71,31 @@
         return auth.user.preferences.join(', ');
     });
 
-    const userInitials = computed(() => {
-        if (!auth.user) return '';
-
-        const { firstName, lastName } = auth.user;
-
-        if (firstName && lastName) {
-            return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-        }
-
-        if (firstName) {
-            return firstName.charAt(0).toUpperCase();
-        }
-
-        return '';
-    });
-
     const userAvatarUrl = computed(() => {
         return auth.user?.avatar || '';
     });
+
+    const onAvatarUpdated = (avatarUrl: string) => {
+        console.log('Avatar updated:', avatarUrl);
+        // L'avatar sera automatiquement mis à jour via le store
+    };
+
+    const onAvatarDeleted = () => {
+        console.log('Avatar deleted');
+        // L'avatar sera automatiquement mis à jour via le store
+    };
 </script>
 
 <template>
     <div class="max-w-5xl mx-auto p-6 flex flex-col md:flex-row gap-10 items-start">
         <div class="bg-orange-100 rounded-3xl p-6 flex flex-col items-center w-full md:w-1/4">
             <div class="mb-4">
-                <UAvatar size="2xl" :image-src="userAvatarUrl" :text="userInitials" status-icon="false" />
+                <AvatarUpload
+                    size="2xl"
+                    :current-avatar="userAvatarUrl"
+                    @avatar-updated="onAvatarUpdated"
+                    @avatar-deleted="onAvatarDeleted"
+                />
             </div>
             <p class="text-body-lg font-bold">{{ auth.user?.firstName }}</p>
         </div>
