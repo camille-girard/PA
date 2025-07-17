@@ -21,9 +21,11 @@ class AccommodationRepository extends ServiceEntityRepository
      */
     public function findByOwnerId(int $ownerId): array
     {
+        // Méthode simple sans jointures pour éviter les problèmes
         return $this->createQueryBuilder('a')
             ->andWhere('a.owner = :ownerId')
             ->setParameter('ownerId', $ownerId)
+            ->orderBy('a.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }

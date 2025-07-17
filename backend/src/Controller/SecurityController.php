@@ -36,14 +36,14 @@ final class SecurityController extends AbstractController
             ->withValue('')
             ->withExpires(new \DateTime('-1 hour'))
             ->withHttpOnly(true)
-            ->withSecure(true)
+            ->withSecure($request->isSecure()) // Utiliser isSecure() pour détecter HTTPS
             ->withSameSite('strict');
 
         $bearerCookie = Cookie::create('BEARER')
             ->withValue('')
             ->withExpires(new \DateTime('-1 hour'))
             ->withHttpOnly(true)
-            ->withSecure(true)
+            ->withSecure($request->isSecure()) // Utiliser isSecure() pour détecter HTTPS
             ->withSameSite('strict');
 
         return new JsonResponse(['message' => 'Logged out'], 200, [
@@ -66,21 +66,52 @@ final class SecurityController extends AbstractController
         $storedToken = $refreshTokenManager->get($refreshToken);
 
         if (!$storedToken || $storedToken->getExpiresAt() < new \DateTime()) {
-            return new JsonResponse(['error' => 'Refresh token expired'], 401);
+            // Nettoyer les tokens expirés
+            if ($storedToken) {
+                $refreshTokenManager->invalidate($storedToken);
+            }
+
+            // Nettoyer les cookies
+            $expiredCookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue('')
+                ->withExpires(new \DateTime('-1 hour'))
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure()) // Utiliser isSecure() pour détecter HTTPS
+                ->withSameSite('strict');
+
+            return new JsonResponse(['error' => 'Refresh token expired'], 401, [
+                'Set-Cookie' => (string) $expiredCookie,
+            ]);
         }
 
-        $user = $storedToken->getUser();
-        $newJwt = $jwtTokenManager->create($user);
-        $newRefreshToken = $refreshTokenManager->rotate($storedToken);
+        try {
+            $user = $storedToken->getUser();
+            $newJwt = $jwtTokenManager->create($user);
+            $newRefreshToken = $refreshTokenManager->rotate($storedToken);
 
-        $cookie = Cookie::create('REFRESH_TOKEN')
-            ->withValue($newRefreshToken->getToken())
-            ->withHttpOnly(true)
-            ->withSecure(true)
-            ->withSameSite('strict')
-            ->withExpires($newRefreshToken->getExpiresAt());
+            $cookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue($newRefreshToken->getToken())
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure()) // Utiliser isSecure() pour détecter HTTPS
+                ->withSameSite('strict')
+                ->withExpires($newRefreshToken->getExpiresAt());
 
-        return new JsonResponse(['token' => $newJwt], 200, ['Set-Cookie' => (string) $cookie]);
+            return new JsonResponse(['token' => $newJwt], 200, ['Set-Cookie' => (string) $cookie]);
+        } catch (\Exception $e) {
+            // En cas d'erreur, nettoyer le token et les cookies
+            $refreshTokenManager->invalidate($storedToken);
+
+            $expiredCookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue('')
+                ->withExpires(new \DateTime('-1 hour'))
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure())
+                ->withSameSite('strict');
+
+            return new JsonResponse(['error' => 'Token refresh failed'], 401, [
+                'Set-Cookie' => (string) $expiredCookie,
+            ]);
+        }
     }
 
     #[Route('/register', name: 'app_register', methods: ['POST'])]

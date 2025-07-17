@@ -24,7 +24,7 @@ export interface FormState {
     maxStay: number;
     latitude: number | null;
     longitude: number | null;
-    images: { id: string; url: string }[];
+    images: { id: string; url: string; file?: File; isMain?: boolean }[];
 }
 
 interface UseAccommodationFormOptions {
@@ -33,8 +33,6 @@ interface UseAccommodationFormOptions {
 
 export function useAccommodationForm(options: UseAccommodationFormOptions = {}) {
     const router = useRouter();
-    const config = useRuntimeConfig();
-    const auth = useAuthStore();
 
     // Form state
     const formState = ref<FormState>({
@@ -76,13 +74,12 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
         isLoading.value = true;
 
         try {
-            const res = await fetch(`${config.public.apiUrl}/api/accommodations/${options.accommodationId}`, {
-                credentials: 'include',
-            });
+            const { $api } = useNuxtApp();
+            const { data: response, error } = await useAuthFetch($api(`/api/accommodations/${options.accommodationId}`));
 
-            if (!res.ok) throw new Error('Erreur serveur');
+            if (error.value) throw new Error(error.value.message || 'Erreur serveur');
 
-            const data = await res.json();
+            const data = response.value;
 
             let advantages = [];
             if (data.advantage && Array.isArray(data.advantage)) {
@@ -148,7 +145,10 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                 advantages,
             };
         } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Erreur inconnue';
+            const toast = useToast();
+            const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+            error.value = errorMessage;
+            toast.error('Erreur de chargement', errorMessage);
         } finally {
             isLoading.value = false;
         }
@@ -167,75 +167,70 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                 }));
             }
         } catch (err) {
+            const toast = useToast();
             console.error('Error fetching themes:', err);
+            toast.error('Erreur de chargement', 'Impossible de charger les thèmes');
         }
     }
 
     // Handle form submission
     async function handleSubmit() {
-        console.log('=== FORM SUBMISSION START ===');
-        console.log('Advantages before submission:', formState.value.advantages);
-
-        const payload = {
-            name: formState.value.title,
-            description: formState.value.description,
-            practicalInformation: formState.value.practicalInformation,
-            address: formState.value.address,
-            city: formState.value.city,
-            postalCode: formState.value.postalCode,
-            country: formState.value.country,
-            type: formState.value.type,
-            price: formState.value.pricePerNight,
-            capacity: formState.value.capacity,
-            bedrooms: formState.value.bedrooms,
-            bathrooms: formState.value.bathrooms,
-            latitude: formState.value.latitude,
-            longitude: formState.value.longitude,
-            minStay: formState.value.minStay,
-            maxStay: formState.value.maxStay,
-            theme: formState.value.theme,
-            images: formState.value.images.map((img) => ({
-                url: img.url,
-            })),
-            advantage: formState.value.advantages, // Changé de 'advantages' à 'advantage'
-        };
-
-        console.log('Payload being sent:', JSON.stringify(payload, null, 2));
-
-        if (!isEditing.value && auth.user?.id) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            payload.ownerId = auth.user.id;
-        }
-
+        const { $api } = useNuxtApp();
         const method = isEditing.value ? 'PUT' : 'POST';
-        const url = isEditing.value
-            ? `${config.public.apiUrl}/api/accommodations/${options.accommodationId}`
-            : `${config.public.apiUrl}/api/accommodations`;
+        const endpoint = isEditing.value
+            ? `/api/accommodations/${options.accommodationId}`
+            : `/api/accommodations`;
 
         console.log('Request details:', { method, url });
 
         try {
-            const res = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify(payload),
+            // Créer un FormData pour envoyer les données et les fichiers
+            const formData = new FormData();
+            
+            // Ajouter les données du formulaire
+            formData.append('name', formState.value.title);
+            formData.append('description', formState.value.description);
+            formData.append('practicalInformation', formState.value.practicalInformation || '');
+            formData.append('address', formState.value.address);
+            formData.append('city', formState.value.city || '');
+            formData.append('postalCode', formState.value.postalCode || '');
+            formData.append('country', formState.value.country || 'France');
+            formData.append('type', formState.value.type || '');
+            formData.append('price', formState.value.pricePerNight.toString());
+            formData.append('capacity', formState.value.capacity.toString());
+            formData.append('bedrooms', formState.value.bedrooms.toString());
+            formData.append('bathrooms', formState.value.bathrooms.toString());
+            formData.append('latitude', formState.value.latitude?.toString() || '');
+            formData.append('longitude', formState.value.longitude?.toString() || '');
+            formData.append('minStay', formState.value.minStay.toString());
+            formData.append('maxStay', formState.value.maxStay.toString());
+            formData.append('theme', formState.value.theme?.toString() || '');
+            
+            // Ajouter les fichiers images
+            formState.value.images.forEach((image, index) => {
+                if (image.file) {
+                    formData.append(`image_${index}`, image.file);
+                }
             });
 
-            console.log('Response status:', res.status);
-
-            if (!res.ok) {
-                const errorText = await res.text();
-                console.error('Response error:', errorText);
-                throw new Error('Erreur lors de la sauvegarde');
+            interface AccommodationResponse {
+                message: string;
+                accommodation: {
+                    id: number;
+                };
             }
 
-            const json = await res.json();
-            console.log('Response data:', json);
+            const { error } = await useAuthFetch<AccommodationResponse>($api(endpoint), {
+                method,
+                body: formData,
+            });
+
+            if (error.value) {
+                throw new Error(error.value.message || 'Erreur lors de la sauvegarde');
+            }
 
             if (!isEditing.value) {
-                router.push(`/accommodations/${json.accommodation.id}/edit`);
+                router.push(`/my-accommodation`);
             } else {
                 const toast = useToast();
                 toast.success(
@@ -260,19 +255,18 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
     // Handle accommodation deletion
     async function deleteAccommodation() {
         try {
-            const res = await fetch(`${config.public.apiUrl}/api/accommodations/${options.accommodationId}`, {
+            const { $api } = useNuxtApp();
+            const { error } = await useAuthFetch($api(`/api/accommodations/${options.accommodationId}`), {
                 method: 'DELETE',
-                credentials: 'include',
             });
 
-            if (res.ok) {
+            if (error.value) {
+                const toast = useToast();
+                toast.error('Erreur de suppression', `Impossible de supprimer l'hébergement : ${error.value.message || 'Erreur serveur'}`);
+            } else {
                 const toast = useToast();
                 toast.success('Suppression réussie', 'Votre hébergement a été supprimé avec succès.');
                 router.push('/my-accommodation');
-            } else {
-                const errText = await res.text();
-                const toast = useToast();
-                toast.error('Erreur de suppression', `Impossible de supprimer l'hébergement : ${errText}`);
             }
         } catch (err) {
             const toast = useToast();
@@ -292,6 +286,8 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                 formState.value.images.push({
                     id: nanoid(),
                     url: reader.result as string,
+                    file: file,
+                    isMain: formState.value.images.length === 0, // Première image = principale
                 });
             };
             reader.readAsDataURL(file);
