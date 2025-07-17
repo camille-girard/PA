@@ -9,25 +9,23 @@
     import type { MapSuggestion } from '~/composables/useAddressSuggestions';
     import { useToast } from '~/composables/useToast';
     import UBaseModal from '~/components/molecules/UBaseModal.vue';
+    import AccommodationImageManager from '~/components/AccommodationImageManager.vue';
 
     const route = useRoute();
     const accommodationId = route.params.id;
 
-    const fileInputRef = ref<HTMLInputElement | null>(null);
     const isDeleteModalOpen = ref(false);
 
     const {
         formState,
         isEditing,
         isLoading,
-        error,
+        error: _error,
         themeOptions,
         fetchAccommodationData,
         fetchThemes,
         handleSubmit,
         deleteAccommodation,
-        addImages,
-        removeImage,
     } = useAccommodationForm({ accommodationId });
 
     const { suggestions, fetchSuggestions, selectSuggestion } = useAddressSuggestions();
@@ -82,66 +80,15 @@
     }
 
     /**
-     * Gestion des avantages sélectionnés
+     * Gère la mise à jour des images depuis le composant AccommodationImageManager
      */
-    /*
-    function toggleAdvantage(value: string) {
-        const advantages = formState.value.advantages;
-        const index = advantages.indexOf(value);
-
-        if (index > -1) {
-            advantages.splice(index, 1);
-        } else {
-            advantages.push(value);
-        }
-    }
-     */
-
-    function isAdvantageSelected(value: string): boolean {
-        return formState.value.advantages.includes(value);
-    }
-
-    /**
-     * Gère le changement d'état d'une checkbox d'avantage
-     */
-    function handleAdvantageChange(value: string, checked: boolean) {
-        console.log('handleAdvantageChange called:', { value, checked });
-        const advantages = formState.value.advantages;
-        const index = advantages.indexOf(value);
-
-        console.log('Current advantages before change:', advantages);
-
-        if (checked && index === -1) {
-            advantages.push(value);
-            console.log('Added advantage:', value);
-        } else if (!checked && index > -1) {
-            advantages.splice(index, 1);
-            console.log('Removed advantage:', value);
-        }
-
-        console.log('Current advantages after change:', formState.value.advantages);
-        console.log('Total advantages count:', formState.value.advantages.length);
-    }
-
-    /**
-     * Gère l'upload d'images et met à jour le formulaire
-     */
-    function handleImageUpload(event: Event): void {
-        const files = (event.target as HTMLInputElement).files;
-        if (!files) return;
-
-        const fileArray = Array.from(files);
-        addImages(fileArray);
-
-        // Reset l'input file pour permettre de sélectionner à nouveau les mêmes fichiers
-        if (fileInputRef.value) {
-            fileInputRef.value.value = '';
-        }
-
-        toast.success(
-            'Images ajoutées',
-            `${fileArray.length} image${fileArray.length > 1 ? 's' : ''} ajoutée${fileArray.length > 1 ? 's' : ''} avec succès.`
-        );
+    function handleImagesUpdated(images: { id?: string | number; url: string; file?: File; isMain?: boolean }[]): void {
+        formState.value.images = images.map((img, index) => ({
+            id: img.id?.toString() || `image_${Date.now()}_${index}`,
+            url: img.url,
+            file: img.file,
+            isMain: img.isMain || false
+        }));
     }
 
     /**
@@ -179,10 +126,6 @@
         </div>
     </UBaseModal>
 
-    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 max-w-4xl mx-auto">
-        <strong class="font-bold">Erreur:</strong>
-        <span class="block sm:inline">{{ error }}</span>
-    </div>
 
     <div v-if="isLoading" class="flex justify-center items-center py-12">
         <ULoading />
@@ -301,42 +244,11 @@
 
         <section>
             <h2 class="text-h2 mb-6">Ajouter vos photos</h2>
-            <input
-                ref="fileInputRef"
-                type="file"
-                class="hidden"
-                accept="image/*"
-                multiple
-                @change="handleImageUpload"
+            <AccommodationImageManager
+                :images="formState.images"
+                :accommodation-id="isEditing ? parseInt(accommodationId as string) : undefined"
+                @images-updated="handleImagesUpdated"
             />
-
-            <div
-                class="w-full h-52 rounded-2xl bg-gray-100 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 border-dashed border-2"
-                @click="fileInputRef?.click()"
-                @dragover.prevent
-                @drop.prevent
-            >
-                <img src="/icon.svg" alt="Ajouter" class="w-10 h-10 opacity-40" />
-                <p class="mt-2 text-sm text-gray-400 text-center">Cliquez ou glissez jusqu'à 10 images ici</p>
-            </div>
-
-            <div v-if="formState.images.length" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-                <div v-for="img in formState.images" :key="img.id" class="relative group">
-                    <img :src="img.url" class="w-full h-40 object-cover rounded-xl" />
-                    <button
-                        type="button"
-                        class="absolute top-2 right-2 bg-black/60 text-white w-6 h-6 flex items-center justify-center rounded-full text-sm opacity-0 group-hover:opacity-100 transition"
-                        @click="
-                            () => {
-                                removeImage(img.id);
-                                toast.info('Image supprimée', 'L\'image a été supprimée de votre hébergement.');
-                            }
-                        "
-                    >
-                        ×
-                    </button>
-                </div>
-            </div>
         </section>
 
         <section>
