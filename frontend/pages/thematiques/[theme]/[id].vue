@@ -43,6 +43,7 @@
 
                 const accommodationToAdd = {
                     ...accommodationResponse.data.value,
+                    slug: currentId,
                     theme: {
                         slug: theme,
                     },
@@ -103,7 +104,7 @@
             </div>
             <section v-if="recentlyViewed.length > 0" id="consult-trending" class="w-full pt-32">
                 <h2 class="text-center text-h2 mb-10">Consultés récemment</h2>
-                <RentalCards :items="recentlyViewed" :link-prefix="`/thematiques/${theme}`" />
+                <AccommodationCards :items="recentlyViewed" :link-prefix="`/thematiques/${theme}`" />
             </section>
         </div>
         <UFooter />

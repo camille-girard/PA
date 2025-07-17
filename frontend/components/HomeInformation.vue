@@ -4,9 +4,8 @@
      * Ce composant utilise les composables useAccommodationForm et useAddressSuggestions
      * pour gérer la logique métier et l'interaction avec l'API.
      */
-    import { ref, onMounted, watch, watchEffect } from 'vue';
-    import { useRoute } from 'vue-router';
     import { ACCOMMODATION_TYPES } from '~/constants/accommodationTypes';
+    import { ACCOMMODATION_ADVANTAGES } from '~/constants/accommodationAdvantages';
     import type { MapSuggestion } from '~/composables/useAddressSuggestions';
     import { useToast } from '~/composables/useToast';
     import UBaseModal from '~/components/molecules/UBaseModal.vue';
@@ -80,6 +79,48 @@
         formState.value.country = 'France';
 
         toast.info('Adresse sélectionnée', 'Les coordonnées géographiques ont été mises à jour.');
+    }
+
+    /**
+     * Gestion des avantages sélectionnés
+     */
+    /*
+    function toggleAdvantage(value: string) {
+        const advantages = formState.value.advantages;
+        const index = advantages.indexOf(value);
+
+        if (index > -1) {
+            advantages.splice(index, 1);
+        } else {
+            advantages.push(value);
+        }
+    }
+     */
+
+    function isAdvantageSelected(value: string): boolean {
+        return formState.value.advantages.includes(value);
+    }
+
+    /**
+     * Gère le changement d'état d'une checkbox d'avantage
+     */
+    function handleAdvantageChange(value: string, checked: boolean) {
+        console.log('handleAdvantageChange called:', { value, checked });
+        const advantages = formState.value.advantages;
+        const index = advantages.indexOf(value);
+
+        console.log('Current advantages before change:', advantages);
+
+        if (checked && index === -1) {
+            advantages.push(value);
+            console.log('Added advantage:', value);
+        } else if (!checked && index > -1) {
+            advantages.splice(index, 1);
+            console.log('Removed advantage:', value);
+        }
+
+        console.log('Current advantages after change:', formState.value.advantages);
+        console.log('Total advantages count:', formState.value.advantages.length);
     }
 
     /**
@@ -194,6 +235,7 @@
                 />
                 <p class="text-sm text-gray-400 mt-1">Maximum 20 000 caractères.</p>
             </div>
+
             <div class="mt-4">
                 <label for="practicalInformation" class="block mb-2 text-sm font-medium text-gray-700">
                     Informations pratiques
@@ -202,11 +244,25 @@
                     id="practicalInformation"
                     v-model="formState.practicalInformation"
                     rows="4"
-                    maxlength="20000"
-                    placeholder="Informations pratiques pour les voyageurs"
+                    maxlength="1000"
+                    placeholder="Instructions d'arrivée, codes d'accès, contacts d'urgence..."
                     class="w-full rounded-lg border border-gray-300 focus:ring-orange-500 focus:border-orange-500 px-4 py-3"
                 />
-                <p class="text-sm text-gray-400 mt-1">Séparez par des virgules ex: Wi-Fi gratuit, cuisine équipée</p>
+                <p class="text-sm text-gray-400 mt-1">Maximum 1000 caractères.</p>
+            </div>
+
+            <div class="mt-6">
+                <label class="block mb-4 text-sm font-medium text-gray-700">Avantages de votre logement</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <UCheckbox
+                        v-for="advantage in ACCOMMODATION_ADVANTAGES"
+                        :key="advantage.value"
+                        :model-value="isAdvantageSelected(advantage.value)"
+                        :name="advantage.value"
+                        :label="advantage.label"
+                        @update:model-value="(checked) => handleAdvantageChange(advantage.value, checked)"
+                    />
+                </div>
             </div>
         </section>
 
