@@ -346,35 +346,35 @@ App\Entity\AccommodationImages:
 
   image_10:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Home_Cabane_Hurlante.webp'
+    url: '/CabaneHurlante/Home_Cabane_Hurlante.webp'
     is_main: true
   image_10b:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_bathroom.webp'
+    url: '/CabaneHurlante/Cabanne_bathroom.webp'
     is_main: false
   image_10c:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_bedroom.webp'
+    url: '/CabaneHurlante/Cabanne_bedroom.webp'
     is_main: false
   image_10d:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_kitchen.webp'
+    url: '/CabaneHurlante/Cabanne_kitchen.webp'
     is_main: false
   image_10e:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_livingroom.webp'
+    url: '/CabaneHurlante/Cabanne_livingroom.webp'
     is_main: false
   image_10f:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_livingroom_2.webp'
+    url: '/CabaneHurlante/Cabanne_livingroom_2.webp'
     is_main: false
   image_10g:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_livingroom_3.webp'
+    url: '/CabaneHurlante/Cabanne_livingroom_3.webp'
     is_main: false
   image_10h:
     accommodation: '@accommodation_10'
-    url: '/CabanneHurlante/Cabanne_outdoor.webp'
+    url: '/CabaneHurlante/Cabanne_outdoor.webp'
     is_main: false
 
   image_11:
@@ -778,4 +778,181 @@ App\Entity\AccommodationImages:
   image_21j:
     accommodation: '@accommodation_21'
     url: '/IEUFDLO/Western_outdoor_4.webp'
+    is_main: false
+
+  image_22:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_livingroom2.webp'
+    is_main: true
+  image_22b:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_bedroom.webp'
+    is_main: false
+  image_22c:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_bedroom_2.webp'
+    is_main: false
+  image_22d:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_bedroom_3.webp'
+    is_main: false
+  image_22e:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_bedroom_4.webp'
+    is_main: false
+  image_22f:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_bathroom_2.webp'
+    is_main: false
+  image_22g:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_livingroom.webp'
+    is_main: false
+  image_22h:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_livingroom_3.webp'
+    is_main: false
+  image_22i:
+    accommodation: '@accommodation_22'
+    url: '/CabaneDansLesBois/Cabanne_dans_les_bois_outdoor.webp'
+    is_main: false
+
+  image_23:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_livingroom.webp'
+    is_main: true
+  image_23b:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_livingroom_4.webp'
+    is_main: false
+  image_23c:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_livingroom_2.webp'
+    is_main: false
+  image_23d:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_livingroom_3.webp'
+    is_main: false
+  image_23e:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_bedroom.webp'
+    is_main: false
+  image_23f:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_bedroom_2.webp'
+    is_main: false
+  image_23g:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_bedroom_3.webp'
+    is_main: false
+  image_23h:
+    accommodation: '@accommodation_23'
+    url: '/Avengers/Avengers_escalier.webp'
+    is_main: false
+
+  image_24:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_outdoor.webp'
+    is_main: true
+  image_24b:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_outdoor2.webp'
+    is_main: false
+  image_24c:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_outdoor3.webp'
+    is_main: false
+  image_24d:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_outdoor_4.webp'
+    is_main: false
+  image_24e:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_livingroom.webp'
+    is_main: false
+  image_24f:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_livingroom_2.webp'
+    is_main: false
+  image_24g:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_livingroom_3.webp'
+    is_main: false
+  image_24h:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_bedroom.webp'
+    is_main: false
+  image_24i:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_bedroom_2.webp'
+    is_main: false
+  image_24j:
+    accommodation: '@accommodation_24'
+    url: '/Impitoyable/Impitoyable_bathroom.webp'
+    is_main: false
+
+  image_25:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_livingroom.webp'
+    is_main: true
+  image_26b:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_livingroom_2.webp'
+    is_main: false
+  image_26c:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_bedroom.webp'
+    is_main: false
+  image_26d:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_bedroom_2.webp'
+    is_main: false
+  image_26e:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_kitchen.webp'
+    is_main: false
+  image_26f:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_bathroom.webp'
+    is_main: false
+  image_26g:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_couloir.webp'
+    is_main: false
+  image_26h:
+    accommodation: '@accommodation_25'
+    url: '/Totoro/Totoro_outdoor.webp'
+    is_main: false
+
+  image_27:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_outdoor.webp'
+    is_main: true
+  image_27b:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_livingroom.webp'
+    is_main: false
+  image_27c:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_livingroom_2.webp'
+    is_main: false
+  image_27d:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_livingroom_3.webp'
+    is_main: false
+  image_27e:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_bathroom.webp'
+    is_main: false
+  image_27f:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_bedroom.webp'
+    is_main: false
+  image_27g:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_kitchen.webp'
+    is_main: false
+  image_27h:
+    accommodation: '@accommodation_26'
+    url: '/Holidays/Holidays_outdoor_2.webp'
     is_main: false

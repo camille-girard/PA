@@ -24,3 +24,81 @@ App\Entity\Client:
     created_at: '<(new DateTimeImmutable())>'
     avatar: '/User/jessica.webp'
     address: '456 Avenue des Champs-Élysées, 75008 Paris, France'
+
+  client_3:
+    email: 'client3@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Marie'
+    last_name: 'Martin'
+    preferences: ['wifi', 'parking', 'garden']
+    is_verified: true
+    phone: '+33612345679'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/marie.webp'
+    address: '78 Rue de la République, 69001 Lyon, France'
+
+  client_4:
+    email: 'client4@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Thomas'
+    last_name: 'Bernard'
+    preferences: ['pets_allowed', 'balcony', 'city_center']
+    is_verified: true
+    phone: '+33698765432'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/thomas.webp'
+    address: '15 Boulevard de la Croisette, 06400 Cannes, France'
+
+  client_5:
+    email: 'client5@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Sophie'
+    last_name: 'Dubois'
+    preferences: ['pool', 'beach', 'air_conditioning']
+    is_verified: true
+    phone: '+33623456789'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/sophie.webp'
+    address: '42 Rue du Vieux-Port, 13001 Marseille, France'
+
+  client_6:
+    email: 'client6@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Pierre'
+    last_name: 'Moreau'
+    preferences: ['wifi', 'kitchen', 'washing_machine']
+    is_verified: true
+    phone: '+33634567890'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/pierre.webp'
+    address: '9 Place Stanislas, 54000 Nancy, France'
+
+  client_7:
+    email: 'client7@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Julie'
+    last_name: 'Roux'
+    preferences: ['mountain_view', 'fireplace', 'hiking']
+    is_verified: true
+    phone: '+33645678901'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/julie.webp'
+    address: '33 Avenue de la Paix, 74000 Annecy, France'
+
+  client_8:
+    email: 'client8@example.com'
+    roles: ['ROLE_CLIENT']
+    password: 'password123'
+    first_name: 'Lucas'
+    last_name: 'Garcia'
+    preferences: ['gaming', 'high_speed_internet', 'modern']
+    is_verified: true
+    phone: '+33656789012'
+    created_at: '<(new DateTimeImmutable())>'
+    avatar: '/User/lucas.webp'
+    address: '17 Rue de la Bourse, 33000 Bordeaux, France'
