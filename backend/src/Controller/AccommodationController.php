@@ -44,7 +44,7 @@ class AccommodationController extends AbstractController
     }
 
     #[Route('/me', name: 'my-accommodation', methods: ['GET'])]
-    public function myAccommodation(): JsonResponse
+    public function myAccommodation(SerializerInterface $serializer): JsonResponse
     {
         /** @var Owner|null $user */
         $user = $this->getUser();
@@ -55,9 +55,11 @@ class AccommodationController extends AbstractController
 
         $accommodations = $this->accommodationRepository->findByOwnerId($user->getId());
 
-        return $this->json([
+        $json = $serializer->serialize([
             'accommodations' => $accommodations,
-        ], Response::HTTP_OK);
+        ], 'json', ['groups' => 'accommodation:summary']);
+
+        return JsonResponse::fromJsonString($json, Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
