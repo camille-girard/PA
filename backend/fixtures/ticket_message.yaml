@@ -1,24 +1,120 @@
 App\Entity\TicketMessage:
   message1:
-    ticket: '@ticket1'
+    ticket: '@ticket_1'
     author: '@owner_1'
-    content: 'Bonjour, je rencontre un problème lors de la réservation.'
-    createdAt: '<(new DateTimeImmutable())>'
+    content: 'L’hébergement ne correspond pas du tout à celui réservé.'
+    createdAt: '<(new \DateTimeImmutable("-10 days"))>'
 
   message2:
-    ticket: '@ticket1'
-    author: '@admin_1'
-    content: 'Bonjour, pouvez-vous préciser votre problème ?'
-    createdAt: '<(new DateTimeImmutable())>'
+    ticket: '@ticket_1'
+    author: '@admin_2'
+    content: 'Merci pour votre signalement, nous allons vérifier cela rapidement.'
+    createdAt: '<(new \DateTimeImmutable("-9 days"))>'
 
   message3:
-    ticket: '@ticket2'
-    author: '@owner_1'
-    content: 'J’ai un problème avec le paiement.'
-    createdAt: '<(new DateTimeImmutable())>'
+    ticket: '@ticket_2'
+    author: '@owner_2'
+    content: 'Le client n’est jamais arrivé, je suis sans nouvelles.'
+    createdAt: '<(new \DateTimeImmutable("-20 days"))>'
 
   message4:
-    ticket: '@ticket2'
+    ticket: '@ticket_2'
+    author: '@admin_3'
+    content: 'Merci, nous avons clôturé le ticket après confirmation de l’annulation.'
+    createdAt: '<(new \DateTimeImmutable("-19 days"))>'
+
+  message5:
+    ticket: '@ticket_3'
+    author: '@owner_3'
+    content: 'Le calendrier se décale tout seul, c’est problématique.'
+    createdAt: '<(new \DateTimeImmutable("-5 days"))>'
+
+  message6:
+    ticket: '@ticket_3'
+    author: '@admin_4'
+    content: 'Nous avons transmis le bug à notre équipe technique.'
+    createdAt: '<(new \DateTimeImmutable("-4 days"))>'
+
+  message7:
+    ticket: '@ticket_4'
+    author: '@owner_4'
+    content: 'Le client demande un remboursement total, que faire ?'
+    createdAt: '<(new \DateTimeImmutable("-15 days"))>'
+
+  message8:
+    ticket: '@ticket_5'
+    author: '@owner_1'
+    content: 'Impossible de publier un nouveau logement, une erreur s’affiche.'
+    createdAt: '<(new \DateTimeImmutable("-12 days"))>'
+
+  message9:
+    ticket: '@ticket_6'
+    author: '@owner_2'
+    content: 'Je ne vois pas le paiement dans mes transactions.'
+    createdAt: '<(new \DateTimeImmutable("-3 days"))>'
+
+  message10:
+    ticket: '@ticket_7'
+    author: '@owner_3'
+    content: 'J’ai remplacé mes photos, mais elles n’apparaissent pas.'
+    createdAt: '<(new \DateTimeImmutable("-30 days"))>'
+
+  message11:
+    ticket: '@ticket_7'
+    author: '@admin_5'
+    content: 'Nous avons corrigé l’erreur, vous pouvez réessayer.'
+    createdAt: '<(new \DateTimeImmutable("-25 days"))>'
+
+  message12:
+    ticket: '@ticket_8'
+    author: '@owner_4'
+    content: 'Un client m’a insulté dans la messagerie.'
+    createdAt: '<(new \DateTimeImmutable("-18 days"))>'
+
+  message13:
+    ticket: '@ticket_9'
+    author: '@owner_1'
+    content: 'Deux réservations pour la même date, c’est embêtant.'
+    createdAt: '<(new \DateTimeImmutable("-4 days"))>'
+
+  message14:
+    ticket: '@ticket_10'
+    author: '@owner_2'
+    content: 'J’ai besoin d’aide rapidement, personne ne me répond.'
+    createdAt: '<(new \DateTimeImmutable("-14 days"))>'
+
+  message15:
+    ticket: '@ticket_10'
     author: '@admin_1'
-    content: 'Problème résolu, ticket fermé.'
-    createdAt: '<(new DateTimeImmutable())>'
+    content: 'Nous nous excusons pour le retard de réponse.'
+    createdAt: '<(new \DateTimeImmutable("-13 days"))>'
+
+  message16:
+    ticket: '@ticket_11'
+    author: '@owner_3'
+    content: 'Pourquoi ma réservation a-t-elle été annulée sans notification ?'
+    createdAt: '<(new \DateTimeImmutable("-9 days"))>'
+
+  message17:
+    ticket: '@ticket_12'
+    author: '@owner_4'
+    content: 'La facture mentionne un montant erroné.'
+    createdAt: '<(new \DateTimeImmutable("-13 days"))>'
+
+  message18:
+    ticket: '@ticket_13'
+    author: '@owner_1'
+    content: 'Je n’ai plus accès à mon interface, j’ai besoin de vérifier mes réservations.'
+    createdAt: '<(new \DateTimeImmutable("-6 days"))>'
+
+  message19:
+    ticket: '@ticket_14'
+    author: '@owner_2'
+    content: 'La promotion d’été n’est pas appliquée correctement.'
+    createdAt: '<(new \DateTimeImmutable("-7 days"))>'
+
+  message20:
+    ticket: '@ticket_15'
+    author: '@owner_3'
+    content: 'Je propose d’ajouter une messagerie interne entre hôtes.'
+    createdAt: '<(new \DateTimeImmutable("-1 day"))>'

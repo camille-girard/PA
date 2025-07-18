@@ -1,16 +1,120 @@
 App\Entity\Ticket:
-  ticket1:
-    title: 'Problème de réservation'
+  ticket_1:
+    title: 'Erreur sur l’hébergement sélectionné'
     owner: '@owner_1'
-    createdAt: '<(new DateTimeImmutable())>'
-    updatedAt: '<(new DateTimeImmutable())>'
+    createdAt: '<(new \DateTimeImmutable("-10 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-8 days"))>'
     status: 'OPEN'
-    description: 'J’ai un problème avec ma réservation, je ne peux pas finaliser le paiement.'
+    description: 'L’hébergement affiché ne correspond pas à celui réservé par le client.'
 
-  ticket2:
-    title: 'Problème de paiement'
-    owner: '@owner_1'
-    createdAt: '<(new DateTimeImmutable())>'
-    updatedAt: '<(new DateTimeImmutable())>'
+  ticket_2:
+    title: 'Client absent à l’arrivée'
+    owner: '@owner_2'
+    createdAt: '<(new \DateTimeImmutable("-20 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-19 days"))>'
     status: 'CLOSED'
-    description: 'J’ai un problème avec le paiement de ma réservation, je ne peux pas finaliser le paiement.'
+    description: 'Le client ne s’est pas présenté le jour de la réservation, que faire ?'
+
+  ticket_3:
+    title: 'Souci avec le calendrier de disponibilité'
+    owner: '@owner_3'
+    createdAt: '<(new \DateTimeImmutable("-5 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-2 days"))>'
+    status: 'IN_PROGRESS'
+    description: 'Les disponibilités ne se mettent pas à jour correctement sur le site.'
+
+  ticket_4:
+    title: 'Demande de remboursement client'
+    owner: '@owner_4'
+    createdAt: '<(new \DateTimeImmutable("-15 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-14 days"))>'
+    status: 'OPEN'
+    description: 'Un client demande un remboursement pour une réservation annulée.'
+
+  ticket_5:
+    title: 'Message d’erreur lors de la création d’annonce'
+    owner: '@owner_1'
+    createdAt: '<(new \DateTimeImmutable("-12 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-12 days"))>'
+    status: 'IN_PROGRESS'
+    description: 'Une erreur technique apparaît quand je tente de publier un nouveau logement.'
+
+  ticket_6:
+    title: 'Paiement en attente'
+    owner: '@owner_2'
+    createdAt: '<(new \DateTimeImmutable("-3 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-1 day"))>'
+    status: 'OPEN'
+    description: 'Un paiement reste en attente depuis plusieurs jours, sans retour.'
+
+  ticket_7:
+    title: 'Modification des photos impossible'
+    owner: '@owner_3'
+    createdAt: '<(new \DateTimeImmutable("-30 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-25 days"))>'
+    status: 'CLOSED'
+    description: 'Je n’arrive pas à modifier ou supprimer les photos de mon logement.'
+
+  ticket_8:
+    title: 'Client agressif'
+    owner: '@owner_4'
+    createdAt: '<(new \DateTimeImmutable("-18 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-18 days"))>'
+    status: 'IN_PROGRESS'
+    description: 'Un client m’a laissé un message menaçant. Que dois-je faire ?'
+
+  ticket_9:
+    title: 'Double réservation sur la même date'
+    owner: '@owner_1'
+    createdAt: '<(new \DateTimeImmutable("-4 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-2 days"))>'
+    status: 'OPEN'
+    description: 'Deux clients ont réservé le même logement pour la même période.'
+
+  ticket_10:
+    title: 'Difficulté à joindre l’assistance'
+    owner: '@owner_2'
+    createdAt: '<(new \DateTimeImmutable("-2 weeks"))>'
+    updatedAt: '<(new \DateTimeImmutable("-2 weeks"))>'
+    status: 'CLOSED'
+    description: 'J’ai tenté de contacter l’assistance plusieurs fois sans réponse.'
+
+  ticket_11:
+    title: 'Réservation annulée sans préavis'
+    owner: '@owner_3'
+    createdAt: '<(new \DateTimeImmutable("-9 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-9 days"))>'
+    status: 'OPEN'
+    description: 'Une réservation a été annulée automatiquement sans explication.'
+
+  ticket_12:
+    title: 'Erreur sur la facture envoyée'
+    owner: '@owner_4'
+    createdAt: '<(new \DateTimeImmutable("-13 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-11 days"))>'
+    status: 'IN_PROGRESS'
+    description: 'Le montant facturé ne correspond pas au montant validé par le client.'
+
+  ticket_13:
+    title: 'Problème d’accès au tableau de bord'
+    owner: '@owner_1'
+    createdAt: '<(new \DateTimeImmutable("-6 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-5 days"))>'
+    status: 'OPEN'
+    description: 'Je n’arrive plus à accéder à mon tableau de bord de gestion.'
+
+  ticket_14:
+    title: 'Réduction non appliquée'
+    owner: '@owner_2'
+    createdAt: '<(new \DateTimeImmutable("-7 days"))>'
+    updatedAt: '<(new \DateTimeImmutable("-6 days"))>'
+    status: 'CLOSED'
+    description: 'La promotion prévue pour l’été ne s’applique pas sur mes logements.'
+
+  ticket_15:
+    title: 'Suggestions d’amélioration'
+    owner: '@owner_3'
+    createdAt: '<(new \DateTimeImmutable("-1 day"))>'
+    updatedAt: '<(new \DateTimeImmutable())>'
+    status: 'OPEN'
+    description: 'J’ai quelques idées pour améliorer l’expérience propriétaire.'
