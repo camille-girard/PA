@@ -13,6 +13,7 @@
     import type { ThemeDto } from '~/types/dtos/theme.dto';
     import type { ApiError } from '~/types/apiError';
     import UBadge from '~/components/atoms/UBadge.vue';
+    import UPagination from '~/components/UPagination.vue';
 
     definePageMeta({
         layout: 'backoffice',
@@ -36,6 +37,17 @@
         name: '',
         description: '',
     });
+
+    const {
+        paginatedItems: paginatedThemes,
+        meta,
+        goToPage,
+        nextPage,
+        previousPage,
+        firstPage,
+        lastPage,
+        setItemsPerPage,
+    } = usePagination(themes, { itemsPerPage: 9 });
 
     async function loadThemes() {
         pending.value = true;
@@ -200,7 +212,7 @@
             <div>
                 <h2 class="text-lg font-semibold my-4">Tous les thèmes</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <UCard v-for="theme in themes" :key="theme.id">
+                    <UCard v-for="theme in paginatedThemes" :key="theme.id">
                         <template #header>
                             <div class="flex justify-between items-center">
                                 <div class="font-semibold">{{ theme.name }}</div>
@@ -236,6 +248,16 @@
                         </template>
                     </UCard>
                 </div>
+
+                <UPagination
+                    :meta="meta"
+                    @go-to-page="goToPage"
+                    @next-page="nextPage"
+                    @previous-page="previousPage"
+                    @first-page="firstPage"
+                    @last-page="lastPage"
+                    @set-items-per-page="setItemsPerPage"
+                />
             </div>
         </div>
     </div>

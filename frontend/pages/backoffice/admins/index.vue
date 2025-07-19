@@ -12,6 +12,7 @@
     import { useToast } from '~/composables/useToast';
     import { useAuthStore } from '~/stores/auth';
     import type { AdminDto } from '~/types/dtos/admin.dto';
+    import UPagination from '~/components/UPagination.vue';
 
     interface AdminRow {
         id: number;
@@ -60,6 +61,17 @@
               }))
             : []
     );
+
+    const {
+        paginatedItems: paginatedAdminsData,
+        meta,
+        goToPage,
+        nextPage,
+        previousPage,
+        firstPage,
+        lastPage,
+        setItemsPerPage,
+    } = usePagination(adminsData, { itemsPerPage: 10 });
 
     function getStatusProps(status: string) {
         switch (status.toLowerCase()) {
@@ -136,7 +148,7 @@
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>
-            <UTable :columns="columns" :data="adminsData">
+            <UTable :columns="columns" :data="paginatedAdminsData">
                 <template #cell-status="{ value }: { value: string }">
                     <UBadge size="sm" variant="pill" :color="getStatusProps(value).color" class="w-fit">
                         {{ getStatusProps(value).label }}
@@ -166,6 +178,16 @@
                     </div>
                 </template>
             </UTable>
+
+            <UPagination
+                :meta="meta"
+                @go-to-page="goToPage"
+                @next-page="nextPage"
+                @previous-page="previousPage"
+                @first-page="firstPage"
+                @last-page="lastPage"
+                @set-items-per-page="setItemsPerPage"
+            />
         </div>
     </div>
 </template>
