@@ -1,4 +1,3 @@
-import type { ThemeDto } from '~/types/dtos/theme.dto';
 import type { ThemesWithAccommodationsResponseDto } from '~/types/dtos/themes_with_accommodations_response.dto';
 
 export const useThemeService = () => {

@@ -1,7 +1,3 @@
-<template>
-    <Line :data="chartData" :options="chartOptions" />
-</template>
-
 <script setup lang="ts">
     import { computed } from 'vue';
     import { Line } from 'vue-chartjs';
@@ -14,9 +10,10 @@
         PointElement,
         CategoryScale,
         LinearScale,
+        Filler,
     } from 'chart.js';
 
-    ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
+    ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale, Filler);
 
     const props = defineProps<{ monthly: Array<{ month: string; count: number }> }>();
 
@@ -41,3 +38,7 @@
         },
     };
 </script>
+
+<template>
+    <Line :data="chartData" :options="chartOptions" />
+</template>

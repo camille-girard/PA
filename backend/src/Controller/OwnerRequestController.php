@@ -174,7 +174,6 @@ class OwnerRequestController extends AbstractController
         }
     }
 
-
     #[Route('/api/owner-requests/{id}/reject', name: 'api_owner_requests_reject', methods: ['PATCH'])]
     #[IsGranted('ROLE_ADMIN')]
     public function reject(int $id, EntityManagerInterface $em): JsonResponse

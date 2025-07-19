@@ -5,9 +5,7 @@ export default defineNuxtRouteMiddleware(() => {
         return navigateTo('/login');
     }
 
-    const hasAccess =
-        authStore.user.roles.includes('ROLE_OWNER') ||
-        authStore.user.roles.includes('ROLE_CLIENT');
+    const hasAccess = authStore.user.roles.includes('ROLE_OWNER') || authStore.user.roles.includes('ROLE_CLIENT');
 
     if (!hasAccess) {
         return navigateTo('/');
