@@ -28,7 +28,7 @@ App\Entity\Theme:
     name: 'Action'
     description: 'Adrénaline, poursuites et explosions : vivez chaque instant à 100 à l’heure. Vous croiserez peut être
     Bruce Willis.'
-    slug: 'dessin-anime'
+    slug: 'action'
 
   theme_7:
     name: 'Animation'

@@ -592,8 +592,31 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: [ 'Proche commoditées', 'Jardin' ]
-    practicalInformations: 'Balcon, cafetière/théière, Chemé'
+    practicalInformations: 'Balcon, cafetière/théière, Cheminée'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 47.4363176
     longitude: 0.6399354
+    rating: 0
+
+  accommodation_27:
+    owner: '@owner_3'
+    theme: '@theme_7'
+    name: "Petite maison Kiki la petite sorcière"
+    description: "Découvrez la magie de Kiki la petite sorcière et rencontrer notre chat Jiji qui occupe les lieux."
+    address: '2 rue des Fauries, 38190 Livron-sur-Drôme, France'
+    city: 'Livron-sur-Drôme'
+    postalCode: '38190'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 250.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Proche commoditées', 'Jardin' ]
+    practicalInformations: 'Jardin, cafetière/théière, Cheminée'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 44.770606994628906
+    longitude: 4.8458333015441895
     rating: 0
