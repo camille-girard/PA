@@ -116,7 +116,11 @@
                 <UButton @click="onContact(booking.id)">
                     {{ contactLabel }}
                 </UButton>
-                <UButton v-if="showRatingButton && isBookingCompleted && !booking.hasRated" color="orange" @click="onRate()">
+                <UButton
+                    v-if="showRatingButton && isBookingCompleted && !booking.hasRated"
+                    color="orange"
+                    @click="onRate()"
+                >
                     <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                             stroke-linecap="round"
