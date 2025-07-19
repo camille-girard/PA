@@ -29,7 +29,17 @@ export const useRecentlyViewedStore = defineStore('recentlyViewed', {
             }
         },
 
-        getRecentlyViewedExcept(excludeId: string | number) {
+        getRecentlyViewedExcept(excludeId: string | number | null) {
+            if (excludeId === null || excludeId === undefined) {
+                return this.items.map((item) => ({
+                    title: item.name,
+                    image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
+                    id: item.id,
+                    slug: item.id.toString(), // Conversion en string pour l'URL
+                    price: item.price,
+                }));
+            }
+
             const normalizedExcludeId = typeof excludeId === 'string' ? parseInt(excludeId) : excludeId;
 
             const filteredItems = this.items.filter((item) => {
@@ -41,7 +51,7 @@ export const useRecentlyViewedStore = defineStore('recentlyViewed', {
                 title: item.name,
                 image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
                 id: item.id,
-                slug: item.slug,
+                slug: item.id.toString(), // Conversion en string pour l'URL
                 price: item.price,
             }));
         },

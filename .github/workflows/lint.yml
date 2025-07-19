@@ -26,7 +26,7 @@ jobs:
           docker compose build backend
           docker compose run --rm -v $(pwd)/backend/vendor:/var/www/html/vendor \
             backend sh -c "composer install --no-progress && \
-            PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run --diff && \
+            vendor/bin/php-cs-fixer fix --dry-run --diff && \
             vendor/bin/phpstan analyse src --memory-limit=2G --no-progress"
 
   frontend-lint:
