@@ -1,6 +1,10 @@
 <script setup lang="ts">
     import { useRouter } from 'vue-router';
 
+    definePageMeta({
+        middleware: ['auth', 'client-owner'],
+    });
+
     const router = useRouter();
 
     const _goBack = () => {

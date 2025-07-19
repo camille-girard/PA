@@ -33,7 +33,7 @@
     }
 
     function goToNewAccommodation() {
-        router.push('/newaccommodation');
+        router.push('/my-accommodation/create');
     }
 
     function goToBecomeOwner() {
