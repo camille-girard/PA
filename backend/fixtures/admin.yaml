@@ -1,24 +1,72 @@
 App\Entity\Admin:
   admin_1:
-    email: 'admin@example.com'
+    email: 'j.durand@example.com'
     roles: ['ROLE_ADMIN']
-    password: 'password123'
-    first_name: 'Joe'
-    last_name: 'Doe'
+    password: 'adminPass123'
+    first_name: 'Julien'
+    last_name: 'Durand'
     is_verified: true
-    created_at: '<(new DateTimeImmutable())>'
+    created_at: '<(new \DateTimeImmutable("-6 months"))>'
     avatar: '/User/joe.webp'
+    phone: '01 45 23 67 89'
+    address: '12 rue Lafayette, Paris, France'
 
   admin_2:
-    email: 'admin2@example.com'
-    roles: [ 'ROLE_ADMIN' ]
-    password: 'password123'
-    first_name: 'maria'
-    last_name: 'DB'
+    email: 's.marchand@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'adminPass123'
+    first_name: 'Sophie'
+    last_name: 'Marchand'
     is_verified: true
-    created_at: '<(new DateTimeImmutable())>'
+    created_at: '<(new \DateTimeImmutable("-1 year"))>'
     avatar: '/User/maria.webp'
-    phone: '123-456-7890'
-    address: '123 Admin St, Admin City, AD 12345'
+    phone: '02 33 45 67 89'
+    address: '25 avenue des Lilas, Lyon, France'
 
+  admin_3:
+    email: 'c.robert@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'adminPass123'
+    first_name: 'Cédric'
+    last_name: 'Robert'
+    is_verified: true
+    created_at: '<(new \DateTimeImmutable("-3 months"))>'
+    avatar: '/User/joe.webp'
+    phone: '03 72 45 12 56'
+    address: '5 rue Victor Hugo, Marseille, France'
 
+  admin_4:
+    email: 'l.moreau@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'adminPass123'
+    first_name: 'Laura'
+    last_name: 'Moreau'
+    is_verified: true
+    created_at: '<(new \DateTimeImmutable("-8 months"))>'
+    avatar: '/User/maria.webp'
+    phone: '04 28 65 99 01'
+    address: '78 rue des Écoles, Lille, France'
+
+  admin_5:
+    email: 't.blanc@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'adminPass123'
+    first_name: 'Thomas'
+    last_name: 'Blanc'
+    is_verified: true
+    created_at: '<(new \DateTimeImmutable("-10 days"))>'
+    avatar: '/User/joe.webp'
+    phone: '05 63 21 45 78'
+    address: '9 rue du Faubourg, Toulouse, France'
+
+  admin_6:
+    email: 'n.lefevre@example.com'
+    roles: ['ROLE_ADMIN']
+    password: 'adminPass123'
+    first_name: 'Nathalie'
+    last_name: 'Lefèvre'
+    is_verified: true
+    created_at: '<(new \DateTimeImmutable("-2 weeks"))>'
+    avatar: '/User/maria.webp'
+    phone: '06 89 45 12 03'
+    address: '14 boulevard Haussmann, Nantes, France'
