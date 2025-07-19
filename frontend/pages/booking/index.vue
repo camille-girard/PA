@@ -107,6 +107,7 @@
                     :booking="booking"
                     contact-label="Contacter l'hôte"
                     delete-label="Annuler réservation"
+                    :show-rating-button="true"
                     @delete="
                         () => {
                             selectedBookingId = booking.id;
