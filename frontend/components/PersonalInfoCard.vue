@@ -114,6 +114,14 @@
                 <EditableField label="Adresse e-mail" :model-value="auth.user.email" field="email" @save="saveField" />
 
                 <EditableField
+                    v-if="auth.user?.roles.includes('ROLE_OWNER')"
+                    label="Bio"
+                    :model-value="auth.user.bio ?? ''"
+                    field="bio"
+                    @save="saveField"
+                />
+
+                <EditableField
                     label="Numéro de téléphone"
                     :model-value="auth.user.phone ?? ''"
                     field="phone"
@@ -127,7 +135,12 @@
                     @save="saveField"
                 />
 
-                <EditablePreferences label="Préférences" :model-value="userPreferences" @save="savePreferences" />
+                <EditablePreferences
+                    v-if="!auth.user?.roles.includes('ROLE_OWNER')"
+                    label="Préférences"
+                    :model-value="userPreferences"
+                    @save="savePreferences"
+                />
             </div>
         </div>
     </div>
