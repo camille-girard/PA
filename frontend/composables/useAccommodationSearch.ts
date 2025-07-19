@@ -61,13 +61,52 @@ export function useAccommodationSearch() {
     // Méthode pour charger les résultats à partir d'une recherche existante
     const loadSearchResults = async (): Promise<void> => {
         const route = useRoute();
-        const query = route.query.destination as string;
 
-        if (query) {
-            await searchByQuery(query);
-        } else if (!searchResultsStore.results) {
-            // Si pas de requête mais des résultats dans le store, on garde les résultats
-            // Sinon on efface les résultats
+        // Si nous avons déjà des résultats dans le store et que nous venons de faire une recherche,
+        // on ne refait pas de requête (évite la double requête)
+        if (searchResultsStore.results) {
+            return;
+        }
+
+        // Si nous avons des paramètres de recherche dans l'URL, on refait la recherche
+        const destination = route.query.destination as string;
+        const arrivalDate = route.query.arrivalDate as string;
+        const departureDate = route.query.departureDate as string;
+        const amountTravelers = route.query.amountTravelers as string;
+
+        if (destination) {
+            // Utiliser le service de recherche complet avec tous les paramètres
+            const searchService = useSearchService();
+            isLoading.value = true;
+            error.value = null;
+
+            try {
+                const searchData = {
+                    destination: destination.trim(),
+                    arrivalDate: arrivalDate || undefined,
+                    departureDate: departureDate || undefined,
+                    amountTravelers: amountTravelers ? Number(amountTravelers) : undefined,
+                };
+
+                const { data, error: fetchError } = await searchService.submitSearch(searchData);
+
+                if (fetchError.value) {
+                    throw new Error(fetchError.value.message || 'Une erreur est survenue lors de la recherche');
+                }
+
+                if (data.value) {
+                    searchResultsStore.setResults(data.value);
+                }
+            } catch (err: unknown) {
+                const errorObj = err as Error;
+                error.value = errorObj;
+                toast.error('Erreur de recherche', errorObj.message || 'Une erreur est survenue lors de la recherche');
+                console.error('Erreur lors de la recherche:', errorObj);
+            } finally {
+                isLoading.value = false;
+            }
+        } else {
+            // Si pas de paramètres de recherche, on efface les résultats
             searchResultsStore.clearResults();
         }
     };

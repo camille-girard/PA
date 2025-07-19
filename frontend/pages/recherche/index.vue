@@ -2,17 +2,27 @@
     import AccommodationCards from '~/components/AccommodationCards.vue';
     import { useAccommodationSearch } from '~/composables/useAccommodationSearch';
     import ULoading from '~/components/atoms/ULoading.vue';
+    import { useSearchResultsStore } from '~/stores/searchResults';
 
     const { accommodationItems, isLoading, hasResults, loadSearchResults } = useAccommodationSearch();
+    const searchResultsStore = useSearchResultsStore();
 
     useSeoMeta({
         title: "PopnBed - Recherche d'hébergements inspirés de films",
         description: "Trouvez l'hébergement parfait inspiré de vos films et séries préférés.",
     });
 
-    onMounted(() => {
-        loadSearchResults();
-    });
+    // Observer les changements dans l'URL pour recharger les résultats
+    const route = useRoute();
+    watch(
+        () => route.query,
+        () => {
+            // Effacer les résultats précédents quand les paramètres changent
+            searchResultsStore.clearResults();
+            loadSearchResults();
+        },
+        { immediate: true }
+    );
 </script>
 
 <template>

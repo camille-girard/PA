@@ -58,9 +58,10 @@
 
     function formatDate(date: Date | null): string {
         if (!date) return '';
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        // Utiliser les méthodes UTC pour éviter les décalages de fuseau horaire
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const year = date.getUTCFullYear();
         return props.dateFormat.replace('dd', day).replace('MM', month).replace('yyyy', String(year));
     }
 
@@ -68,8 +69,12 @@
         const parts = dateString.split('/');
         if (parts.length !== 3) return null;
         const [day, month, year] = parts.map(Number);
-        const date = new Date(year, month - 1, day);
-        return date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year ? date : null;
+
+        const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+
+        return date.getUTCDate() === day && date.getUTCMonth() === month - 1 && date.getUTCFullYear() === year
+            ? date
+            : null;
     }
 
     const monthYear = computed(() => capitalizeFirstLetter(d(current.value, { year: 'numeric', month: 'long' })));
@@ -103,7 +108,7 @@
         emit('month-change', current.value);
     }
     function selectDate(day: number) {
-        const newDate = new Date(current.value.getFullYear(), current.value.getMonth(), day);
+        const newDate = new Date(Date.UTC(current.value.getFullYear(), current.value.getMonth(), day, 12, 0, 0));
         if ((props.minDate && newDate < props.minDate) || (props.maxDate && newDate > props.maxDate)) return;
         selected.value = newDate;
     }
