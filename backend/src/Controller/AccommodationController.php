@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Accommodation;
 use App\Entity\AccommodationImages;
 use App\Entity\Owner;
+use App\Enum\AccommodationAdvantage;
 use App\Repository\AccommodationRepository;
 use App\Repository\OwnerRepository;
 use App\Repository\ThemeRepository;
@@ -318,5 +319,29 @@ class AccommodationController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json(['message' => 'Hébergement supprimé avec succès'], Response::HTTP_OK);
+    }
+
+    #[Route('/advantages', name: 'advantages', methods: ['GET'])]
+    #[OA\Get(
+        path: '/api/accommodations/advantages',
+        summary: 'Récupère la liste des avantages disponibles',
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Liste des avantages'
+            ),
+        ]
+    )]
+    public function getAdvantages(): JsonResponse
+    {
+        $advantages = [];
+        foreach (AccommodationAdvantage::cases() as $advantage) {
+            $advantages[] = [
+                'value' => $advantage->value,
+                'label' => $advantage->label(),
+            ];
+        }
+
+        return $this->json($advantages, Response::HTTP_OK);
     }
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import '~/types/accommodation';
     import '~/types/owner';
+    import { accommodationAdvantageLabels } from '~/types/accommodationAdvantage';
 
     const props = defineProps<{
         informations?: Accommodation;
@@ -27,9 +28,14 @@
                 {{ props.informations.description }}
             </p>
         </div>
-        <div v-if="props.informations?.advantages" class="grid grid-cols-2 md:grid-cols-3 gap-6">
-            <div v-for="(info, index) in props.informations.advantages" :key="index" class="flex items-center gap-3">
-                <span class="text-body-md text-gray-800 font-medium">{{ info }}</span>
+        <div
+            v-if="props.informations?.advantage?.length"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-w-0"
+        >
+            <div v-for="(advantageEnum, idx) in props.informations.advantage" :key="idx">
+                <span class="text-body-md text-gray-800 p-2 sm:p-4 w-full border rounded-lg shadow-sm block">
+                    {{ accommodationAdvantageLabels[advantageEnum] || advantageEnum }}
+                </span>
             </div>
         </div>
         <div v-if="props.host" class="flex items-center gap-4 mt-8">
