@@ -14,6 +14,7 @@ export interface FormState {
     capacity: number;
     description: string;
     practicalInformation: string;
+    advantages: string[];
     address: string;
     city: string;
     postalCode: string;
@@ -45,6 +46,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
         capacity: 1,
         description: '',
         practicalInformation: '',
+        advantages: [],
         address: '',
         city: '',
         postalCode: '',
@@ -82,6 +84,44 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
 
             const data = await res.json();
 
+            let advantages = [];
+            if (data.advantage && Array.isArray(data.advantage)) {
+                const labelToValueMap: { [key: string]: string } = {
+                    'Petit-déjeuner offert': 'breakfast',
+                    Goûter: 'snack',
+                    Jardin: 'garden',
+                    'Salle de jeux': 'game_room',
+                    Terrasse: 'terrace',
+                    Balcon: 'balcony',
+                    Barbecue: 'barbecue',
+                    'Accès au château': 'castle_access',
+                    'Visite du château': 'castle_visit',
+                    'Wi-Fi gratuit': 'wifi',
+                    Parking: 'parking',
+                    Piscine: 'pool',
+                    Spa: 'spa',
+                    'Salle de sport': 'gym',
+                    'Cuisine équipée': 'kitchen',
+                    'Lave-linge': 'laundry',
+                    Climatisation: 'air_conditioning',
+                    Chauffage: 'heating',
+                    Télévision: 'tv',
+                    'Accès à la salle commune': 'common_room_access',
+                };
+
+                advantages = data.advantage.map((adv: string | { value: string }) => {
+                    if (typeof adv === 'object' && adv.value) {
+                        return adv.value;
+                    }
+                    if (typeof adv === 'string') {
+                        return labelToValueMap[adv] || adv;
+                    }
+                    return adv;
+                });
+            }
+
+            console.log('Processed advantages:', advantages);
+
             formState.value = {
                 title: data.name,
                 description: data.description,
@@ -105,6 +145,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                         id: nanoid(),
                         url: img.url,
                     })) || [],
+                advantages,
             };
         } catch (err) {
             error.value = err instanceof Error ? err.message : 'Erreur inconnue';
@@ -132,6 +173,9 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
 
     // Handle form submission
     async function handleSubmit() {
+        console.log('=== FORM SUBMISSION START ===');
+        console.log('Advantages before submission:', formState.value.advantages);
+
         const payload = {
             name: formState.value.title,
             description: formState.value.description,
@@ -153,7 +197,10 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
             images: formState.value.images.map((img) => ({
                 url: img.url,
             })),
+            advantage: formState.value.advantages, // Changé de 'advantages' à 'advantage'
         };
+
+        console.log('Payload being sent:', JSON.stringify(payload, null, 2));
 
         if (!isEditing.value && auth.user?.id) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -166,6 +213,8 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
             ? `${config.public.apiUrl}/api/accommodations/${options.accommodationId}`
             : `${config.public.apiUrl}/api/accommodations`;
 
+        console.log('Request details:', { method, url });
+
         try {
             const res = await fetch(url, {
                 method,
@@ -174,11 +223,16 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                 body: JSON.stringify(payload),
             });
 
+            console.log('Response status:', res.status);
+
             if (!res.ok) {
+                const errorText = await res.text();
+                console.error('Response error:', errorText);
                 throw new Error('Erreur lors de la sauvegarde');
             }
 
             const json = await res.json();
+            console.log('Response data:', json);
 
             if (!isEditing.value) {
                 router.push(`/accommodations/${json.accommodation.id}/edit`);
@@ -190,6 +244,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                 );
             }
         } catch (err) {
+            console.error('Submit error:', err);
             const toast = useToast();
             toast.error(
                 'Erreur de sauvegarde',
@@ -198,6 +253,8 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
                     : 'Une erreur est survenue lors de la sauvegarde de votre hébergement.'
             );
         }
+
+        console.log('=== FORM SUBMISSION END ===');
     }
 
     // Handle accommodation deletion
