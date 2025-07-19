@@ -43,6 +43,7 @@ services:
     image: registry.nassimlounadi.fr/pa/frontend
     environment:
       NITRO_PRESET: node
+      NUXT_PUBLIC_API_URL: 'https://api.popnbed.com'
 
   nginx:
     image: registry.nassimlounadi.fr/pa/nginx
