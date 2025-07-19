@@ -1,4 +1,3 @@
-import type { ThemeDto } from '~/types/dtos/theme.dto';
 import type { ThemesWithAccommodationsResponseDto } from '~/types/dtos/themes_with_accommodations_response.dto';
 
 export const useThemeService = () => {
@@ -15,7 +14,7 @@ export const useThemeService = () => {
      * Récupère un thème par son slug
      */
     const getThemeBySlug = async (slug: string) => {
-        return await useAuthFetch<ThemeDto>($api(`/api/themes/accommodation/${slug}`));
+        return await useAuthFetch<ThemesWithAccommodationsResponseDto>($api(`/api/themes/accommodation/${slug}`));
     };
 
     return {

@@ -16,13 +16,13 @@ interface PaginationMeta {
 
 export function usePagination<T>(items: Ref<T[]>, options: PaginationOptions = {}) {
     const { itemsPerPage = 10, initialPage = 1 } = options;
-    
+
     const currentPage = ref(initialPage);
     const perPage = ref(itemsPerPage);
 
     const totalItems = computed(() => items.value?.length || 0);
     const totalPages = computed(() => Math.ceil(totalItems.value / perPage.value) || 1);
-    
+
     const paginatedItems = computed(() => {
         if (!items.value || !Array.isArray(items.value)) return [];
         const startIndex = (currentPage.value - 1) * perPage.value;
@@ -30,14 +30,16 @@ export function usePagination<T>(items: Ref<T[]>, options: PaginationOptions = {
         return items.value.slice(startIndex, endIndex);
     });
 
-    const meta = computed((): PaginationMeta => ({
-        currentPage: currentPage.value,
-        totalPages: totalPages.value,
-        totalItems: totalItems.value,
-        itemsPerPage: perPage.value,
-        hasNextPage: currentPage.value < totalPages.value,
-        hasPreviousPage: currentPage.value > 1,
-    }));
+    const meta = computed(
+        (): PaginationMeta => ({
+            currentPage: currentPage.value,
+            totalPages: totalPages.value,
+            totalItems: totalItems.value,
+            itemsPerPage: perPage.value,
+            hasNextPage: currentPage.value < totalPages.value,
+            hasPreviousPage: currentPage.value > 1,
+        })
+    );
 
     const goToPage = (page: number) => {
         if (page >= 1 && page <= totalPages.value) {

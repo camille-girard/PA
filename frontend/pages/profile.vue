@@ -2,6 +2,10 @@
     import PersonalInfoCard from '~/components/PersonalInfoCard.vue';
     import { useRecommendations } from '~/composables/useRecommendations';
 
+    definePageMeta({
+        middleware: ['auth', 'client-owner'],
+    });
+
     const authStore = useAuthStore();
     const recentlyViewedStore = useRecentlyViewedStore();
     const { getPersonalizedRecommendations } = useRecommendations();

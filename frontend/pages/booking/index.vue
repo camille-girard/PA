@@ -5,6 +5,7 @@
 
     definePageMeta({
         ssr: false,
+        middleware: ['auth', 'client-owner'],
     });
 
     const { $api } = useNuxtApp();

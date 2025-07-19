@@ -65,6 +65,7 @@
                     icon: LogoutIcon,
                     action: async () => {
                         await authStore.logout();
+                        await navigateTo('/');
                     },
                 },
             ];
@@ -137,6 +138,7 @@
             icon: LogoutIcon,
             action: async () => {
                 await authStore.logout();
+                await navigateTo('/');
             },
         });
 

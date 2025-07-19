@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, markRaw } from 'vue';
     import StatsCard from '~/components/StatsCard.vue';
     import UserIcon from '~/components/atoms/icons/UserIcon.vue';
     import BuildingIcon from '~/components/atoms/icons/BuildingIcon.vue';
@@ -18,7 +18,7 @@
 
     const toast = useToast();
     const {
-        public: { apiUrl },
+        public: { apiUrl, matomoUrl },
     } = useRuntimeConfig();
 
     const stats = ref([]);
@@ -35,10 +35,18 @@
             }
             if (data.value) {
                 stats.value = [
-                    { label: 'Clients', value: data.value.counts.clients.toLocaleString(), icon: UserIcon },
-                    { label: 'Hôtes', value: data.value.counts.owners.toLocaleString(), icon: BuildingIcon },
-                    { label: 'Réservations', value: data.value.counts.bookings.toLocaleString(), icon: CoinsHandIcon },
-                    { label: 'Hébergements', value: data.value.counts.accommodations.toLocaleString(), icon: PinIcon },
+                    { label: 'Clients', value: data.value.counts.clients.toLocaleString(), icon: markRaw(UserIcon) },
+                    { label: 'Hôtes', value: data.value.counts.owners.toLocaleString(), icon: markRaw(BuildingIcon) },
+                    {
+                        label: 'Réservations',
+                        value: data.value.counts.bookings.toLocaleString(),
+                        icon: markRaw(CoinsHandIcon),
+                    },
+                    {
+                        label: 'Hébergements',
+                        value: data.value.counts.accommodations.toLocaleString(),
+                        icon: markRaw(PinIcon),
+                    },
                 ];
                 bookingStatusData.value = data.value.bookingStatusCounts;
                 monthlyBookings.value = data.value.monthlyBookings;
@@ -61,7 +69,8 @@
         <div class="flex flex-row justify-between">
             <h2 class="text-xl sm:text-2xl font-semibold">Tableau de Bord</h2>
             <ULink
-                to="http://localhost:8082/index.php"
+                v-if="matomoUrl"
+                :to="matomoUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="tertiary"

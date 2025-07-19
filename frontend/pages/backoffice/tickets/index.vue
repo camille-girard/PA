@@ -123,20 +123,22 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <UCard
                     v-for="ticket in paginatedTickets"
-                :key="ticket.id"
-                class="cursor-pointer hover:shadow-md transition"
-                @click="openTicket(ticket)"
-            >
-                <template #header>
-                    <div class="flex justify-between items-center">
-                        <div class="font-semibold">{{ ticket.title }}</div>
-                        <UBadge :color="statusColor(ticket.status)">{{ statusLabel(ticket.status) }}</UBadge>
+                    :key="ticket.id"
+                    class="cursor-pointer hover:shadow-md transition"
+                    @click="openTicket(ticket)"
+                >
+                    <template #header>
+                        <div class="flex justify-between items-center">
+                            <div class="font-semibold">{{ ticket.title }}</div>
+                            <UBadge :color="statusColor(ticket.status)">{{ statusLabel(ticket.status) }}</UBadge>
+                        </div>
+                    </template>
+                    <div class="text-sm text-gray-600">
+                        <p>
+                            <strong>Propriétaire :</strong> {{ ticket.owner?.firstName }} {{ ticket.owner?.lastName }}
+                        </p>
+                        <p><strong>Créé le :</strong> {{ new Date(ticket.createdAt).toLocaleDateString() }}</p>
                     </div>
-                </template>
-                <div class="text-sm text-gray-600">
-                    <p><strong>Propriétaire :</strong> {{ ticket.owner?.firstName }} {{ ticket.owner?.lastName }}</p>
-                    <p><strong>Créé le :</strong> {{ new Date(ticket.createdAt).toLocaleDateString() }}</p>
-                </div>
                 </UCard>
             </div>
 

@@ -13,15 +13,15 @@
     onMounted(async () => {
         if (typeof route.params.slug === 'string') {
             const themeData = await getThemeBySlug(route.params.slug);
-            if (themeData && themeData.theme) {
-                theme.value = themeData.theme;
+            if (themeData) {
+                theme.value = themeData;
 
                 accommodations.value =
-                    themeData.theme.accommodations?.map((accommodation) => ({
+                    themeData.accommodations?.map((accommodation) => ({
                         id: accommodation.id,
                         title: accommodation.name,
                         image: accommodation.images[0]?.url || 'https://via.placeholder.com/400x250',
-                        slug: themeData.theme.slug,
+                        slug: themeData.slug,
                     })) || [];
 
                 useSeoMeta({
