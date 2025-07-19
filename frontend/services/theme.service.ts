@@ -15,7 +15,7 @@ export const useThemeService = () => {
      * Récupère un thème par son slug
      */
     const getThemeBySlug = async (slug: string) => {
-        return await useAuthFetch<ThemeDto>($api(`/api/themes/accommodation/${slug}`));
+        return await useAuthFetch<ThemesWithAccommodationsResponseDto>($api(`/api/themes/accommodation/${slug}`));
     };
 
     return {
