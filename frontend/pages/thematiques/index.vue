@@ -33,8 +33,8 @@
                 <div class="text-center mb-10">
                     <h2 class="text-h2">{{ section.title }}</h2>
                 </div>
-                <AccommodationCards :items="section.items" />
-                <div class="flex justify-end hover:underline mt-5">
+                <AccommodationCards :items="section.items?.slice(0, 3)" />
+                <div v-if="section.items?.length > 3" class="flex justify-end hover:underline mt-5">
                     <NuxtLink
                         :to="`/thematiques/${section.slug}`"
                         class="inline-flex items-center text-orange-600 text-body-sm font-medium"

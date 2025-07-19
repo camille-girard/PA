@@ -64,8 +64,8 @@
         alert(`Fonction à implémenter pour contacter l'hôte de la réservation #${bookingId}`);
     }
 
-    function handleRatingSubmit(event: { bookingId: number; ratingData: any; hasRated: boolean }) {
-        const bookingIndex = bookings.value.findIndex(b => b.id === event.bookingId);
+    function handleRatingSubmit(event: { bookingId: number; ratingData: unknown; hasRated: boolean }) {
+        const bookingIndex = bookings.value.findIndex((b) => b.id === event.bookingId);
         if (bookingIndex !== -1) {
             bookings.value[bookingIndex].hasRated = event.hasRated;
         }

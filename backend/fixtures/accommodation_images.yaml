@@ -895,64 +895,97 @@ App\Entity\AccommodationImages:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_livingroom.webp'
     is_main: true
-  image_26b:
+  image_25b:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_livingroom_2.webp'
     is_main: false
-  image_26c:
+  image_25c:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_bedroom.webp'
     is_main: false
-  image_26d:
+  image_25d:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_bedroom_2.webp'
     is_main: false
-  image_26e:
+  image_25e:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_kitchen.webp'
     is_main: false
-  image_26f:
+  image_25f:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_bathroom.webp'
     is_main: false
-  image_26g:
+  image_25g:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_couloir.webp'
     is_main: false
-  image_26h:
+  image_25h:
     accommodation: '@accommodation_25'
     url: '/Totoro/Totoro_outdoor.webp'
     is_main: false
 
-  image_27:
+  image_26:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_outdoor.webp'
     is_main: true
-  image_27b:
+  image_26b:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_livingroom.webp'
     is_main: false
-  image_27c:
+  image_26c:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_livingroom_2.webp'
     is_main: false
-  image_27d:
+  image_26d:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_livingroom_3.webp'
     is_main: false
-  image_27e:
+  image_26e:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_bathroom.webp'
     is_main: false
-  image_27f:
+  image_26f:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_bedroom.webp'
     is_main: false
-  image_27g:
+  image_26g:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_kitchen.webp'
     is_main: false
-  image_27h:
+  image_26h:
     accommodation: '@accommodation_26'
     url: '/Holidays/Holidays_outdoor_2.webp'
+    is_main: false
+
+  image_27:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_outdoor.webp'
+    is_main: true
+  image_27b:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_livingroom.webp'
+    is_main: false
+  image_27c:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_kitchen.webp'
+    is_main: false
+  image_27d:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_bathroom.webp'
+    is_main: false
+  image_27e:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_bedroom.webp'
+    is_main: false
+  image_27f:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_grenier.webp'
+    is_main: false
+  image_27g:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_dressing.webp'
+    is_main: false
+  image_27h:
+    accommodation: '@accommodation_27'
+    url: '/Kiki/Kiki_reading.webp'
     is_main: false
