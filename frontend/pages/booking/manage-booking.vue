@@ -93,6 +93,7 @@
                     :booking="booking"
                     contact-label="Contacter le locataire"
                     delete-label="Supprimer la réservation"
+                    :show-rating-button="false"
                     @delete="
                         () => {
                             selectedBookingId = booking.id;

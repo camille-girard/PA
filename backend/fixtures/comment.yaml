@@ -1,22 +1,126 @@
-# backend/fixtures/comment.yaml
 App\Entity\Comment:
   comment_1:
-    content: 'Un séjour parmis les orgres plus qu’agréable. Mes enfants été aux anges. La maison est fidèle au dessin...'
+    content: "Un séjour parmis les orgres plus qu'agréable. Mes enfants été aux anges. La maison est fidèle au dessin..."
     rating: 3
     createdAt: '<(new DateTimeImmutable("-1 week"))>'
     client: '@client_2'
     accommodation: '@accommodation_3'
 
   comment_2:
-    content: 'J’y ai amené mes petits enfants pour les vacances. Endroit douillé et vue imprenable'
+    content: "J'y ai amené mes petits enfants pour les vacances. Endroit douillé et vue imprenable"
     rating: 4
     createdAt: '<(new DateTimeImmutable("-5 days"))>'
     client: '@client_2'
     accommodation: '@accommodation_1'
 
   comment_3:
-    content: 'Grand fan de Shrek, c’est juste incroyable ! Et Richard est au top !'
+    content: "Grand fan de Shrek, c'est juste incroyable ! Et Richard est au top !"
     rating: 4
     createdAt: '<(new DateTimeImmutable("-3 week"))>'
     client: '@client_1'
     accommodation: '@accommodation_3'
+
+  comment_4:
+    content: "Appartement sympa avec une bonne ambiance Friends, mais quelques détails à améliorer. La WiFi était un peu lente et la cuisine mériterait d'être mieux équipée. Sinon, Richard est très réactif."
+    rating: 3
+    createdAt: '<(new DateTimeImmutable("-2 months"))>'
+    client: '@client_3'
+    accommodation: '@accommodation_1'
+
+  comment_5:
+    content: "Parfait pour des vacances en famille ! Les enfants ont adoré la salle de jeux et le jardin avec balançoire. La décoration Shrek est bien réalisée. Richard a été aux petits soins. Seul bémol : un peu bruyant le soir."
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-3 weeks"))>'
+    client: '@client_4'
+    accommodation: '@accommodation_3'
+
+  comment_6:
+    content: "Expérience décevante. Le château semblait négligé, la bibliothèque magique était poussiéreuse. Richard était difficile à joindre et les repas dignes de Poudlard étaient basiques. Dommage car le potentiel est là."
+    rating: 2
+    createdAt: '<(new DateTimeImmutable("-4 months"))>'
+    client: '@client_5'
+    accommodation: '@accommodation_2'
+
+  comment_7:
+    content: "Séjour authentique dans l'univers de Shrek ! La maison est fidèle au film, mes enfants n'ont pas voulu repartir. Richard est un propriétaire passionné qui connaît bien son sujet. La salle de jeux est un vrai plus !"
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-5 months"))>'
+    client: '@client_7'
+    accommodation: '@accommodation_3'
+
+  comment_8:
+    content: "Le château Harry Potter est impressionnant ! L'ambiance Gryffondor est parfaitement retranscrite. Richard nous a fait une visite guidée passionnante. Seul point négatif : il n'y a qu'une salle de bain pour 4 personnes."
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-2 weeks"))>'
+    client: '@client_1'
+    accommodation: '@accommodation_2'
+
+  comment_9:
+    content: 'Appartement Game of Thrones exceptionnel ! Michel Polnareff a créé une ambiance digne de Winterfell. La vue sur le château de Vincennes est parfaite. Terrasse magnifique. Un séjour inoubliable !'
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-6 weeks"))>'
+    client: '@client_3'
+    accommodation: '@accommodation_4'
+
+  comment_10:
+    content: "Ambiance années 80 parfaite ! Francis Cabrel a soigné chaque détail. Le prix est très abordable pour la qualité. Seul regret : l'appartement est un peu petit pour 2 personnes si on veut étaler ses affaires."
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-8 weeks"))>'
+    client: '@client_2'
+    accommodation: '@accommodation_5'
+
+  comment_11:
+    content: "Maison Simpson décevante. Johnny Hallyday ne semble pas entretenir le logement. Le jardin était mal entretenu, la salle de jeux en désordre. Dommage car l'idée était bonne. Rapport qualité/prix insuffisant."
+    rating: 2
+    createdAt: '<(new DateTimeImmutable("-10 weeks"))>'
+    client: '@client_4'
+    accommodation: '@accommodation_6'
+
+  comment_12:
+    content: "Expérience unique dans la maison de Jesse ! Richard a pensé à tout, même la sono fonctionne parfaitement. L'ambiance chimie est bien dosée sans être dérangeante. Barbecue au top pour les soirées !"
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-12 weeks"))>'
+    client: '@client_6'
+    accommodation: '@accommodation_7'
+
+  comment_13:
+    content: "Domaine grandiose ! Michel Polnareff a créé un vrai décor de film. Capacité parfaite pour notre groupe de 12. Seul problème : une seule salle de bain pour tout le monde, c'est compliqué le matin."
+    rating: 3
+    createdAt: '<(new DateTimeImmutable("-14 weeks"))>'
+    client: '@client_8'
+    accommodation: '@accommodation_8'
+
+  comment_14:
+    content: "Appartement Twilight romantique à souhait ! Richard a créé une ambiance mystérieuse parfaite. Équipements au top (lave-vaisselle, machine à laver). Excellent rapport qualité/prix. Je reviendrai !"
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-16 weeks"))>'
+    client: '@client_5'
+    accommodation: '@accommodation_9'
+
+  comment_15:
+    content: "Villa Barbie de rêve ! Mes filles ont vécu un conte de fées. La piscine et le spa sont parfaits. Richard a pensé à tout. Seul bémol : le prix est élevé mais ça vaut le coup pour une occasion spéciale."
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-18 weeks"))>'
+    client: '@client_7'
+    accommodation: '@accommodation_13'
+
+  comment_16:
+    content: "Appartement Star Wars incroyable ! Francis Cabrel est un passionné, ça se sent dans chaque détail. Ambiance futuriste parfaite. Localisation au top dans Paris. Un must pour les fans de la saga !"
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-20 weeks"))>'
+    client: '@client_8'
+    accommodation: '@accommodation_15'
+
+  comment_17:
+    content: "Maison Scream parfaite pour Halloween ! Richard a créé une ambiance de folie. Mes amis ont adoré le frisson. Équipements au top, jardin parfait pour les soirées. Expérience unique à renouveler !"
+    rating: 4
+    createdAt: '<(new DateTimeImmutable("-22 weeks"))>'
+    client: '@client_1'
+    accommodation: '@accommodation_17'
+
+  comment_18:
+    content: "Maison familiale exceptionnelle ! Francis Cabrel a pensé aux familles nombreuses. Jeux pour enfants au top, sono parfaite pour les soirées. Mes 6 enfants ont adoré ! Séjour parfait."
+    rating: 5
+    createdAt: '<(new DateTimeImmutable("-24 weeks"))>'
+    client: '@client_3'
+    accommodation: '@accommodation_19'
