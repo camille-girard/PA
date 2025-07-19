@@ -24,11 +24,17 @@
             return;
         }
 
+        const formatDate = (date: string | undefined) => {
+            if (!date) return undefined;
+            const parsedDate = new Date(date);
+            return isNaN(parsedDate.getTime()) ? undefined : parsedDate.toISOString().split('T')[0];
+        };
+
         const searchData = {
             destination: destination.value.trim(),
-            arrivalDate: arrivalDate.value,
-            departureDate: departureDate.value,
-            amountTravelers: amountTravelers.value,
+            arrivalDate: formatDate(arrivalDate.value),
+            departureDate: formatDate(departureDate.value),
+            amountTravelers: amountTravelers.value || undefined,
         };
 
         try {
@@ -38,23 +44,30 @@
             const response = await searchService.submitSearch(searchData);
 
             const searchResultsStore = useSearchResultsStore();
-
             searchResultsStore.setResults(response.data);
 
             const router = useRouter();
+            const queryParams: Record<string, string> = {
+                destination: searchData.destination,
+            };
+
+            if (searchData.arrivalDate) {
+                queryParams.arrivalDate = searchData.arrivalDate;
+            }
+            if (searchData.departureDate) {
+                queryParams.departureDate = searchData.departureDate;
+            }
+            if (searchData.amountTravelers) {
+                queryParams.amountTravelers = searchData.amountTravelers.toString();
+            }
+
             await router.push({
                 path: '/recherche',
-                query: {
-                    destination: searchData.destination,
-                    arrivalDate: searchData.arrivalDate,
-                    departureDate: searchData.departureDate,
-                    amountTravelers: searchData.amountTravelers,
-                },
+                query: queryParams,
             });
         } catch (error) {
             console.error('Erreur lors de la recherche:', error);
 
-            // Ajouter un toast d'erreur
             const toast = useToast();
             toast.error('Erreur de recherche', 'Une erreur est survenue lors de la recherche');
         } finally {
