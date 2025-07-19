@@ -120,10 +120,10 @@ class OwnerRequestController extends AbstractController
             }
 
             $user = $ownerRequest->getUser();
-
             $client = $em->getRepository(Client::class)->find($user->getId());
+
             if (!$client) {
-                return $this->json(['error' => 'L\'utilisateur doit être un client pour devenir propriétaire.'], 400);
+                return $this->json(['error' => 'L\'utilisateur est déjà propriétaire ou administrateur.'], 400);
             }
 
             if (count($client->getBookings()) > 0) {
@@ -136,13 +136,10 @@ class OwnerRequestController extends AbstractController
             $conn->beginTransaction();
 
             try {
+                // 1. Supprimer de la table `client`
                 $conn->executeStatement('DELETE FROM client WHERE id = :id', ['id' => $user->getId()]);
 
-                $conn->executeStatement(
-                    'INSERT INTO owner (id, bio, notation) VALUES (:id, NULL, 0.0)',
-                    ['id' => $user->getId()]
-                );
-
+                // 2. Mettre à jour le `discr` et `roles` dans la table `user`
                 $conn->executeStatement(
                     'UPDATE user SET discr = :discr, roles = :roles WHERE id = :id',
                     [
@@ -152,27 +149,37 @@ class OwnerRequestController extends AbstractController
                     ]
                 );
 
-                $ownerRequest->setReviewed(true);
+                // 3. Ajouter une ligne dans la table `owner`
+                $conn->executeStatement(
+                    'INSERT INTO owner (id) VALUES (:id)',
+                    ['id' => $user->getId()]
+                );
 
+                // 4. Marquer la demande comme traitée
+                $ownerRequest->setReviewed(true);
                 $em->flush();
+
                 $conn->commit();
 
                 return $this->json([
                     'success' => true,
                     'message' => 'Demande acceptée avec succès. L\'utilisateur est maintenant propriétaire.',
                 ]);
-            } catch (\Exception $e) {
-                $conn->rollBack();
-                error_log('Erreur transaction owner request accept: '.$e->getMessage());
+            }  catch (\Exception $e) {
+                    $conn->rollBack();
+                    return $this->json([
+                        'error' => 'Erreur: '.$e->getMessage(),
+                        'trace' => $e->getTraceAsString(), // seulement en dev
+                    ], 500);
+                }
 
-                return $this->json(['error' => 'Erreur lors du traitement de la demande.'], 500);
-            }
-        } catch (\Exception $e) {
+    } catch (\Exception $e) {
             error_log('Erreur owner request accept: '.$e->getMessage());
 
             return $this->json(['error' => 'Erreur lors de l\'acceptation de la demande.'], 500);
         }
     }
+
 
     #[Route('/api/owner-requests/{id}/reject', name: 'api_owner_requests_reject', methods: ['PATCH'])]
     #[IsGranted('ROLE_ADMIN')]
