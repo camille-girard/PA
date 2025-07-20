@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Admin;
 use App\Entity\Client;
 use App\Repository\ClientRepository;
+use App\Service\CloudflareR2Service;
 use App\Service\ValidationErrorFormatterService;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -268,5 +271,88 @@ final class ClientController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json(['message' => 'Client archivé avec succès'], Response::HTTP_OK);
+    }
+
+    #[Route('/{id}/avatar', name: 'upload_avatar', methods: ['POST'])]
+    public function uploadAvatar(
+        int $id,
+        Request $request,
+        CloudflareR2Service $r2Service,
+        SerializerInterface $serializer,
+        #[CurrentUser] ?Admin $currentUser,
+    ): JsonResponse {
+        if (!$currentUser) {
+            return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $client = $this->clientRepository->find($id);
+
+        if (!$client || $client->isDeleted()) {
+            return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        $file = $request->files->get('file') ?: $request->files->get('avatar');
+
+        if (!$file) {
+            return $this->json(['message' => 'Aucun fichier fourni'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            // Delete old avatar if exists
+            if ($client->getAvatar()) {
+                $r2Service->deleteFile($client->getAvatar());
+            }
+
+            // Upload new avatar
+            $avatarUrl = $r2Service->uploadAvatar($file, $client->getId());
+
+            // Update client
+            $client->setAvatar($avatarUrl);
+            $this->entityManager->flush();
+
+            // Return updated client data
+            $json = $serializer->serialize($client, 'json', ['groups' => 'client:read']);
+
+            return JsonResponse::fromJsonString($json, Response::HTTP_OK);
+        } catch (\InvalidArgumentException $e) {
+            return $this->json(['message' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (\RuntimeException $e) {
+            return $this->json(['message' => 'Erreur lors de l\'upload: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/{id}/avatar', name: 'delete_avatar', methods: ['DELETE'])]
+    public function deleteAvatar(
+        int $id,
+        CloudflareR2Service $r2Service,
+        #[CurrentUser] ?Admin $currentUser,
+    ): JsonResponse {
+        if (!$currentUser) {
+            return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $client = $this->clientRepository->find($id);
+
+        if (!$client || $client->isDeleted()) {
+            return $this->json(['message' => 'Client non trouvé'], Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$client->getAvatar()) {
+            return $this->json(['message' => 'Aucun avatar à supprimer'], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            // Delete avatar from R2
+            $r2Service->deleteFile($client->getAvatar());
+
+            // Update client
+            $client->setAvatar(null);
+            $this->entityManager->flush();
+
+            // Return success message
+            return $this->json(['message' => 'Avatar supprimé avec succès'], Response::HTTP_OK);
+        } catch (\RuntimeException $e) {
+            return $this->json(['message' => 'Erreur lors de la suppression: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

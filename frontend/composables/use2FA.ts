@@ -83,12 +83,14 @@ export const use2FA = () => {
 
         isLoading.value = true;
         try {
-            const { data, _error } = await useAuthFetch<Verify2FAResponse>('/api/2fa/verify', {
+            const { data } = await useAuthFetch<Verify2FAResponse>('/api/2fa/verify', {
                 method: 'POST',
                 body: { code: verificationToken.value },
             });
 
             if (data.value && data.value.valid) {
+                console.log('Test', data.value)
+
                 toast.success('Succès', 'Authentification à deux facteurs activée avec succès');
                 showQrCodeModal.value = false;
                 verificationToken.value = '';

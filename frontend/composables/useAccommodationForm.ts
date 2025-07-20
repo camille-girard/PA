@@ -75,9 +75,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
 
         try {
             const { $api } = useNuxtApp();
-            const { data: response, error } = await useAuthFetch(
-                $api(`/api/accommodations/${options.accommodationId}`)
-            );
+            const { data: response, error } = await useAuthFetch($api(`/api/accommodations/${options.accommodationId}`));
 
             if (error.value) throw new Error(error.value.message || 'Erreur serveur');
 
@@ -179,14 +177,14 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
     async function handleSubmit() {
         const { $api } = useNuxtApp();
         const method = isEditing.value ? 'PUT' : 'POST';
-        const endpoint = isEditing.value ? `/api/accommodations/${options.accommodationId}` : `/api/accommodations`;
-
-        console.log('Request details:', { method, url });
+        const endpoint = isEditing.value
+            ? `/api/accommodations/${options.accommodationId}`
+            : `/api/accommodations`;
 
         try {
             // Créer un FormData pour envoyer les données et les fichiers
             const formData = new FormData();
-
+            
             // Ajouter les données du formulaire
             formData.append('name', formState.value.title);
             formData.append('description', formState.value.description);
@@ -205,7 +203,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
             formData.append('minStay', formState.value.minStay.toString());
             formData.append('maxStay', formState.value.maxStay.toString());
             formData.append('theme', formState.value.theme?.toString() || '');
-
+            
             // Ajouter les fichiers images
             formState.value.images.forEach((image, index) => {
                 if (image.file) {
@@ -262,10 +260,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
 
             if (error.value) {
                 const toast = useToast();
-                toast.error(
-                    'Erreur de suppression',
-                    `Impossible de supprimer l'hébergement : ${error.value.message || 'Erreur serveur'}`
-                );
+                toast.error('Erreur de suppression', `Impossible de supprimer l'hébergement : ${error.value.message || 'Erreur serveur'}`);
             } else {
                 const toast = useToast();
                 toast.success('Suppression réussie', 'Votre hébergement a été supprimé avec succès.');

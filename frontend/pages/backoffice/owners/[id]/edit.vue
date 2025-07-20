@@ -147,6 +147,17 @@
             <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
             <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
 
+            <div class="md:col-span-2 flex flex-col gap-3">
+                <label class="text-body-sm">Avatar</label>
+                <AdminAvatarUpload 
+                    :current-avatar="owner?.avatar" 
+                    :user-id="id" 
+                    user-type="owners"
+                    :user-name="`${owner?.firstName} ${owner?.lastName}`"
+                    @avatar-updated="refresh" 
+                />
+            </div>
+
             <UTextarea
                 v-model="form.bio"
                 class="md:col-span-2"
