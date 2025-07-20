@@ -87,7 +87,7 @@
             id: img.id?.toString() || `image_${Date.now()}_${index}`,
             url: img.url,
             file: img.file,
-            isMain: img.isMain || false
+            isMain: img.isMain || false,
         }));
     }
 
@@ -112,6 +112,45 @@
     function closeDeleteModal(): void {
         isDeleteModalOpen.value = false;
     }
+
+    /*
+    function toggleAdvantage(value: string) {
+        const advantages = formState.value.advantages;
+        const index = advantages.indexOf(value);
+
+        if (index > -1) {
+            advantages.splice(index, 1);
+        } else {
+            advantages.push(value);
+        }
+    }
+     */
+
+    function isAdvantageSelected(value: string): boolean {
+        return formState.value.advantages.includes(value);
+    }
+
+    /**
+     * Gère le changement d'état d'une checkbox d'avantage
+     */
+    function handleAdvantageChange(value: string, checked: boolean) {
+        console.log('handleAdvantageChange called:', { value, checked });
+        const advantages = formState.value.advantages;
+        const index = advantages.indexOf(value);
+
+        console.log('Current advantages before change:', advantages);
+
+        if (checked && index === -1) {
+            advantages.push(value);
+            console.log('Added advantage:', value);
+        } else if (!checked && index > -1) {
+            advantages.splice(index, 1);
+            console.log('Removed advantage:', value);
+        }
+
+        console.log('Current advantages after change:', formState.value.advantages);
+        console.log('Total advantages count:', formState.value.advantages.length);
+    }
 </script>
 
 <template>
@@ -125,7 +164,6 @@
             </div>
         </div>
     </UBaseModal>
-
 
     <div v-if="isLoading" class="flex justify-center items-center py-12">
         <ULoading />

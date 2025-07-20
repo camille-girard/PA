@@ -183,10 +183,10 @@ export const useAuthStore = defineStore('auth', {
                 // Vérifier si la 2FA est requise
                 if (data.value && typeof data.value === 'object' && 'requiresTwoFactor' in data.value) {
                     const twoFactorData = data.value as { requiresTwoFactor: boolean; email: string };
-                    return { 
-                        success: false, 
-                        requiresTwoFactor: true, 
-                        email: twoFactorData.email 
+                    return {
+                        success: false,
+                        requiresTwoFactor: true,
+                        email: twoFactorData.email,
                     };
                 }
 
@@ -263,7 +263,7 @@ export const useAuthStore = defineStore('auth', {
         async refreshToken(): Promise<boolean> {
             try {
                 const { $api } = useNuxtApp();
-                
+
                 // Utiliser useFetch directement pour éviter la référence circulaire avec useAuthFetch
                 const { error } = await useFetch($api('/api/token/refresh'), {
                     method: 'POST',
@@ -298,7 +298,7 @@ export const useAuthStore = defineStore('auth', {
         isAdmin(state) {
             return state.user?.roles?.includes('ROLE_ADMIN') ?? false;
         },
-        
+
         isTwoFactorEnabled(state) {
             return state.user?.isTwoFactorEnabled ?? false;
         },
