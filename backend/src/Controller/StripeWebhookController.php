@@ -6,6 +6,7 @@ use App\Entity\Booking;
 use App\Enum\BookingStatus;
 use App\Repository\AccommodationRepository;
 use App\Repository\ClientRepository;
+use App\Service\BookingEmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Stripe\Webhook;
@@ -23,6 +24,7 @@ class StripeWebhookController extends AbstractController
         ClientRepository $clientRepo,
         AccommodationRepository $accommodationRepo,
         LoggerInterface $logger,
+        BookingEmailService $bookingEmailService,
     ): Response {
         $payload = $request->getContent();
         $sigHeader = $request->headers->get('stripe-signature');
@@ -81,7 +83,12 @@ class StripeWebhookController extends AbstractController
                         $em->persist($booking);
                         $em->flush();
 
+                        $bookingEmailService->sendBookingConfirmationToClient($booking);
+                        $bookingEmailService->sendBookingNotificationToOwner($booking);
+
                         $logger->info("Réservation enregistrée : ID #{$booking->getId()}");
+
+                        $logger->info("Événement BookingCreated dispatché pour la réservation #{$booking->getId()}");
                     } else {
                         $logger->warning("Client ou hébergement introuvable : client #$clientId / acc #$accommodationId");
                     }

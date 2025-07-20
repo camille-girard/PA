@@ -7,6 +7,7 @@
     import { useAuthFetch } from '~/composables/useAuthFetch';
     import { useToast } from '~/composables/useToast';
     import type { ApiError } from '~/types/apiError';
+    import { AccommodationAdvantage, accommodationAdvantageLabels } from '~/types/accommodationAdvantage';
 
     interface Theme {
         id: number;
@@ -65,10 +66,13 @@
         bedrooms: 0,
         bathrooms: 0,
         practicalInformations: '',
-        advantage: '',
+        advantage: [] as AccommodationAdvantage[],
         latitude: '',
         longitude: '',
     });
+
+    // Liste de tous les avantages disponibles
+    const availableAdvantages = Object.values(AccommodationAdvantage);
 
     async function loadThemes() {
         try {
@@ -107,7 +111,7 @@
                 form.bedrooms = acc.bedrooms ?? 0;
                 form.bathrooms = acc.bathrooms ?? 0;
                 form.practicalInformations = acc.practicalInformations ?? '';
-                form.advantage = acc.advantage?.join('\n') ?? '';
+                form.advantage = (acc.advantage || []) as AccommodationAdvantage[];
                 form.latitude = acc.latitude?.toString() ?? '';
                 form.longitude = acc.longitude?.toString() ?? '';
                 selectedThemeId.value = acc.themeId ?? null;
@@ -145,10 +149,7 @@
                     bedrooms: form.bedrooms,
                     bathrooms: form.bathrooms,
                     practicalInformations: form.practicalInformations,
-                    advantage: form.advantage
-                        .split('\n')
-                        .map((a) => a.trim())
-                        .filter(Boolean),
+                    advantage: form.advantage,
                     latitude: form.latitude ? parseFloat(form.latitude) : null,
                     longitude: form.longitude ? parseFloat(form.longitude) : null,
                     themeId: selectedThemeId.value,
@@ -234,11 +235,29 @@
 
             <Textarea v-model="form.description" label="Description" />
             <Textarea v-model="form.practicalInformations" label="Informations pratiques" />
-            <Textarea
-                v-model="form.advantage"
-                label="Avantages (un par ligne)"
-                placeholder="Exemple :&#10;Wi-Fi gratuit&#10;Petit-déjeuner offert"
-            />
+
+            <div class="flex flex-col gap-3">
+                <label class="text-body-sm">Avantages</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div v-for="advantage in availableAdvantages" :key="advantage" class="flex items-center gap-2">
+                        <input
+                            :id="`advantage-${advantage}`"
+                            v-model="form.advantage"
+                            type="checkbox"
+                            :value="advantage"
+                            class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                        />
+                        <label :for="`advantage-${advantage}`" class="text-sm text-gray-700 cursor-pointer">
+                            {{ accommodationAdvantageLabels[advantage] }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <label class="text-body-sm">Images du logement</label>
+                <AccommodationImageManager :accommodation-id="parseInt(id)" />
+            </div>
 
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <UButton :disabled="saving" :is-loading="saving" size="lg" variant="primary" type="submit">

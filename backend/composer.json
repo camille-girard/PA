@@ -7,22 +7,24 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "aws/aws-sdk-php": "^3.350",
-        "doctrine/dbal": "^3.9.4",
-        "doctrine/doctrine-bundle": "^2.14",
+        "aws/aws-sdk-php": "^3.351.2",
+        "doctrine/dbal": "^3.10.0",
+        "doctrine/doctrine-bundle": "^2.15",
         "doctrine/doctrine-migrations-bundle": "^3.4.2",
-        "doctrine/orm": "^3.3.3",
+        "doctrine/orm": "^3.5.0",
+        "endroid/qr-code": "^6.0",
         "hautelook/alice-bundle": "^2.15.1",
-        "intervention/image": "^3.11",
+        "intervention/image": "^3.11.3",
         "lexik/jwt-authentication-bundle": "^3.1.1",
-        "nelmio/api-doc-bundle": "^5.0.1",
+        "nelmio/api-doc-bundle": "^5.4.0",
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6.2",
-        "phpstan/phpdoc-parser": "^2.1",
-        "stripe/stripe-php": "^17.3",
+        "phpstan/phpdoc-parser": "^2.2",
+        "spomky-labs/otphp": "^11.3",
+        "stripe/stripe-php": "^17.4",
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
-        "symfony/flex": "^2.5.1",
+        "symfony/flex": "^2.8.1",
         "symfony/form": "7.2.*",
         "symfony/framework-bundle": "7.2.*",
         "symfony/mailer": "7.2.*",
@@ -35,9 +37,9 @@
         "symfony/uid": "7.2.*",
         "symfony/validator": "7.2.*",
         "symfony/yaml": "7.2.*",
-        "symfonycasts/reset-password-bundle": "^1.23",
-        "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "symfonycasts/reset-password-bundle": "^1.23.1",
+        "twig/extra-bundle": "^2.12|^3.21",
+        "twig/twig": "^2.12|^3.21.1"
     },
     "config": {
         "allow-plugins": {
@@ -80,7 +82,7 @@
             "@auto-scripts"
         ],
         "phpstan": "phpstan --memory-limit=1G --no-progress --no-interaction",
-        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix"
+        "cs-fix": "php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -92,8 +94,8 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.75",
-        "phpstan/phpstan": "^2.1.16",
-        "symfony/maker-bundle": "^1.63"
+        "friendsofphp/php-cs-fixer": "^3.84.0",
+        "phpstan/phpstan": "^2.1.18",
+        "symfony/maker-bundle": "^1.64"
     }
 }

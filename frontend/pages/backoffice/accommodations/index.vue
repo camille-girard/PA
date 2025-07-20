@@ -11,6 +11,7 @@
     import { useToast } from '~/composables/useToast';
     import type { AccommodationDto } from '~/types/dtos/accommodation.dto';
     import type { ApiError } from '~/types/apiError';
+    import UPagination from '~/components/UPagination.vue';
 
     definePageMeta({
         layout: 'backoffice',
@@ -64,6 +65,17 @@
             _original: acc,
         }))
     );
+
+    const {
+        paginatedItems: paginatedAccommodationsData,
+        meta,
+        goToPage,
+        nextPage,
+        previousPage,
+        firstPage,
+        lastPage,
+        setItemsPerPage,
+    } = usePagination(accommodationsTableData, { itemsPerPage: 10 });
 
     const columns = [
         { key: 'name', label: 'Nom', sortable: true },
@@ -129,7 +141,7 @@
         <div v-if="pending" class="text-gray-600">Chargement…</div>
 
         <div v-else>
-            <UTable :columns="columns" :data="accommodationsTableData">
+            <UTable :columns="columns" :data="paginatedAccommodationsData">
                 <template #cell-availability="{ row }">
                     <UBadge :color="row.availability === 'Disponible' ? 'success' : 'error'" variant="pill" size="sm">
                         {{ row.availability }}
@@ -162,6 +174,16 @@
                     </div>
                 </template>
             </UTable>
+
+            <UPagination
+                :meta="meta"
+                @go-to-page="goToPage"
+                @next-page="nextPage"
+                @previous-page="previousPage"
+                @first-page="firstPage"
+                @last-page="lastPage"
+                @set-items-per-page="setItemsPerPage"
+            />
         </div>
     </div>
 </template>

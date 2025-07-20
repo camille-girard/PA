@@ -1,9 +1,6 @@
 <script setup lang="ts">
-    import { ref, reactive, watch } from 'vue';
-    import { useRoute } from 'vue-router';
     import Input from '~/components/atoms/UInput.vue';
     import UCheckbox from '~/components/atoms/UCheckbox.vue';
-    import UTextarea from '~/components/atoms/UTextarea.vue';
     import UButton from '~/components/atoms/UButton.vue';
     import { useRuntimeConfig } from '#app';
     import { useAuthFetch } from '~/composables/useAuthFetch';
@@ -18,6 +15,7 @@
 
     const toast = useToast();
     const route = useRoute();
+    const router = useRouter();
 
     const {
         public: { apiUrl },
@@ -48,6 +46,68 @@
         preferences: '' as string,
     });
 
+    const availablePreferences = [
+        'breakfast',
+        'snack',
+        'garden',
+        'game_room',
+        'terrace',
+        'balcony',
+        'barbecue',
+        'castle_access',
+        'castle_visit',
+        'wifi',
+        'parking',
+        'pool',
+        'spa',
+        'gym',
+        'kitchen',
+        'laundry',
+        'air_conditioning',
+        'heating',
+        'tv',
+        'common_room_access',
+    ];
+
+    const preferenceLabels: Record<string, string> = {
+        breakfast: 'Petit-déjeuner offert',
+        snack: 'Goûter',
+        garden: 'Jardin',
+        game_room: 'Salle de jeux',
+        terrace: 'Terrasse',
+        balcony: 'Balcon',
+        barbecue: 'Barbecue',
+        castle_access: 'Accès au château',
+        castle_visit: 'Visite du château',
+        wifi: 'Wi-Fi gratuit',
+        parking: 'Parking',
+        pool: 'Piscine',
+        spa: 'Spa',
+        gym: 'Salle de sport',
+        kitchen: 'Cuisine équipée',
+        laundry: 'Lave-linge',
+        air_conditioning: 'Climatisation',
+        heating: 'Chauffage',
+        tv: 'Télévision',
+        common_room_access: 'Accès à la salle commune',
+    };
+
+    const selectedPreferences = computed({
+        get: () => {
+            return form.preferences
+                .split(',')
+                .map((p) => p.trim())
+                .filter((p) => p.length > 0);
+        },
+        set: (value: string[]) => {
+            form.preferences = value.join(', ');
+        },
+    });
+
+    function getPreferenceLabel(preference: string): string {
+        return preferenceLabels[preference] || preference;
+    }
+
     async function loadClient(clientId: string) {
         pending.value = true;
         errorMsg.value = '';
@@ -66,7 +126,13 @@
                 form.avatar = client.value.avatar ?? '';
                 form.isVerified = Boolean(client.value?.isVerified);
                 form.role = client.value.roles?.[0] ?? 'ROLE_CLIENT';
-                form.preferences = (client.value.preferences ?? []).join(', ');
+                if (client.value.preferences && Array.isArray(client.value.preferences)) {
+                    form.preferences = client.value.preferences.join(', ');
+                } else if (typeof client.value.preferences === 'string') {
+                    form.preferences = client.value.preferences;
+                } else {
+                    form.preferences = '';
+                }
             } else {
                 errorMsg.value = 'Client introuvable.';
             }
@@ -79,11 +145,6 @@
         }
     }
 
-    async function refresh() {
-        if (id.value) {
-            await loadClient(id.value);
-        }
-    }
     async function save() {
         if (!id.value) return;
 
@@ -106,7 +167,6 @@
                     email: form.email,
                     phone: form.phone,
                     address: form.address,
-                    avatar: form.avatar,
                     isVerified: form.isVerified,
                     role: form.role,
                     preferences: preferencesArray,
@@ -135,7 +195,7 @@
 
             success.value = true;
             toast.success('Succès', 'Modifications enregistrées');
-            await refresh();
+            router.push('/backoffice/clients');
         } catch (err: unknown) {
             if (typeof err === 'object' && err !== null && 'data' in err) {
                 const apiErr = err as ApiError;
@@ -183,14 +243,42 @@
                 <Input v-model="form.email" class="md:col-span-2" label="Email" name="email" type="email" required />
                 <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
                 <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
-                <Input v-model="form.avatar" class="md:col-span-2" label="Avatar (URL)" name="avatar" type="url" />
 
-                <UTextarea
-                    v-model="form.preferences"
-                    class="md:col-span-2"
-                    label="Préférences (séparées par des virgules)"
-                    placeholder="exemple: Wifi, Parking, Animaux acceptés"
-                />
+                <div class="md:col-span-2 flex flex-col gap-3">
+                    <label class="text-body-sm">Avatar</label>
+                    <AdminAvatarUpload
+                        :current-avatar="client?.avatar"
+                        :user-id="id"
+                        user-type="clients"
+                        :user-name="`${client?.firstName} ${client?.lastName}`"
+                        @avatar-updated="refresh"
+                    />
+                </div>
+
+                <div class="md:col-span-2 flex flex-col gap-3">
+                    <label class="text-body-sm font-medium text-gray-900">Préférences</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                        <div
+                            v-for="preference in availablePreferences"
+                            :key="preference"
+                            class="flex items-center gap-2 p-2 rounded-lg border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-colors"
+                        >
+                            <input
+                                :id="`preferences-${preference}`"
+                                v-model="selectedPreferences"
+                                type="checkbox"
+                                :value="preference"
+                                class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2 flex-shrink-0"
+                            />
+                            <label
+                                :for="`preferences-${preference}`"
+                                class="text-sm text-gray-700 cursor-pointer select-none flex-1 leading-tight"
+                            >
+                                {{ getPreferenceLabel(preference) }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-secondary mb-1" for="role">Rôle</label>

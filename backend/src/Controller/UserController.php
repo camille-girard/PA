@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Owner;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\CloudflareR2Service;
@@ -63,19 +64,25 @@ final class UserController extends AbstractController
             $user->setPhone($data['phone']);
         }
 
-        if (isset($data['address'])) {
-            $user->setAddress($data['address']);
+        if (isset($data['bio'])) {
+            /** @var Owner $user */
+            $user->setBio($data['bio']);
         }
 
-        if (isset($data['preferences'])) {
+        if (isset($data['preferences']) && $user->getRoles() === ['ROLE_CLIENT']) {
             /** @var Client $user */
             $user->setPreferences($data['preferences']);
+        }
+
+        if (isset($data['address'])) {
+            $user->setAddress($data['address']);
         }
 
         $em->flush();
 
         $json = $serializer->serialize($user, 'json', [
             'ignored_attributes' => ['password', 'userIdentifier'],
+            'groups' => ['me:read', 'me:write'],
         ]);
 
         return JsonResponse::fromJsonString($json);

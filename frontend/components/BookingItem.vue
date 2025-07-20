@@ -6,6 +6,7 @@
         booking: Booking;
         contactLabel?: string;
         deleteLabel?: string;
+        showRatingButton?: boolean;
     }>();
 
     const emit = defineEmits(['delete', 'contact', 'rate']);
@@ -43,6 +44,12 @@
         const endDate = new Date(props.booking.endDate);
         const now = new Date();
         return endDate < now && props.booking.status === 'accepted';
+    });
+
+    const isBookingFuture = computed(() => {
+        const startDate = new Date(props.booking.startDate);
+        const now = new Date();
+        return startDate > now;
     });
 
     const handleRatingSubmit = async (ratingData: {
@@ -103,15 +110,17 @@
                 </span>
             </div>
         </div>
-
         <div class="mt-4 md:mt-0 md:text-right space-y-2">
             <p class="text-lg font-bold">{{ booking.totalPrice.toFixed(2) }} €</p>
             <div class="flex flex-col md:flex-row md:justify-end gap-2">
                 <UButton @click="onContact(booking.id)">
                     {{ contactLabel }}
                 </UButton>
-
-                <UButton v-if="isBookingCompleted && !booking.hasRated" color="orange" @click="onRate()">
+                <UButton
+                    v-if="showRatingButton && isBookingCompleted && !booking.hasRated"
+                    color="orange"
+                    @click="onRate()"
+                >
                     <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path
                             stroke-linecap="round"
@@ -122,15 +131,13 @@
                     </svg>
                     Noter le séjour
                 </UButton>
-
-                <UButton v-else-if="isBookingCompleted && booking.hasRated" color="green" disabled>
+                <UButton v-else-if="showRatingButton && isBookingCompleted && booking.hasRated" color="green" disabled>
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Déjà noté
                 </UButton>
-
-                <UButton v-else color="red" @click="onDelete(booking.id)">
+                <UButton v-else-if="isBookingFuture" color="red" @click="onDelete(booking.id)">
                     {{ deleteLabel }}
                 </UButton>
             </div>

@@ -9,9 +9,13 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
 
   backend:
-    image: registry.nassimlounadi.fr/backend
+    image: registry.nassimlounadi.fr/pa/backend
     depends_on:
       - db
+      - mercure
+    environment:
+      MERCURE_URL: 'http://mercure/.well-known/mercure'
+      MERCURE_PUBLIC_URL: 'https://popnbed.com/.well-known/mercure'
     healthcheck:
       test: ["CMD-SHELL", "SCRIPT_FILENAME=/app/public/index.php REQUEST_METHOD=GET REQUEST_URI=/api/health cgi-fcgi -bind -connect localhost:9000 | grep 'running.*true' || exit 1"]
       interval: 30s
@@ -19,13 +23,74 @@ services:
       retries: 3
       start_period: 20s
 
+  mercure:
+    image: dunglas/mercure
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_KEY: '${MERCURE_JWT_SECRET}'
+      MERCURE_SUBSCRIBER_JWT_KEY: '${MERCURE_JWT_SECRET}'
+      CORS_ALLOWED_ORIGINS: '${CORS_ALLOWED_ORIGINS}'
+      MERCURE_EXTRA_DIRECTIVES: |
+        cors_origins ${FRONTEND_URL} ${BACKEND_URL}
+        publish_origins ${BACKEND_URL}
+        subscribe_origins ${FRONTEND_URL}
+        use_forwarded_headers
+    networks:
+      - default
+
   frontend:
-    image: registry.nassimlounadi.fr/frontend
+    image: registry.nassimlounadi.fr/pa/frontend
+    environment:
+      NITRO_PRESET: node
+      NUXT_PUBLIC_API_URL: 'https://api.popnbed.com'
 
   nginx:
-    image: registry.nassimlounadi.fr/nginx
+    image: registry.nassimlounadi.fr/pa/nginx
     ports:
       - '80:80'
+      - '443:443'
     depends_on:
       - backend
       - frontend
+      - mercure
+
+  matomo-db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MATOMO_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MATOMO_DB_NAME}
+      MYSQL_USER: ${MATOMO_DB_USER}
+      MYSQL_PASSWORD: ${MATOMO_DB_PASSWORD}
+    volumes:
+      - matomo-db-data:/var/lib/mysql
+    command: --max-allowed-packet=64MB
+    networks:
+      - default
+
+  matomo:
+    image: matomo:5
+    restart: unless-stopped
+    volumes:
+      - matomo-data:/var/www/html
+    environment:
+      MATOMO_DATABASE_HOST: matomo-db
+      MATOMO_DATABASE_ADAPTER: mysql
+      MATOMO_DATABASE_TABLES_PREFIX: matomo_
+      MATOMO_DATABASE_USERNAME: ${MATOMO_DB_USER}
+      MATOMO_DATABASE_PASSWORD: ${MATOMO_DB_PASSWORD}
+      MATOMO_DATABASE_DBNAME: ${MATOMO_DB_NAME}
+      MATOMO_DATABASE_PORT: 3306
+    depends_on:
+      - matomo-db
+    command: >
+      bash -c "
+        chown -R www-data:www-data /var/www/html &&
+        chmod -R 755 /var/www/html &&
+        apache2-foreground
+      "
+
+volumes:
+  matomo-data:
+  matomo-db-data:

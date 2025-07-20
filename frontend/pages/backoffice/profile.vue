@@ -151,6 +151,11 @@
                 />
             </div>
 
+            <div class="md:col-span-2 flex flex-col gap-3">
+                <label class="text-body-sm">Avatar</label>
+                <AvatarUpload :current-avatar="authStore.user?.avatar" @avatar-updated="authStore.refreshUser" />
+            </div>
+
             <div class="md:col-span-2 flex gap-3 items-center">
                 <button
                     :disabled="savingProfile"

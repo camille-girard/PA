@@ -120,10 +120,10 @@ class OwnerRequestController extends AbstractController
             }
 
             $user = $ownerRequest->getUser();
-
             $client = $em->getRepository(Client::class)->find($user->getId());
+
             if (!$client) {
-                return $this->json(['error' => 'L\'utilisateur doit être un client pour devenir propriétaire.'], 400);
+                return $this->json(['error' => 'L\'utilisateur est déjà propriétaire ou administrateur.'], 400);
             }
 
             if (count($client->getBookings()) > 0) {
@@ -139,11 +139,6 @@ class OwnerRequestController extends AbstractController
                 $conn->executeStatement('DELETE FROM client WHERE id = :id', ['id' => $user->getId()]);
 
                 $conn->executeStatement(
-                    'INSERT INTO owner (id, bio, notation) VALUES (:id, NULL, 0.0)',
-                    ['id' => $user->getId()]
-                );
-
-                $conn->executeStatement(
                     'UPDATE user SET discr = :discr, roles = :roles WHERE id = :id',
                     [
                         'discr' => 'owner',
@@ -152,9 +147,14 @@ class OwnerRequestController extends AbstractController
                     ]
                 );
 
-                $ownerRequest->setReviewed(true);
+                $conn->executeStatement(
+                    'INSERT INTO owner (id) VALUES (:id)',
+                    ['id' => $user->getId()]
+                );
 
+                $ownerRequest->setReviewed(true);
                 $em->flush();
+
                 $conn->commit();
 
                 return $this->json([

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-    import UButton from '~/components/atoms/UButton.vue';
-    import EditableField from '@/components/EditableField.vue';
     import { useAuthStore } from '@/stores/auth';
+    import { AccommodationAdvantage } from '~/types/accommodationAdvantage';
 
     const auth = useAuthStore();
     const router = useRouter();
@@ -13,15 +12,11 @@
     });
 
     function saveField(field: string, value: string) {
-        if (field === 'preferences') {
-            const preferencesArray = value
-                .split(',')
-                .map((pref) => pref.trim())
-                .filter((pref) => pref.length > 0);
-            auth.updateUser({ [field]: preferencesArray });
-        } else {
-            auth.updateUser({ [field]: value });
-        }
+        auth.updateUser({ [field]: value });
+    }
+
+    function savePreferences(preferences: AccommodationAdvantage[]) {
+        auth.updateUser({ preferences });
     }
 
     function handleDelete() {
@@ -38,7 +33,7 @@
     }
 
     function goToNewAccommodation() {
-        router.push('/newaccommodation');
+        router.push('/my-accommodation/create');
     }
 
     function goToBecomeOwner() {
@@ -49,9 +44,9 @@
         () => auth.user?.roles.includes('ROLE_CLIENT') && !auth.user?.roles.includes('ROLE_OWNER')
     );
 
-    const preferencesString = computed(() => {
+    const userPreferences = computed(() => {
         if (!auth.user?.preferences) {
-            return '';
+            return [];
         }
 
         if (!Array.isArray(auth.user.preferences)) {
@@ -59,16 +54,21 @@
                 try {
                     const parsed = JSON.parse(auth.user.preferences);
                     if (Array.isArray(parsed)) {
-                        return parsed.join(', ');
+                        return parsed.filter((pref) => Object.values(AccommodationAdvantage).includes(pref));
                     }
                 } catch {
-                    return auth.user.preferences; // Retourner tel quel si c'est déjà une string
+                    return auth.user.preferences
+                        .split(',')
+                        .map((pref) => pref.trim())
+                        .filter((pref) =>
+                            Object.values(AccommodationAdvantage).includes(pref as AccommodationAdvantage)
+                        ) as AccommodationAdvantage[];
                 }
             }
-            return '';
+            return [];
         }
 
-        return auth.user.preferences.join(', ');
+        return auth.user.preferences.filter((pref) => Object.values(AccommodationAdvantage).includes(pref));
     });
 
     const userAvatarUrl = computed(() => {
@@ -114,6 +114,14 @@
                 <EditableField label="Adresse e-mail" :model-value="auth.user.email" field="email" @save="saveField" />
 
                 <EditableField
+                    v-if="auth.user?.roles.includes('ROLE_OWNER')"
+                    label="Bio"
+                    :model-value="auth.user.bio ?? ''"
+                    field="bio"
+                    @save="saveField"
+                />
+
+                <EditableField
                     label="Numéro de téléphone"
                     :model-value="auth.user.phone ?? ''"
                     field="phone"
@@ -127,16 +135,20 @@
                     @save="saveField"
                 />
 
-                <EditableField
+                <EditablePreferences
+                    v-if="!auth.user?.roles.includes('ROLE_OWNER')"
                     label="Préférences"
-                    :model-value="preferencesString"
-                    field="preferences"
-                    @save="saveField"
+                    :model-value="userPreferences"
+                    @save="savePreferences"
                 />
+
+                <!-- Section Authentification à deux facteurs -->
+                <div class="border-t pt-6 mt-6">
+                    <TwoFactorAuthSetup />
+                </div>
             </div>
         </div>
     </div>
-
     <div class="flex flex-col items-center mt-10 gap-2">
         <UButton
             v-if="auth.user?.roles.includes('ROLE_OWNER')"

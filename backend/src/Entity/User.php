@@ -87,6 +87,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $isDeleted = false;
 
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $totpSecret = null;
+
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['client:read', 'owner:read', 'me:read', 'admin:read'])]
+    private bool $isTwoFactorEnabled = false;
+
     /**
      * @var Collection<int, TicketMessage>
      */
@@ -133,7 +140,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_CLIENT';
 
         return array_unique($roles);
     }
@@ -321,6 +328,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ticket->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTotpSecret(): ?string
+    {
+        return $this->totpSecret;
+    }
+
+    public function setTotpSecret(?string $totpSecret): static
+    {
+        $this->totpSecret = $totpSecret;
+
+        return $this;
+    }
+
+    public function isTwoFactorEnabled(): bool
+    {
+        return $this->isTwoFactorEnabled;
+    }
+
+    public function setIsTwoFactorEnabled(bool $isTwoFactorEnabled): static
+    {
+        $this->isTwoFactorEnabled = $isTwoFactorEnabled;
 
         return $this;
     }

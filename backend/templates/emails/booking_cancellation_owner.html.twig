@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annulation d'une réservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #dc3545; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background: #f8f9fa; }
+        .booking-details { background: white; padding: 15px; margin: 15px 0; border-radius: 5px; }
+        .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚫 Réservation Annulée</h1>
+        </div>
+
+        <div class="content">
+            <h2>Bonjour {{ owner.firstName }} {{ owner.lastName }},</h2>
+
+            <p>Nous vous informons qu'une réservation pour votre hébergement a été <strong>annulée</strong>.</p>
+
+            <div class="booking-details">
+                <h3>📋 Détails de la réservation annulée :</h3>
+                <ul>
+                    <li><strong>Hébergement :</strong> {{ accommodation.name }}</li>
+                    <li><strong>Client :</strong> {{ client.firstName }} {{ client.lastName }}</li>
+                    <li><strong>Email du client :</strong> {{ client.email }}</li>
+                    <li><strong>Dates :</strong> Du {{ booking.startDate|date('d/m/Y') }} au {{ booking.endDate|date('d/m/Y') }}</li>
+                    <li><strong>Prix total :</strong> {{ booking.totalPrice }}€</li>
+                    <li><strong>Numéro de réservation :</strong> #{{ booking.id }}</li>
+                </ul>
+            </div>
+
+            <p>Ces dates sont maintenant à nouveau disponibles pour de nouvelles réservations.</p>
+
+            <p>Si vous avez des questions concernant cette annulation, n'hésitez pas à nous contacter.</p>
+
+            <p>Cordialement,<br>
+            L'équipe PopnBed</p>
+        </div>
+
+        <div class="footer">
+            <p>PopnBed - Votre plateforme de réservation d'hébergements</p>
+        </div>
+    </div>
+</body>
+</html>
+

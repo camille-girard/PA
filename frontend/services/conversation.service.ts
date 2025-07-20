@@ -17,11 +17,21 @@ class ConversationService {
 
     async createConversation(clientId: number, ownerId: number): Promise<Conversation> {
         const { $api } = useNuxtApp();
-        const { data } = await useAuthFetch<{ conversation: Conversation }>($api(this.baseUrl), {
+        const response = await useAuthFetch<{ conversation: Conversation }>($api(this.baseUrl), {
             method: 'POST',
             body: { clientId, ownerId },
         });
-        return data.value?.conversation as Conversation;
+
+        if (response.error.value) {
+            throw new Error(response.error.value.data?.message || 'Erreur lors de la création de la conversation');
+        }
+
+        const conversation = response.data.value?.conversation;
+        if (!conversation) {
+            throw new Error('Réponse invalide du serveur');
+        }
+
+        return conversation;
     }
 
     async sendMessage(conversationId: number, content: string): Promise<Message> {

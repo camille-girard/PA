@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle réservation</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #27ae60; color: white; padding: 20px; text-align: center; }
+        .content { padding: 20px; background-color: #f9f9f9; }
+        .booking-details { background-color: white; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
+        .client-info { background-color: #ecf0f1; padding: 15px; margin: 20px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Nouvelle réservation !</h1>
+        </div>
+
+        <div class="content">
+            <p>Bonjour {{ owner.firstName }} {{ owner.lastName }},</p>
+
+            <p>Vous avez reçu une nouvelle réservation pour votre hébergement.</p>
+
+            <div class="booking-details">
+                <h3>Détails de la réservation</h3>
+                <div class="detail-row">
+                    <strong>Numéro de réservation :</strong>
+                    <span>#{{ booking.id }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Hébergement :</strong>
+                    <span>{{ accommodation.title }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Date d'arrivée :</strong>
+                    <span>{{ booking.startDate|date('d/m/Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Date de départ :</strong>
+                    <span>{{ booking.endDate|date('d/m/Y') }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Prix total :</strong>
+                    <span>{{ booking.totalPrice }}€</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Statut :</strong>
+                    <span>{{ booking.status.value }}</span>
+                </div>
+            </div>
+
+            <div class="client-info">
+                <h3>Informations du client</h3>
+                <div class="detail-row">
+                    <strong>Nom :</strong>
+                    <span>{{ client.firstName }} {{ client.lastName }}</span>
+                </div>
+                <div class="detail-row">
+                    <strong>Email :</strong>
+                    <span>{{ client.email }}</span>
+                </div>
+                {% if client.phone %}
+                <div class="detail-row">
+                    <strong>Téléphone :</strong>
+                    <span>{{ client.phone }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <p>Pensez à contacter votre client pour lui fournir les instructions d'arrivée et les détails pratiques.</p>
+
+            <p>Connectez-vous à votre espace propriétaire pour gérer cette réservation.</p>
+
+            <p>Cordialement,</p>
+            <p>L'équipe PopnBed</p>
+        </div>
+
+        <div class="footer">
+            <p>Cet email a été envoyé automatiquement. Merci de ne pas y répondre.</p>
+        </div>
+    </div>
+</body>
+</html>
+

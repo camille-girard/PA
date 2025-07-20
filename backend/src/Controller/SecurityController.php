@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Client;
 use App\Repository\UserRepository;
 use App\Service\RefreshTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,23 +32,36 @@ final class SecurityController extends AbstractController
             }
         }
 
+        // Détermine la configuration des cookies selon l'environnement
+        $isProduction = str_contains($request->getHost(), 'popnbed.com');
+        $cookieDomain = $isProduction ? '.popnbed.com' : null;
+        $sameSite = $isProduction ? 'none' : 'strict';
+
         $cookie = Cookie::create('REFRESH_TOKEN')
             ->withValue('')
             ->withExpires(new \DateTime('-1 hour'))
             ->withHttpOnly(true)
-            ->withSecure(true)
-            ->withSameSite('strict');
+            ->withSecure($request->isSecure())
+            ->withSameSite($sameSite);
 
         $bearerCookie = Cookie::create('BEARER')
             ->withValue('')
             ->withExpires(new \DateTime('-1 hour'))
             ->withHttpOnly(true)
-            ->withSecure(true)
-            ->withSameSite('strict');
+            ->withSecure($request->isSecure())
+            ->withSameSite($sameSite);
 
-        return new JsonResponse(['message' => 'Logged out'], 200, [
-            'Set-Cookie' => (string) $cookie,
-        ]);
+        // Ajouter le domaine seulement en production
+        if ($cookieDomain) {
+            $cookie = $cookie->withDomain($cookieDomain);
+            $bearerCookie = $bearerCookie->withDomain($cookieDomain);
+        }
+
+        $response = new JsonResponse(['message' => 'Logged out'], 200);
+        $response->headers->setCookie($cookie);
+        $response->headers->setCookie($bearerCookie);
+
+        return $response;
     }
 
     #[Route('/token/refresh', name: 'app_refresh_token')]
@@ -66,21 +79,89 @@ final class SecurityController extends AbstractController
         $storedToken = $refreshTokenManager->get($refreshToken);
 
         if (!$storedToken || $storedToken->getExpiresAt() < new \DateTime()) {
-            return new JsonResponse(['error' => 'Refresh token expired'], 401);
+            // Nettoyer les tokens expirés
+            if ($storedToken) {
+                $refreshTokenManager->invalidate($storedToken);
+            }
+
+            // Nettoyer les cookies
+            $isProduction = str_contains($request->getHost(), 'popnbed.com');
+            $cookieDomain = $isProduction ? '.popnbed.com' : null;
+            $sameSite = $isProduction ? 'none' : 'strict';
+
+            $expiredCookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue('')
+                ->withExpires(new \DateTime('-1 hour'))
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure())
+                ->withSameSite($sameSite);
+
+            if ($cookieDomain) {
+                $expiredCookie = $expiredCookie->withDomain($cookieDomain);
+            }
+
+            return new JsonResponse(['error' => 'Refresh token expired'], 401, [
+                'Set-Cookie' => (string) $expiredCookie,
+            ]);
         }
 
-        $user = $storedToken->getUser();
-        $newJwt = $jwtTokenManager->create($user);
-        $newRefreshToken = $refreshTokenManager->rotate($storedToken);
+        try {
+            $user = $storedToken->getUser();
+            $newJwt = $jwtTokenManager->create($user);
+            $newRefreshToken = $refreshTokenManager->rotate($storedToken);
 
-        $cookie = Cookie::create('REFRESH_TOKEN')
-            ->withValue($newRefreshToken->getToken())
-            ->withHttpOnly(true)
-            ->withSecure(true)
-            ->withSameSite('strict')
-            ->withExpires($newRefreshToken->getExpiresAt());
+            $isProduction = str_contains($request->getHost(), 'popnbed.com');
+            $cookieDomain = $isProduction ? '.popnbed.com' : null;
+            $sameSite = $isProduction ? 'none' : 'strict';
 
-        return new JsonResponse(['token' => $newJwt], 200, ['Set-Cookie' => (string) $cookie]);
+            $refreshCookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue($newRefreshToken->getToken())
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure())
+                ->withSameSite($sameSite)
+                ->withExpires($newRefreshToken->getExpiresAt());
+
+            // Cookie BEARER pour le nouveau JWT
+            $bearerCookie = Cookie::create('BEARER')
+                ->withValue($newJwt)
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure())
+                ->withSameSite($sameSite);
+
+            // Ajouter le domaine seulement en production
+            if ($cookieDomain) {
+                $refreshCookie = $refreshCookie->withDomain($cookieDomain);
+                $bearerCookie = $bearerCookie->withDomain($cookieDomain);
+            }
+
+            $response = new JsonResponse(['token' => $newJwt]);
+            $response->headers->setCookie($refreshCookie);
+            $response->headers->setCookie($bearerCookie);
+
+            return $response;
+        } catch (\Exception $e) {
+            // En cas d'erreur, nettoyer le token et les cookies
+            $refreshTokenManager->invalidate($storedToken);
+
+            $isProduction = str_contains($request->getHost(), 'popnbed.com');
+            $cookieDomain = $isProduction ? '.popnbed.com' : null;
+            $sameSite = $isProduction ? 'none' : 'strict';
+
+            $expiredCookie = Cookie::create('REFRESH_TOKEN')
+                ->withValue('')
+                ->withExpires(new \DateTime('-1 hour'))
+                ->withHttpOnly(true)
+                ->withSecure($request->isSecure())
+                ->withSameSite($sameSite);
+
+            if ($cookieDomain) {
+                $expiredCookie = $expiredCookie->withDomain($cookieDomain);
+            }
+
+            return new JsonResponse(['error' => 'Token refresh failed'], 401, [
+                'Set-Cookie' => (string) $expiredCookie,
+            ]);
+        }
     }
 
     #[Route('/register', name: 'app_register', methods: ['POST'])]
@@ -99,7 +180,7 @@ final class SecurityController extends AbstractController
             return new JsonResponse(['error' => 'Cet email est déjà utilisé'], 409);
         }
 
-        $user = new User();
+        $user = new Client();
         $user->setEmail($data['email']);
         $user->setFirstName($data['firstName']);
         $user->setLastName($data['lastName']);

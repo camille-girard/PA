@@ -2,6 +2,7 @@ import type { AccommodationImage } from './accommodationImage';
 import type { Comment } from './comment';
 import type { Owner } from './owner';
 import type { Theme } from './theme';
+import type { AccommodationAdvantage } from './accommodationAdvantage';
 
 export interface Accommodation {
     id: number;
@@ -17,7 +18,7 @@ export interface Accommodation {
     capacity: number;
     price: number;
     rating?: number;
-    advantage: string[];
+    advantage: AccommodationAdvantage[];
     practicalInformations: string;
     images: AccommodationImage[];
     owner: Owner;

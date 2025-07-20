@@ -3,8 +3,11 @@
 
     const router = useRouter();
 
+    definePageMeta({
+        middleware: ['auth', 'client-owner'],
+    });
     const goToAccount = () => {
-        router.push('/profile/booking');
+        router.push('/booking');
     };
 </script>
 

@@ -16,11 +16,11 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: ['Goûter', 'Petit-déjeuner offert']
-    practicalInformations: 'Wi-Fi gratuit, cuisine équipée, salle de bain privée'
+    practicalInformations: 'Wi-Fi gratuit,Ccuisine équipée, Salle de bain privée'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8686
     longitude: 2.3320
-    rating: 4
+    rating: 3.5
 
   accommodation_2:
     owner: '@owner_1'
@@ -39,11 +39,11 @@ App\Entity\Accommodation:
     minStay: 2
     maxStay: 10
     advantage: ['Accès à la salle commune', 'Visite du château']
-    practicalInformations: 'Visite guidée, bibliothèque magique, repas dignes de Poudlard'
+    practicalInformations: 'Visite guidée, Bibliothèque magique, Repas dignes de Poudlard'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.1988
     longitude: 7.3209
-    rating: 0
+    rating: 3.0
 
   accommodation_3:
     owner: '@owner_1'
@@ -62,11 +62,11 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: ['Jardin', 'Salle de jeux']
-    practicalInformations: 'Wi-Fi, salle de jeux, jardin avec balançoire'
+    practicalInformations: 'Wi-Fi, Salle de jeux, Jardin avec balançoire'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 44.8378
     longitude: -0.5792
-    rating: 3
+    rating: 4.0
 
 
   accommodation_4:
@@ -86,11 +86,11 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: [ 'Terrasse', 'Visite du château',  ]
-    practicalInformations: 'Wi-Fi, salle de jeux, cafetière/thériaire, machine à laver'
+    practicalInformations: 'Wi-Fi, Salle de jeux, Cafetière/Thériaire, Machine à laver'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8465388
     longitude: 2.4290596
-    rating: 0
+    rating: 5.0
 
   accommodation_5:
     owner: '@owner_3'
@@ -113,7 +113,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 45.6185934
     longitude: 4.6717498
-    rating: 0
+    rating: 4.0
 
   accommodation_6:
     owner: '@owner_4'
@@ -136,7 +136,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.296607971191406
     longitude: 5.373908042907715
-    rating: 0
+    rating: 2.0
 
   accommodation_7:
     owner: '@owner_1'
@@ -159,7 +159,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.6005834
     longitude: 1.4425023
-    rating: 0
+    rating: 4.0
 
   accommodation_8:
     owner: '@owner_2'
@@ -182,7 +182,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.109169006347656
     longitude: -1.6811187267303467
-    rating: 0
+    rating: 3.0
 
   accommodation_9:
     owner: '@owner_1'
@@ -205,7 +205,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 47.21492004394531
     longitude: -1.5545382499694824
-    rating: 0
+    rating: 5.0
 
   accommodation_10:
     owner: '@owner_1'
@@ -297,7 +297,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.713096618652344
     longitude: 7.296810626983643
-    rating: 0
+    rating: 4.0
 
   accommodation_14:
     owner: '@owner_2'
@@ -343,7 +343,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.8492134
     longitude: 2.3895753
-    rating: 0
+    rating: 5.0
 
   accommodation_16:
     owner: '@owner_4'
@@ -389,11 +389,11 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.3729046
     longitude: 2.8065889
-    rating: 0
+    rating: 4.0
 
   accommodation_18:
     owner: '@owner_2'
-    theme: '@theme_8'
+    theme: '@theme_7'
     name: 'Maison Ghibli'
     description: 'Petite maison inspirée des films Ghibli, avec une ambiance magique et féerique.'
     address: '10 Rue des Capucins, 14600 Honfleur, France'
@@ -435,7 +435,7 @@ App\Entity\Accommodation:
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 48.879326
     longitude: 2.254647
-    rating: 0
+    rating: 5.0
 
   accommodation_20:
     owner: '@owner_4'
@@ -454,7 +454,7 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: [ 'balcon' ]
-    practicalInformations: 'Wi-Fi, cafetière/théière, TV, lave-vaiselle'
+    practicalInformations: 'Wi-Fi, Cafetière/théière, TV, Lave-vaiselle'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 43.493106
     longitude: -1.475044
@@ -462,7 +462,7 @@ App\Entity\Accommodation:
 
   accommodation_21:
     owner: '@owner_1'
-    theme: '@theme_7'
+    theme: '@theme_8'
     name: "Domaine Il était une fois dans l’Ouest"
     description: 'Domaine du Far West, avec une ambiance western et des paysages à couper le souffle.'
     address: '10 rue Napoléon, 20200 Bastia, France'
@@ -477,8 +477,146 @@ App\Entity\Accommodation:
     minStay: 1
     maxStay: 7
     advantage: [ 'Paysage', 'Atypique' ]
-    practicalInformations: 'Wi-Fi, cafetière/théière, Barbecue, jardin'
+    practicalInformations: 'Wi-Fi, cafetière/théière, Barbecue, Jardin'
     createdAt: '<(new DateTimeImmutable())>'
     latitude: 42.6979658
     longitude: 9.4498854
+    rating: 0
+
+  accommodation_22:
+    owner: '@owner_2'
+    theme: '@theme_5'
+    name: "Cabane dans les bois"
+    description: "Dormez dans une cabane suspendue dans les arbres, pour une expérience unique et insolite avec pour thème différents films d'horreur."
+    address: '26 rue Cheix Monton 63960 Veyre-Monton, France'
+    city: 'Veyre-Monton'
+    postalCode: '63960'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 4
+    bathrooms: 1
+    capacity: 8
+    price: 1200.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Paysage', 'Atypique' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière, Barbecue, jardin'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 45.67694854736328
+    longitude: 3.1614909172058105
+    rating: 0
+
+  accommodation_23:
+    owner: '@owner_3'
+    theme: '@theme_6'
+    name: "Maison des Avengers"
+    description: "Profitez d'un séjour aux côtés de vos super-héros préférés tel que Spiderman ou encore Dr Strange."
+    address: '3 rue de la Liberté, 21000 Dijon, France'
+    city: 'Dijon'
+    postalCode: '21000'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 3
+    bathrooms: 1
+    capacity: 5
+    price: 750.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Proche dés commodité', 'Salle de jeu' ]
+    practicalInformations: 'Wi-Fi, cafetière/théière'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 47.3231734
+    longitude: 5.0352323
+    rating: 0
+
+  accommodation_24:
+    owner: '@owner_4'
+    theme: '@theme_8'
+    name: "Maison Impitoyable Western"
+    description: "Vivez l'expérience du Far West dans cette maison inspirée des westerns classiques."
+    address: '18 Impasse J Bayle, 23100 La Courtine, France'
+    city: 'La Courtine'
+    postalCode: '23100'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 400.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Paysage', 'Jardin' ]
+    practicalInformations: 'Balancoire, cafetière/théière, Jardin avec balançoire'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 45.706050872802734
+    longitude: 2.2600491046905518
+    rating: 0
+
+  accommodation_25:
+    owner: '@owner_1'
+    theme: '@theme_7'
+    name: "Appartement Mon voisin Totoro"
+    description: "Retrouvez la magie de Totoro dans cet appartement inspiré du célèbre film d'animation."
+    address: '2 rue Émile-Zola, 10000  Troye, France'
+    city: 'Troyes'
+    postalCode: '10000'
+    country: 'France'
+    type: 'Appartement'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 90.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Proche commoditées', 'Balcon' ]
+    practicalInformations: 'Balcon, cafetière/théière, Concierge'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 48.297699
+    longitude: 4.077038
+    rating: 0
+
+  accommodation_26:
+    owner: '@owner_2'
+    theme: '@theme_9'
+    name: "Maison Holidays"
+    description: "Vivez l'expérience romantique du film Holidays, désolé mais Jude Law ne sera pas là."
+    address: '3 rue Nationale, 37390 La Membrolle-sur-Choisille, France'
+    city: 'La Membrolle-sur-Choisille'
+    postalCode: '37390'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 2
+    bathrooms: 1
+    capacity: 4
+    price: 120.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Proche commoditées', 'Jardin' ]
+    practicalInformations: 'Balcon, cafetière/théière, Cheminée'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 47.4363176
+    longitude: 0.6399354
+    rating: 0
+
+  accommodation_27:
+    owner: '@owner_3'
+    theme: '@theme_7'
+    name: "Petite maison Kiki la petite sorcière"
+    description: "Découvrez la magie de Kiki la petite sorcière et rencontrer notre chat Jiji qui occupe les lieux."
+    address: '2 rue des Fauries, 38190 Livron-sur-Drôme, France'
+    city: 'Livron-sur-Drôme'
+    postalCode: '38190'
+    country: 'France'
+    type: 'Maison'
+    bedrooms: 1
+    bathrooms: 1
+    capacity: 2
+    price: 250.00
+    minStay: 1
+    maxStay: 7
+    advantage: [ 'Proche commoditées', 'Jardin' ]
+    practicalInformations: 'Jardin, cafetière/théière, Cheminée'
+    createdAt: '<(new DateTimeImmutable())>'
+    latitude: 44.770606994628906
+    longitude: 4.8458333015441895
     rating: 0

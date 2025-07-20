@@ -16,3 +16,174 @@ App\Entity\Booking:
     status: 'accepted'
     total_price: 241.00
     created_at: '<(new DateTimeImmutable())>'
+
+  booking_3:
+    client: '@client_3'
+    accommodation: '@accommodation_1'
+    start_date: '<(new DateTimeImmutable("2024-06-15"))>'
+    end_date: '<(new DateTimeImmutable("2024-06-20"))>'
+    status: 'accepted'
+    total_price: 602.50
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_4:
+    client: '@client_4'
+    accommodation: '@accommodation_3'
+    start_date: '<(new DateTimeImmutable("2024-08-01"))>'
+    end_date: '<(new DateTimeImmutable("2024-08-07"))>'
+    status: 'accepted'
+    total_price: 420.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_5:
+    client: '@client_5'
+    accommodation: '@accommodation_2'
+    start_date: '<(new DateTimeImmutable("2024-05-10"))>'
+    end_date: '<(new DateTimeImmutable("2024-05-15"))>'
+    status: 'accepted'
+    total_price: 875.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_6:
+    client: '@client_6'
+    accommodation: '@accommodation_1'
+    start_date: '<(new DateTimeImmutable("+10 days"))>'
+    end_date: '<(new DateTimeImmutable("+15 days"))>'
+    status: 'pending'
+    total_price: 602.50
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_7:
+    client: '@client_7'
+    accommodation: '@accommodation_3'
+    start_date: '<(new DateTimeImmutable("2024-04-20"))>'
+    end_date: '<(new DateTimeImmutable("2024-04-25"))>'
+    status: 'accepted'
+    total_price: 300.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_8:
+    client: '@client_8'
+    accommodation: '@accommodation_2'
+    start_date: '<(new DateTimeImmutable("+20 days"))>'
+    end_date: '<(new DateTimeImmutable("+25 days"))>'
+    status: 'refused'
+    total_price: 875.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_9:
+    client: '@client_1'
+    accommodation: '@accommodation_2'
+    start_date: '<(new DateTimeImmutable("2024-09-01"))>'
+    end_date: '<(new DateTimeImmutable("2024-09-05"))>'
+    status: 'accepted'
+    total_price: 700.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_10:
+    client: '@client_3'
+    accommodation: '@accommodation_3'
+    start_date: '<(new DateTimeImmutable("+30 days"))>'
+    end_date: '<(new DateTimeImmutable("+35 days"))>'
+    status: 'refused'
+    total_price: 300.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_11:
+    client: '@client_3'
+    accommodation: '@accommodation_4'
+    start_date: '<(new DateTimeImmutable("2024-03-15"))>'
+    end_date: '<(new DateTimeImmutable("2024-03-20"))>'
+    status: 'accepted'
+    total_price: 1850.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_12:
+    client: '@client_2'
+    accommodation: '@accommodation_5'
+    start_date: '<(new DateTimeImmutable("2024-03-01"))>'
+    end_date: '<(new DateTimeImmutable("2024-03-05"))>'
+    status: 'accepted'
+    total_price: 240.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_13:
+    client: '@client_4'
+    accommodation: '@accommodation_6'
+    start_date: '<(new DateTimeImmutable("2024-02-10"))>'
+    end_date: '<(new DateTimeImmutable("2024-02-15"))>'
+    status: 'accepted'
+    total_price: 1450.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_14:
+    client: '@client_6'
+    accommodation: '@accommodation_7'
+    start_date: '<(new DateTimeImmutable("2024-01-20"))>'
+    end_date: '<(new DateTimeImmutable("2024-01-25"))>'
+    status: 'accepted'
+    total_price: 900.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_15:
+    client: '@client_8'
+    accommodation: '@accommodation_8'
+    start_date: '<(new DateTimeImmutable("2024-01-05"))>'
+    end_date: '<(new DateTimeImmutable("2024-01-10"))>'
+    status: 'accepted'
+    total_price: 12500.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_16:
+    client: '@client_5'
+    accommodation: '@accommodation_9'
+    start_date: '<(new DateTimeImmutable("2023-12-15"))>'
+    end_date: '<(new DateTimeImmutable("2023-12-20"))>'
+    status: 'accepted'
+    total_price: 400.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_17:
+    client: '@client_7'
+    accommodation: '@accommodation_13'
+    start_date: '<(new DateTimeImmutable("2023-11-25"))>'
+    end_date: '<(new DateTimeImmutable("2023-11-30"))>'
+    status: 'accepted'
+    total_price: 13000.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_18:
+    client: '@client_8'
+    accommodation: '@accommodation_15'
+    start_date: '<(new DateTimeImmutable("2023-11-10"))>'
+    end_date: '<(new DateTimeImmutable("2023-11-15"))>'
+    status: 'accepted'
+    total_price: 3750.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_19:
+    client: '@client_1'
+    accommodation: '@accommodation_17'
+    start_date: '<(new DateTimeImmutable("2023-10-28"))>'
+    end_date: '<(new DateTimeImmutable("2023-11-02"))>'
+    status: 'accepted'
+    total_price: 8000.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_20:
+    client: '@client_3'
+    accommodation: '@accommodation_19'
+    start_date: '<(new DateTimeImmutable("2023-10-15"))>'
+    end_date: '<(new DateTimeImmutable("2023-10-20"))>'
+    status: 'accepted'
+    total_price: 2900.00
+    created_at: '<(new DateTimeImmutable())>'
+
+  booking_21:
+    client: '@client_2'
+    accommodation: '@accommodation_20'
+    start_date: '<(new DateTimeImmutable("2023-10-01"))>'
+    end_date: '<(new DateTimeImmutable("2023-10-05"))>'
+    status: 'accepted'
+    total_price: 720.00
+    created_at: '<(new DateTimeImmutable())>'

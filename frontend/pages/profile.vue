@@ -2,6 +2,10 @@
     import PersonalInfoCard from '~/components/PersonalInfoCard.vue';
     import { useRecommendations } from '~/composables/useRecommendations';
 
+    definePageMeta({
+        middleware: ['auth', 'client-owner'],
+    });
+
     const authStore = useAuthStore();
     const recentlyViewedStore = useRecentlyViewedStore();
     const { getPersonalizedRecommendations } = useRecommendations();
@@ -27,14 +31,7 @@
     });
 
     const recentlyViewed = computed(() => {
-        console.log(recentlyViewedStore.value);
-        return recentlyViewedStore.items.map((item) => ({
-            title: item.name,
-            image: item.images && item.images.length > 0 ? item.images[0].url : '/placeholder-image.jpg',
-            id: item.id,
-            slug: item.theme?.slug || '',
-            price: item.price,
-        }));
+        return recentlyViewedStore.getRecentlyViewedExcept();
     });
 
     const userAccommodations = computed(() => {

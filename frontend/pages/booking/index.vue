@@ -5,6 +5,7 @@
 
     definePageMeta({
         ssr: false,
+        middleware: ['auth', 'client-owner'],
     });
 
     const { $api } = useNuxtApp();
@@ -64,6 +65,13 @@
         alert(`Fonction à implémenter pour contacter l'hôte de la réservation #${bookingId}`);
     }
 
+    function handleRatingSubmit(event: { bookingId: number; ratingData: unknown; hasRated: boolean }) {
+        const bookingIndex = bookings.value.findIndex((b) => b.id === event.bookingId);
+        if (bookingIndex !== -1) {
+            bookings.value[bookingIndex].hasRated = event.hasRated;
+        }
+    }
+
     onMounted(() => {
         loadBookings();
     });
@@ -100,6 +108,7 @@
                     :booking="booking"
                     contact-label="Contacter l'hôte"
                     delete-label="Annuler réservation"
+                    :show-rating-button="true"
                     @delete="
                         () => {
                             selectedBookingId = booking.id;
@@ -107,6 +116,7 @@
                         }
                     "
                     @contact="contactHost"
+                    @rate="handleRatingSubmit"
                 />
             </div>
         </div>
