@@ -403,6 +403,8 @@
         if (pendingImages.value.length === 0) return;
 
         try {
+            const uploadedImages: ImageData[] = [];
+
             // Upload chaque image individuellement
             for (const pendingImage of pendingImages.value) {
                 const uploadUrl = $api(`/api/accommodations/${props.accommodationId}/images`);
@@ -413,13 +415,16 @@
                 if (isSuccess.value && responseData.value) {
                     const response = responseData.value as { image?: { url: string; isMain: boolean } };
                     if (response.image) {
-                        currentImages.value.push({
+                        uploadedImages.push({
                             url: response.image.url,
                             isMain: response.image.isMain || false,
                         });
                     }
                 }
             }
+
+            // Ajouter seulement les nouvelles images uploadées
+            currentImages.value.push(...uploadedImages);
 
             // Nettoyer les images en attente
             pendingImages.value.forEach((img) => URL.revokeObjectURL(img.preview));
@@ -442,15 +447,16 @@
         emit('close');
     };
 
-    // Sync avec les props uniquement si ce n'est pas vide ou à l'initialisation
+    // Sync avec les props seulement à l'initialisation ou quand on ouvre le modal
     watch(
-        () => props.images,
-        (newImages) => {
-            if (newImages.length > 0 || currentImages.value.length === 0) {
-                currentImages.value = [...newImages];
+        () => props.isOpen,
+        (isOpen) => {
+            if (isOpen) {
+                // Réinitialiser avec les props uniquement à l'ouverture
+                currentImages.value = [...props.images];
             }
         },
-        { deep: true, immediate: true }
+        { immediate: true }
     );
 
     // Nettoyer au démontage

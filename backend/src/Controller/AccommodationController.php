@@ -426,8 +426,11 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        // Vérifier que l'utilisateur est le propriétaire de l'hébergement
-        if ($accommodation->getOwner()->getId() !== $user->getId()) {
+        // Vérifier que l'utilisateur est le propriétaire de l'hébergement OU un administrateur
+        $isOwner = $accommodation->getOwner()->getId() === $user->getId();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
+        if (!$isOwner && !$isAdmin) {
             return $this->json(['message' => 'Accès refusé'], Response::HTTP_FORBIDDEN);
         }
 
@@ -484,8 +487,11 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        // Vérifier que l'utilisateur est le propriétaire de l'hébergement
-        if ($accommodation->getOwner()->getId() !== $user->getId()) {
+        // Vérifier que l'utilisateur est le propriétaire de l'hébergement OU un administrateur
+        $isOwner = $accommodation->getOwner()->getId() === $user->getId();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
+        if (!$isOwner && !$isAdmin) {
             return $this->json(['message' => 'Accès refusé'], Response::HTTP_FORBIDDEN);
         }
 
@@ -528,8 +534,11 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        // Vérifier que l'utilisateur est le propriétaire de l'hébergement
-        if ($accommodation->getOwner()->getId() !== $user->getId()) {
+        // Vérifier que l'utilisateur est le propriétaire de l'hébergement OU un administrateur
+        $isOwner = $accommodation->getOwner()->getId() === $user->getId();
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
+        if (!$isOwner && !$isAdmin) {
             return $this->json(['message' => 'Accès refusé'], Response::HTTP_FORBIDDEN);
         }
 

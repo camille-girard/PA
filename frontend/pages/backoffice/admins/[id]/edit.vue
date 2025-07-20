@@ -94,7 +94,6 @@
                     email: form.email,
                     phone: form.phone,
                     address: form.address,
-                    avatar: form.avatar,
                     isVerified: form.isVerified,
                 },
             });
@@ -145,7 +144,16 @@
 
                 <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
 
-                <Input v-model="form.avatar" class="md:col-span-2" label="Avatar (URL)" name="avatar" type="url" />
+                <div class="md:col-span-2 flex flex-col gap-3">
+                    <label class="text-body-sm">Avatar</label>
+                    <AdminAvatarUpload 
+                        :current-avatar="admin?.avatar" 
+                        :user-id="id" 
+                        user-type="admins"
+                        :user-name="`${admin?.firstName} ${admin?.lastName}`"
+                        @avatar-updated="refresh" 
+                    />
+                </div>
 
                 <UCheckbox v-model="form.isVerified" class="md:col-span-2" label="Compte vérifié" name="isVerified" />
 

@@ -254,6 +254,11 @@
                 </div>
             </div>
 
+            <div class="flex flex-col gap-3">
+                <label class="text-body-sm">Images du logement</label>
+                <AccommodationImageManager :accommodation-id="parseInt(id)" />
+            </div>
+
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <UButton :disabled="saving" :is-loading="saving" size="lg" variant="primary" type="submit">
                     {{ saving ? 'Enregistrement…' : 'Enregistrer' }}

@@ -167,7 +167,6 @@
                     email: form.email,
                     phone: form.phone,
                     address: form.address,
-                    avatar: form.avatar,
                     isVerified: form.isVerified,
                     role: form.role,
                     preferences: preferencesArray,
@@ -244,7 +243,17 @@
                 <Input v-model="form.email" class="md:col-span-2" label="Email" name="email" type="email" required />
                 <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
                 <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
-                <Input v-model="form.avatar" class="md:col-span-2" label="Avatar (URL)" name="avatar" type="url" />
+                
+                <div class="md:col-span-2 flex flex-col gap-3">
+                    <label class="text-body-sm">Avatar</label>
+                    <AdminAvatarUpload 
+                        :current-avatar="client?.avatar" 
+                        :user-id="id" 
+                        user-type="clients"
+                        :user-name="`${client?.firstName} ${client?.lastName}`"
+                        @avatar-updated="refresh" 
+                    />
+                </div>
 
                 <div class="md:col-span-2 flex flex-col gap-3">
                     <label class="text-body-sm font-medium text-gray-900">Préférences</label>

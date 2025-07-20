@@ -42,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+    import { ref, watch, onMounted } from 'vue';
+
     interface ImageData {
         url: string;
         file?: File;
@@ -66,15 +68,47 @@
 
     const isModalOpen = ref(false);
     const localImages = ref<ImageData[]>([...(props.images || [])]);
+    const loading = ref(false);
 
-    // Sync avec les props
+    // Charger les images existantes si accommodationId est fourni
+    const loadExistingImages = async () => {
+        if (!props.accommodationId) return;
+        
+        loading.value = true;
+        try {
+            const { $api } = useNuxtApp();
+            const response = await $fetch(`${$api}/api/accommodations/${props.accommodationId}/images`);
+            if (response && response.images) {
+                localImages.value = response.images.map((img: { url: string; isMain: boolean }) => ({
+                    url: img.url,
+                    isMain: img.isMain
+                }));
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des images:', error);
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    // Sync avec les props seulement si different de l'état local
     watch(
         () => props.images,
         (newImages) => {
-            localImages.value = [...(newImages || [])];
+            // Ne pas réinitialiser si on vient de faire une mise à jour depuis le composant
+            if (newImages && newImages.length !== localImages.value.length) {
+                localImages.value = [...(newImages || [])];
+            }
         },
         { deep: true, immediate: true }
     );
+
+    // Charger les images au montage si accommodationId est fourni
+    onMounted(() => {
+        if (props.accommodationId && localImages.value.length === 0) {
+            loadExistingImages();
+        }
+    });
 
     const openModal = () => {
         isModalOpen.value = true;
@@ -84,9 +118,15 @@
         isModalOpen.value = false;
     };
 
-    const handleImagesUpdated = (updatedImages: ImageData[]) => {
-        localImages.value = [...updatedImages];
-        emit('images-updated', updatedImages);
+    const handleImagesUpdated = async (updatedImages: ImageData[]) => {
+        // Si on a un accommodationId, recharger depuis le serveur pour éviter les doublons
+        if (props.accommodationId) {
+            await loadExistingImages();
+        } else {
+            // En mode création, utiliser les images fournies
+            localImages.value = [...updatedImages];
+        }
+        emit('images-updated', localImages.value);
     };
 </script>
 
