@@ -141,7 +141,7 @@
                     :model-value="userPreferences"
                     @save="savePreferences"
                 />
-                
+
                 <!-- Section Authentification à deux facteurs -->
                 <div class="border-t pt-6 mt-6">
                     <TwoFactorAuthSetup />

@@ -20,7 +20,7 @@
         initiateLogin,
         handleTwoFactorVerification,
         cancelTwoFactorVerification,
-        resetAuthState
+        resetAuthState,
     } = useAuth2FA();
 
     const email = ref<string>('');
@@ -49,23 +49,30 @@
                         <p class="text-body-md">Connectez-vous pour accéder à votre espace PopnBed</p>
                     </div>
                     <form class="w-96" @submit.prevent="login">
-                    <div class="space-y-5">
-                        <UInput v-model="email" type="email" name="email" placeholder="Email" label="Email" required />
-                        <UInput
-                            v-model="password"
-                            type="password"
-                            name="password"
-                            placeholder="••••••••"
-                            label="Mot de passe"
-                            required
-                        />
-                    </div>
-                    <div class="flex justify-end mt-2">
-                        <ULink to="/forgot-password"> Mot de passe oublié ? </ULink>
-                    </div>
-                    <UButton class="mt-6 w-full justify-center" type="submit" :loading="isLoginLoading">
-                        {{ isLoginLoading ? 'Connexion en cours...' : 'Se connecter' }}
-                    </UButton>
+                        <div class="space-y-5">
+                            <UInput
+                                v-model="email"
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                label="Email"
+                                required
+                            />
+                            <UInput
+                                v-model="password"
+                                type="password"
+                                name="password"
+                                placeholder="••••••••"
+                                label="Mot de passe"
+                                required
+                            />
+                        </div>
+                        <div class="flex justify-end mt-2">
+                            <ULink to="/forgot-password"> Mot de passe oublié ? </ULink>
+                        </div>
+                        <UButton class="mt-6 w-full justify-center" type="submit" :loading="isLoginLoading">
+                            {{ isLoginLoading ? 'Connexion en cours...' : 'Se connecter' }}
+                        </UButton>
                     </form>
                     <div class="text-center">
                         <p class="text-body-md flex items-center justify-center gap-1">

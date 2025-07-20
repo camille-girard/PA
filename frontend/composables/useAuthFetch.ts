@@ -51,7 +51,7 @@ export async function useAuthFetch<T>(url: string, options: UseFetchOptions<T> =
                     // Réessayer la requête originale avec un nouveau fetch
                     response = await useFetch(url, {
                         ...finalOptions(),
-                        key: `${url}-retry-${Date.now()}` // Force un nouveau fetch
+                        key: `${url}-retry-${Date.now()}`, // Force un nouveau fetch
                     });
                 } else {
                     console.log('Token refresh failed, logging out...');
