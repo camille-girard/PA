@@ -60,7 +60,7 @@ final class SecurityController extends AbstractController
         $response = new JsonResponse(['message' => 'Logged out'], 200);
         $response->headers->setCookie($cookie);
         $response->headers->setCookie($bearerCookie);
-        
+
         return $response;
     }
 
