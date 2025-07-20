@@ -122,7 +122,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
-    public function update(Request $request, int $id, #[CurrentUser] ?Admin $currentUser): JsonResponse
+    public function update(Request $request, int $id, #[CurrentUser] ?Admin $currentUser, SerializerInterface $serializer): JsonResponse
     {
         if (!$currentUser) {
             return $this->json(['message' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
@@ -168,7 +168,12 @@ final class AdminController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->json(['message' => 'Admin mis à jour avec succès'], Response::HTTP_OK);
+        $jsonAdmin = $this->serializer->serialize($admin, 'json', ['groups' => 'admin:read']);
+
+        return JsonResponse::fromJsonString(json_encode([
+            'message' => 'Admin mis à jour avec succès',
+            'admin' => json_decode($jsonAdmin),
+        ]), Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

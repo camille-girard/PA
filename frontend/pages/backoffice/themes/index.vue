@@ -190,8 +190,6 @@
         </h2>
         <div v-if="pending" class="text-gray-600">Chargement…</div>
         <div v-else>
-            <div v-if="successMsg" class="text-green-600 text-sm mb-4">{{ successMsg }}</div>
-            <div v-if="errorMsg" class="text-red-600 text-sm mb-4">{{ errorMsg }}</div>
             <UCard>
                 <template #header>
                     <span class="text-lg font-medium">Ajouter un nouveau thème</span>
