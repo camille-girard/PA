@@ -268,7 +268,7 @@ class TOTPController extends AbstractController
 
         $request = $this->requestStack->getCurrentRequest();
         $isSecure = $request ? $request->isSecure() : false;
-        
+
         // Cookie REFRESH_TOKEN
         $refreshCookie = Cookie::create('REFRESH_TOKEN')
             ->withValue($refreshToken->getToken())

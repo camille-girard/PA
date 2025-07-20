@@ -22,7 +22,7 @@ class TwoFactorAwareJsonLoginAuthenticator extends AbstractAuthenticator
     public function __construct(
         private JWTTokenManagerInterface $jwtTokenManager,
         private RefreshTokenManager $refreshTokenManager,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
     ) {
     }
 
@@ -73,7 +73,7 @@ class TwoFactorAwareJsonLoginAuthenticator extends AbstractAuthenticator
 
         $currentRequest = $this->requestStack->getCurrentRequest();
         $isSecure = $currentRequest ? $currentRequest->isSecure() : false;
-        
+
         // Cookie REFRESH_TOKEN
         $refreshCookie = Cookie::create('REFRESH_TOKEN')
             ->withValue($refreshToken->getToken())
