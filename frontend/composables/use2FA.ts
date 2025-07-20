@@ -89,7 +89,7 @@ export const use2FA = () => {
             });
 
             if (data.value && data.value.valid) {
-                console.log('Test', data.value)
+                console.log('Test', data.value);
 
                 toast.success('Succès', 'Authentification à deux facteurs activée avec succès');
                 showQrCodeModal.value = false;

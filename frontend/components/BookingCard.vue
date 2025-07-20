@@ -94,7 +94,8 @@
             }
         } catch (error) {
             console.error('Erreur lors de la création de la conversation:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Impossible de créer une conversation avec ce propriétaire.';
+            const errorMessage =
+                error instanceof Error ? error.message : 'Impossible de créer une conversation avec ce propriétaire.';
             toast.error('Erreur', errorMessage);
         } finally {
             isCreatingConversation.value = false;
@@ -134,13 +135,13 @@
             >
                 Réserver
             </button>
-            <button 
+            <button
                 class="w-1/2 bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="isCreatingConversation"
                 @click="createConversationWithOwner"
             >
                 <span v-if="isCreatingConversation" class="animate-spin mr-1">⏳</span>
-                {{ isCreatingConversation ? 'Contact...' : 'Contacter l\'hôte' }}
+                {{ isCreatingConversation ? 'Contact...' : "Contacter l'hôte" }}
             </button>
         </div>
     </div>

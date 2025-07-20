@@ -26,12 +26,12 @@
 
     const userInitials = computed(() => {
         if (!props.userName) return '';
-        
+
         const names = props.userName.split(' ');
         if (names.length >= 2) {
             return `${names[0].charAt(0)}${names[1].charAt(0)}`.toUpperCase();
         }
-        
+
         return names[0]?.charAt(0).toUpperCase() || '';
     });
 

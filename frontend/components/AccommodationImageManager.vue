@@ -73,7 +73,7 @@
     // Charger les images existantes si accommodationId est fourni
     const loadExistingImages = async () => {
         if (!props.accommodationId) return;
-        
+
         loading.value = true;
         try {
             const { $api } = useNuxtApp();
@@ -81,7 +81,7 @@
             if (response && response.images) {
                 localImages.value = response.images.map((img: { url: string; isMain: boolean }) => ({
                     url: img.url,
-                    isMain: img.isMain
+                    isMain: img.isMain,
                 }));
             }
         } catch (error) {
