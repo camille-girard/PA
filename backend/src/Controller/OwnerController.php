@@ -99,7 +99,7 @@ final class OwnerController extends AbstractController
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
-    public function update(int $id, Request $request): JsonResponse
+    public function update(int $id, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $owner = $this->ownerRepository->find($id);
 
@@ -148,10 +148,14 @@ final class OwnerController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->json([
+        $jsonOwner = $serializer->serialize($owner, 'json', [
+            'groups' => ['owner:read'],
+        ]);
+
+        return JsonResponse::fromJsonString(json_encode([
             'message' => 'Owner successfully updated',
-            'owner' => $owner,
-        ], Response::HTTP_OK);
+            'owner' => json_decode($jsonOwner),
+        ]), Response::HTTP_OK);
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

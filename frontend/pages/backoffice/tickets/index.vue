@@ -105,15 +105,15 @@
                 >Tous</UButton
             >
             <UButton :variant="selectedStatus === 'OPEN' ? 'primary' : 'ghost'" @click="selectedStatus = 'OPEN'"
-                >Open</UButton
+                >Ouvert</UButton
             >
             <UButton
                 :variant="selectedStatus === 'IN_PROGRESS' ? 'primary' : 'ghost'"
                 @click="selectedStatus = 'IN_PROGRESS'"
-                >In Progress</UButton
+                >En cours</UButton
             >
             <UButton :variant="selectedStatus === 'CLOSED' ? 'primary' : 'ghost'" @click="selectedStatus = 'CLOSED'"
-                >Closed</UButton
+                >Fermé</UButton
             >
         </div>
 
@@ -130,7 +130,7 @@
                     <template #header>
                         <div class="flex justify-between items-center">
                             <div class="font-semibold">{{ ticket.title }}</div>
-                            <UBadge :color="statusColor(ticket.status)">{{ statusLabel(ticket.status) }}</UBadge>
+                            <UBadge :color="statusColor(ticket.status)" class="text-center">{{ statusLabel(ticket.status) }}</UBadge>
                         </div>
                     </template>
                     <div class="text-sm text-gray-600">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, reactive, watch } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter} from 'vue-router';
     import Input from '~/components/atoms/UInput.vue';
     import UCheckbox from '~/components/atoms/UCheckbox.vue';
     import UTextarea from '~/components/atoms/UTextarea.vue';
@@ -18,6 +18,7 @@
 
     const toast = useToast();
     const route = useRoute();
+    const router = useRouter();
 
     const {
         public: { apiUrl },
@@ -135,7 +136,7 @@
 
             success.value = true;
             toast.success('Succès', 'Modifications enregistrées');
-            await refresh();
+            router.push('/backoffice/clients');
         } catch (err: unknown) {
             if (typeof err === 'object' && err !== null && 'data' in err) {
                 const apiErr = err as ApiError;

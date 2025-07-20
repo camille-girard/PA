@@ -216,7 +216,7 @@ class AccommodationController extends AbstractController
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
-    public function update(int $id, Request $request): JsonResponse
+    public function update(int $id, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $accommodation = $this->accommodationRepository->find($id);
 
@@ -269,6 +269,14 @@ class AccommodationController extends AbstractController
             $accommodation->setLongitude($data['longitude']);
         }
 
+        if (isset($data['themeId'])) {
+            $theme = $this->themeRepository->find($data['themeId']);
+            if (!$theme) {
+                return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
+            }
+            $accommodation->setTheme($theme);
+        }
+
         if (array_key_exists('practicalInformations', $data)) {
             $accommodation->setPracticalInformations($data['practicalInformations'] ?? '');
         }
@@ -300,10 +308,15 @@ class AccommodationController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->json([
+        $serialized = $serializer->serialize($accommodation, 'json', [
+            'groups' => ['accommodation:read'],
+        ]);
+
+        return JsonResponse::fromJsonString(json_encode([
             'message' => 'Hébergement mis à jour avec succès',
-            'accommodation' => $accommodation,
-        ], Response::HTTP_OK);
+            'accommodation' => json_decode($serialized),
+        ]), Response::HTTP_OK);
+
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

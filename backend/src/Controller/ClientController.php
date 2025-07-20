@@ -114,7 +114,7 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
-    public function update(int $id, Request $request): JsonResponse
+    public function update(int $id, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $client = $this->clientRepository->find($id);
 
@@ -245,10 +245,15 @@ final class ClientController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->json([
+        $serializedClient = $serializer->serialize($client, 'json', [
+            'groups' => ['client:read'],
+        ]);
+
+        return JsonResponse::fromJsonString(json_encode([
             'message' => 'Client mis à jour avec succès',
-            'client' => $client,
-        ], Response::HTTP_OK);
+            'client' => json_decode($serializedClient),
+        ]), Response::HTTP_OK);
+
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
