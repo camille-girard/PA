@@ -57,9 +57,11 @@ final class SecurityController extends AbstractController
             $bearerCookie = $bearerCookie->withDomain($cookieDomain);
         }
 
-        return new JsonResponse(['message' => 'Logged out'], 200, [
-            'Set-Cookie' => (string) $cookie,
-        ]);
+        $response = new JsonResponse(['message' => 'Logged out'], 200);
+        $response->headers->setCookie($cookie);
+        $response->headers->setCookie($bearerCookie);
+        
+        return $response;
     }
 
     #[Route('/token/refresh', name: 'app_refresh_token')]

@@ -98,6 +98,7 @@
                             :price-per-night="Location.price"
                             :accommodation-id="Location.id"
                             :title="Location.name"
+                            :owner-id="Location.host?.id"
                         />
                     </div>
                 </div>
