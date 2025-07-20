@@ -243,15 +243,15 @@
                 <Input v-model="form.email" class="md:col-span-2" label="Email" name="email" type="email" required />
                 <Input v-model="form.phone" class="md:col-span-2" label="Téléphone" name="phone" type="tel" />
                 <Input v-model="form.address" class="md:col-span-2" label="Adresse" name="address" type="text" />
-                
+
                 <div class="md:col-span-2 flex flex-col gap-3">
                     <label class="text-body-sm">Avatar</label>
-                    <AdminAvatarUpload 
-                        :current-avatar="client?.avatar" 
-                        :user-id="id" 
+                    <AdminAvatarUpload
+                        :current-avatar="client?.avatar"
+                        :user-id="id"
                         user-type="clients"
                         :user-name="`${client?.firstName} ${client?.lastName}`"
-                        @avatar-updated="refresh" 
+                        @avatar-updated="refresh"
                     />
                 </div>
 

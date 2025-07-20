@@ -33,12 +33,12 @@
 
     const userInitials = computed(() => {
         if (!props.userName) return '';
-        
+
         const names = props.userName.split(' ');
         if (names.length >= 2) {
             return `${names[0].charAt(0)}${names[1].charAt(0)}`.toUpperCase();
         }
-        
+
         return names[0]?.charAt(0).toUpperCase() || '';
     });
 
@@ -71,7 +71,7 @@
 
         if (data.response?.avatar) {
             emit('avatar-updated', data.response.avatar);
-            success('Avatar mis à jour', 'L\'avatar a été mis à jour avec succès');
+            success('Avatar mis à jour', "L'avatar a été mis à jour avec succès");
             emit('close');
         }
     };
@@ -88,13 +88,16 @@
 
     const handleDeleteAvatar = async () => {
         try {
-            const { data, error: apiError } = await useAuthFetch($api(`/api/${props.userType}/${props.userId}/avatar`), {
-                method: 'DELETE',
-            });
+            const { data, error: apiError } = await useAuthFetch(
+                $api(`/api/${props.userType}/${props.userId}/avatar`),
+                {
+                    method: 'DELETE',
+                }
+            );
 
             if (data.value && !apiError.value) {
                 emit('avatar-deleted');
-                success('Avatar supprimé', 'L\'avatar a été supprimé');
+                success('Avatar supprimé', "L'avatar a été supprimé");
                 emit('close');
             }
         } catch {

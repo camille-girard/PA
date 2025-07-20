@@ -146,12 +146,12 @@
 
                 <div class="md:col-span-2 flex flex-col gap-3">
                     <label class="text-body-sm">Avatar</label>
-                    <AdminAvatarUpload 
-                        :current-avatar="admin?.avatar" 
-                        :user-id="id" 
+                    <AdminAvatarUpload
+                        :current-avatar="admin?.avatar"
+                        :user-id="id"
                         user-type="admins"
                         :user-name="`${admin?.firstName} ${admin?.lastName}`"
-                        @avatar-updated="refresh" 
+                        @avatar-updated="refresh"
                     />
                 </div>
 
