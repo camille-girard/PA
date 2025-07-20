@@ -69,13 +69,13 @@ final class UserController extends AbstractController
             $user->setBio($data['bio']);
         }
 
-        if (isset($data['address'])) {
-            $user->setAddress($data['address']);
-        }
-
-        if (isset($data['preferences'])) {
+        if (isset($data['preferences']) && $user->getRoles() === ['ROLE_CLIENT']) {
             /** @var Client $user */
             $user->setPreferences($data['preferences']);
+        }
+
+        if (isset($data['address'])) {
+            $user->setAddress($data['address']);
         }
 
         $em->flush();

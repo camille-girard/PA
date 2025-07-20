@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Entity\Client;
 use App\Repository\UserRepository;
 use App\Service\RefreshTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -178,7 +178,7 @@ final class SecurityController extends AbstractController
             return new JsonResponse(['error' => 'Cet email est déjà utilisé'], 409);
         }
 
-        $user = new User();
+        $user = new Client();
         $user->setEmail($data['email']);
         $user->setFirstName($data['firstName']);
         $user->setLastName($data['lastName']);

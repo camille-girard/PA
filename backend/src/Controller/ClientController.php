@@ -206,6 +206,10 @@ final class ClientController extends AbstractController
                 $client->setIsVerified($data['isVerified']);
             }
 
+            if (isset($data['preferences'])) {
+                $client->setPreferences($data['preferences']);
+            }
+
             $this->entityManager->flush();
 
             return $this->json([
