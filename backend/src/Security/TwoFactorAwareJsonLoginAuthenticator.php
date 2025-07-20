@@ -74,12 +74,17 @@ class TwoFactorAwareJsonLoginAuthenticator extends AbstractAuthenticator
         $currentRequest = $this->requestStack->getCurrentRequest();
         $isSecure = $currentRequest ? $currentRequest->isSecure() : false;
 
+        // Détermine la configuration des cookies selon l'environnement
+        $isProduction = $currentRequest && str_contains($currentRequest->getHost(), 'popnbed.com');
+        $cookieDomain = $isProduction ? '.popnbed.com' : null;
+        $sameSite = $isProduction ? 'none' : 'strict';
+
         // Cookie REFRESH_TOKEN
         $refreshCookie = Cookie::create('REFRESH_TOKEN')
             ->withValue($refreshToken->getToken())
             ->withHttpOnly(true)
             ->withSecure($isSecure)
-            ->withSameSite('strict')
+            ->withSameSite($sameSite)
             ->withExpires($refreshToken->getExpiresAt());
 
         // Cookie BEARER pour le JWT
@@ -87,7 +92,13 @@ class TwoFactorAwareJsonLoginAuthenticator extends AbstractAuthenticator
             ->withValue($jwt)
             ->withHttpOnly(true)
             ->withSecure($isSecure)
-            ->withSameSite('strict');
+            ->withSameSite($sameSite);
+
+        // Ajouter le domaine seulement en production
+        if ($cookieDomain) {
+            $refreshCookie = $refreshCookie->withDomain($cookieDomain);
+            $bearerCookie = $bearerCookie->withDomain($cookieDomain);
+        }
 
         $response = new JsonResponse(['token' => $jwt]);
         $response->headers->setCookie($refreshCookie);

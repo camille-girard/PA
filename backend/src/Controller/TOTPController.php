@@ -269,12 +269,17 @@ class TOTPController extends AbstractController
         $request = $this->requestStack->getCurrentRequest();
         $isSecure = $request ? $request->isSecure() : false;
 
+        // Détermine la configuration des cookies selon l'environnement
+        $isProduction = $request && str_contains($request->getHost(), 'popnbed.com');
+        $cookieDomain = $isProduction ? '.popnbed.com' : null;
+        $sameSite = $isProduction ? 'none' : 'strict';
+
         // Cookie REFRESH_TOKEN
         $refreshCookie = Cookie::create('REFRESH_TOKEN')
             ->withValue($refreshToken->getToken())
             ->withHttpOnly(true)
             ->withSecure($isSecure)
-            ->withSameSite('strict')
+            ->withSameSite($sameSite)
             ->withExpires($refreshToken->getExpiresAt());
 
         // Cookie BEARER pour le JWT
@@ -282,7 +287,13 @@ class TOTPController extends AbstractController
             ->withValue($token)
             ->withHttpOnly(true)
             ->withSecure($isSecure)
-            ->withSameSite('strict');
+            ->withSameSite($sameSite);
+
+        // Ajouter le domaine seulement en production
+        if ($cookieDomain) {
+            $refreshCookie = $refreshCookie->withDomain($cookieDomain);
+            $bearerCookie = $bearerCookie->withDomain($cookieDomain);
+        }
 
         $response = new JsonResponse(['token' => $token]);
         $response->headers->setCookie($refreshCookie);
