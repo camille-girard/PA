@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Exception\TwoFactorRequiredException;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Psr\Log\LoggerInterface;
 
@@ -21,7 +20,6 @@ class JWTCreatedListener
             return;
         }
 
-
-        $this->loggerInterface->info('JWT Created for user: ' . $user->getUserIdentifier());
+        $this->loggerInterface->info('JWT Created for user: '.$user->getUserIdentifier());
     }
 }
