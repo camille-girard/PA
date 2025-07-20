@@ -29,7 +29,7 @@ class Owner extends User
     private Collection $messages;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['owner:read'])]
+    #[Groups(['owner:read', 'me:read', 'me:write'])]
     private ?string $bio = null;
 
     #[ORM\Column(type: 'float', options: ['default' => 0])]

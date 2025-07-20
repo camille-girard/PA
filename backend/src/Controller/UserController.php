@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Owner;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\CloudflareR2Service;
@@ -61,6 +62,11 @@ final class UserController extends AbstractController
 
         if (isset($data['phone'])) {
             $user->setPhone($data['phone']);
+        }
+
+        if (isset($data['bio'])) {
+            /** @var Owner $user */
+            $user->setBio($data['bio']);
         }
 
         if (isset($data['address'])) {

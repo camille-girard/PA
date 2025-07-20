@@ -4,6 +4,7 @@ type User = {
     id: number;
     firstName: string;
     lastName: string;
+    bio: string;
     email: string;
     phone?: string;
     address?: string;
