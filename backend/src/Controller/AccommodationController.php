@@ -316,7 +316,6 @@ class AccommodationController extends AbstractController
             'message' => 'Hébergement mis à jour avec succès',
             'accommodation' => json_decode($serialized),
         ]), Response::HTTP_OK);
-
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

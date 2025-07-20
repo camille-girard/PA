@@ -174,7 +174,6 @@ final class AdminController extends AbstractController
             'message' => 'Admin mis à jour avec succès',
             'admin' => json_decode($jsonAdmin),
         ]), Response::HTTP_OK);
-
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

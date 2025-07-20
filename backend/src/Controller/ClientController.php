@@ -253,7 +253,6 @@ final class ClientController extends AbstractController
             'message' => 'Client mis à jour avec succès',
             'client' => json_decode($serializedClient),
         ]), Response::HTTP_OK);
-
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

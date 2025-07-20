@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref, reactive, watch } from 'vue';
-    import { useRoute, useRouter} from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import Input from '~/components/atoms/UInput.vue';
     import UCheckbox from '~/components/atoms/UCheckbox.vue';
     import UTextarea from '~/components/atoms/UTextarea.vue';
@@ -80,11 +80,6 @@
         }
     }
 
-    async function refresh() {
-        if (id.value) {
-            await loadClient(id.value);
-        }
-    }
     async function save() {
         if (!id.value) return;
 

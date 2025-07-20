@@ -130,7 +130,9 @@
                     <template #header>
                         <div class="flex justify-between items-center">
                             <div class="font-semibold">{{ ticket.title }}</div>
-                            <UBadge :color="statusColor(ticket.status)" class="text-center">{{ statusLabel(ticket.status) }}</UBadge>
+                            <UBadge :color="statusColor(ticket.status)" class="text-center">{{
+                                statusLabel(ticket.status)
+                            }}</UBadge>
                         </div>
                     </template>
                     <div class="text-sm text-gray-600">
