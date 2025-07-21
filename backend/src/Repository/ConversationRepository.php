@@ -26,14 +26,23 @@ class ConversationRepository extends ServiceEntityRepository
      */
     public function findByUser(User $user): array
     {
-        $qb = $this->createQueryBuilder('c');
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.client', 'cl')
+            ->leftJoin('c.owner', 'o');
 
+        $conditions = [];
+        
         if (in_array('ROLE_CLIENT', $user->getRoles())) {
-            $qb->andWhere('c.client = :user')
-                ->setParameter('user', $user);
-        } elseif (in_array('ROLE_OWNER', $user->getRoles())) {
-            $qb->andWhere('c.owner = :user')
-                ->setParameter('user', $user);
+            $conditions[] = 'cl.id = :userId';
+        }
+        
+        if (in_array('ROLE_OWNER', $user->getRoles())) {
+            $conditions[] = 'o.id = :userId';
+        }
+
+        if (!empty($conditions)) {
+            $qb->andWhere(implode(' OR ', $conditions))
+                ->setParameter('userId', $user->getId());
         }
 
         return $qb->orderBy('c.updatedAt', 'DESC')

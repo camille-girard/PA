@@ -74,10 +74,13 @@ class ConversationController extends AbstractController
 
         // Vérifier que l'utilisateur est bien participant à la conversation
         $isParticipant = false;
+        
         if (in_array('ROLE_CLIENT', $user->getRoles())) {
-            $isParticipant = $conversation->getClient()->getId() === $user->getId();
-        } elseif (in_array('ROLE_OWNER', $user->getRoles())) {
-            $isParticipant = $conversation->getOwner()->getId() === $user->getId();
+            $isParticipant = $isParticipant || $conversation->getClient()->getId() === $user->getId();
+        }
+        
+        if (in_array('ROLE_OWNER', $user->getRoles())) {
+            $isParticipant = $isParticipant || $conversation->getOwner()->getId() === $user->getId();
         }
 
         if (!$isParticipant) {

@@ -47,7 +47,7 @@
 <template>
     <div class="relative h-fit w-fit">
         <div :class="[baseClasses, sizeClasses[size]]">
-            <NuxtImg v-if="imageSrc" :src="imageSrc" />
+            <img v-if="imageSrc" :src="imageSrc" alt="Photo de profil" />
             <p v-else-if="text" :class="[textSizeClasses[size], 'text-quaternary font-semibold']">
                 {{ text }}
             </p>
