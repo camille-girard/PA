@@ -33,7 +33,7 @@
     };
 
     const getPartnerName = (conversation: Conversation) => {
-        const isClient = authStore.user?.roles.includes('ROLE_CLIENT');
+        const isClient = !authStore.user?.roles.includes('ROLE_OWNER');
 
         if (isClient) {
             return `${conversation.owner.firstName} ${conversation.owner.lastName}`;
@@ -43,14 +43,24 @@
     };
 
     const getAvatar = (conversation: Conversation) => {
-        const isClient = authStore.user?.roles.includes('ROLE_CLIENT');
+        const isClient = !authStore.user?.roles.includes('ROLE_OWNER');
 
         if (isClient) {
-            return conversation.owner.avatar || '/images/default-avatar.png';
+            return conversation.owner.avatar || '';
         } else {
-            return conversation.client.avatar || '/images/default-avatar.png';
+            return conversation.client.avatar || '';
         }
     };
+
+    const getInitials = (conversation: Conversation) => {
+        const isClient = !authStore.user?.roles.includes('ROLE_OWNER');
+
+        if (isClient) {
+            return conversation.owner.firstName.split('')[0] + conversation.owner.lastName.split('')[0];
+        } else {
+            return conversation.client.firstName.split('')[0] + conversation.client.lastName.split('')[0];
+        }
+    }
 </script>
 
 <template>
@@ -71,10 +81,11 @@
             >
                 <div class="flex items-center">
                     <div class="relative">
-                        <img
-                            :src="getAvatar(conversation)"
+                        <UAvatar
+                            :image-src="getAvatar(conversation)"
+                            :text="getInitials(conversation)"
                             :alt="getPartnerName(conversation)"
-                            class="w-12 h-12 rounded-full object-cover"
+                            size="xl"
                         />
                         <div
                             v-if="conversation.hasNewMessages"

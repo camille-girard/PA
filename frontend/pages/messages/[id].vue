@@ -18,7 +18,7 @@
         if (!conversationStore.currentConversation) return '';
 
         const authStore = useAuthStore();
-        const isClient = authStore.user?.roles.includes('ROLE_CLIENT');
+        const isClient = !authStore.user?.roles.includes('ROLE_OWNER');
 
         if (isClient) {
             const owner = conversationStore.currentConversation.owner;
