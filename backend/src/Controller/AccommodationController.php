@@ -301,9 +301,10 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = json_decode($request->getContent(), true);
-        if (!is_array($data)) {
-            return $this->json(['message' => 'JSON invalide'], Response::HTTP_BAD_REQUEST);
+        $data = $request->request->all();
+        
+        if (empty($data)) {
+            return $this->json(['message' => 'Données manquantes'], Response::HTTP_BAD_REQUEST);
         }
 
         if (isset($data['name'])) {
