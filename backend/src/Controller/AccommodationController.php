@@ -301,50 +301,14 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        // Récupération des données selon la méthode HTTP
-        if ($request->getMethod() === 'POST') {
-            $data = $request->request->all();
+        // Pour les requêtes PUT avec multipart/form-data, Symfony ne parse pas automatiquement
+        // On force le parsing en créant une nouvelle requête POST temporaire
+        if ($request->getMethod() === 'PUT' && strpos($request->headers->get('Content-Type', ''), 'multipart/form-data') !== false) {
+            $tempRequest = Request::create('/', 'POST', [], [], [], [], $request->getContent());
+            $tempRequest->headers->set('Content-Type', $request->headers->get('Content-Type'));
+            $data = $tempRequest->request->all();
         } else {
-            $data = [];
-            $contentType = $request->headers->get('Content-Type');
-            
-            if (strpos($contentType, 'multipart/form-data') !== false) {
-                $content = $request->getContent();
-                $boundary = null;
-                
-                if (preg_match('/boundary=([^;]+)/', $contentType, $matches)) {
-                    $boundary = $matches[1];
-                }
-                
-                if ($boundary && $content) {
-                    $parts = explode('--' . $boundary, $content);
-                    
-                    foreach ($parts as $part) {
-                        if (strpos($part, 'Content-Disposition: form-data') !== false) {
-                            if (preg_match('/name="([^"]+)"/', $part, $nameMatches)) {
-                                $name = $nameMatches[1];
-                                
-                                $lines = explode("\r\n", $part);
-                                $valueStarted = false;
-                                $value = '';
-                                
-                                foreach ($lines as $line) {
-                                    if ($valueStarted) {
-                                        if ($value !== '') $value .= "\r\n";
-                                        $value .= $line;
-                                    } elseif (trim($line) === '') {
-                                        $valueStarted = true;
-                                    }
-                                }
-                                
-                                $data[$name] = trim($value);
-                            }
-                        }
-                    }
-                }
-            } else {
-                $data = $request->request->all();
-            }
+            $data = $request->request->all();
         }
         
         if (empty($data)) {

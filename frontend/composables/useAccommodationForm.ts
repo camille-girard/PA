@@ -178,7 +178,7 @@ export function useAccommodationForm(options: UseAccommodationFormOptions = {}) 
     // Handle form submission
     async function handleSubmit() {
         const { $api } = useNuxtApp();
-        const method = isEditing.value ? 'PUT' : 'POST';
+        const method = 'POST';
         const endpoint = isEditing.value ? `/api/accommodations/${options.accommodationId}` : `/api/accommodations`;
 
         try {
