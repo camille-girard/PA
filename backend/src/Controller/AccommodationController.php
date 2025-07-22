@@ -292,7 +292,7 @@ class AccommodationController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update', methods: ['PUT'])]
+    #[Route('/{id}', name: 'update', methods: ['PUT', 'POST'])]
     public function update(int $id, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $accommodation = $this->accommodationRepository->find($id);
@@ -301,7 +301,51 @@ class AccommodationController extends AbstractController
             return $this->json(['message' => 'Hébergement non trouvé'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = $request->request->all();
+        // Récupération des données selon la méthode HTTP
+        if ($request->getMethod() === 'POST') {
+            $data = $request->request->all();
+        } else {
+            $data = [];
+            $contentType = $request->headers->get('Content-Type');
+            
+            if (strpos($contentType, 'multipart/form-data') !== false) {
+                $content = $request->getContent();
+                $boundary = null;
+                
+                if (preg_match('/boundary=([^;]+)/', $contentType, $matches)) {
+                    $boundary = $matches[1];
+                }
+                
+                if ($boundary && $content) {
+                    $parts = explode('--' . $boundary, $content);
+                    
+                    foreach ($parts as $part) {
+                        if (strpos($part, 'Content-Disposition: form-data') !== false) {
+                            if (preg_match('/name="([^"]+)"/', $part, $nameMatches)) {
+                                $name = $nameMatches[1];
+                                
+                                $lines = explode("\r\n", $part);
+                                $valueStarted = false;
+                                $value = '';
+                                
+                                foreach ($lines as $line) {
+                                    if ($valueStarted) {
+                                        if ($value !== '') $value .= "\r\n";
+                                        $value .= $line;
+                                    } elseif (trim($line) === '') {
+                                        $valueStarted = true;
+                                    }
+                                }
+                                
+                                $data[$name] = trim($value);
+                            }
+                        }
+                    }
+                }
+            } else {
+                $data = $request->request->all();
+            }
+        }
         
         if (empty($data)) {
             return $this->json(['message' => 'Données manquantes'], Response::HTTP_BAD_REQUEST);
@@ -320,7 +364,12 @@ class AccommodationController extends AbstractController
             $accommodation->setCity($data['city']);
         }
         if (isset($data['postalCode'])) {
-            $accommodation->setPostalCode($data['postalCode']);
+            $postalCode = trim($data['postalCode']);
+            if (empty($postalCode)) {
+                $accommodation->setPostalCode(null);
+            } else {
+                $accommodation->setPostalCode(substr($postalCode, 0, 10));
+            }
         }
         if (isset($data['country'])) {
             $accommodation->setCountry($data['country']);
@@ -329,30 +378,49 @@ class AccommodationController extends AbstractController
             $accommodation->setType($data['type']);
         }
         if (isset($data['bedrooms'])) {
-            $accommodation->setBedrooms($data['bedrooms']);
+            $accommodation->setBedrooms((int) $data['bedrooms']);
         }
         if (isset($data['bathrooms'])) {
-            $accommodation->setBathrooms($data['bathrooms']);
+            $accommodation->setBathrooms((int) $data['bathrooms']);
         }
         if (isset($data['price'])) {
-            $accommodation->setPrice($data['price']);
+            $accommodation->setPrice((float) $data['price']);
         }
         if (isset($data['capacity'])) {
-            $accommodation->setCapacity($data['capacity']);
+            $accommodation->setCapacity((int) $data['capacity']);
         }
         if (isset($data['latitude'])) {
-            $accommodation->setLatitude($data['latitude']);
+            $accommodation->setLatitude($data['latitude'] ? (float) $data['latitude'] : null);
         }
         if (isset($data['longitude'])) {
-            $accommodation->setLongitude($data['longitude']);
+            $accommodation->setLongitude($data['longitude'] ? (float) $data['longitude'] : null);
+        }
+        if (isset($data['minStay'])) {
+            $accommodation->setMinStay((int) $data['minStay']);
+        }
+        if (isset($data['maxStay'])) {
+            $accommodation->setMaxStay((int) $data['maxStay']);
         }
 
-        if (isset($data['themeId'])) {
-            $theme = $this->themeRepository->find($data['themeId']);
-            if (!$theme) {
-                return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
+        if (isset($data['themeId']) && !empty($data['themeId'])) {
+            $themeId = (int) $data['themeId'];
+            if ($themeId > 0) {
+                $theme = $this->themeRepository->find($themeId);
+                if (!$theme) {
+                    return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
+                }
+                $accommodation->setTheme($theme);
             }
-            $accommodation->setTheme($theme);
+        } elseif (isset($data['theme']) && !empty($data['theme'])) {
+            $themeId = (int) $data['theme'];
+            
+            if ($themeId > 0) {
+                $theme = $this->themeRepository->find($themeId);
+                if (!$theme) {
+                    return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
+                }
+                $accommodation->setTheme($theme);
+            }
         }
 
         if (array_key_exists('practicalInformations', $data)) {
@@ -369,14 +437,6 @@ class AccommodationController extends AbstractController
                 return $this->json(['message' => 'Propriétaire non trouvé'], Response::HTTP_BAD_REQUEST);
             }
             $accommodation->setOwner($owner);
-        }
-
-        if (isset($data['theme'])) {
-            $theme = $this->themeRepository->find($data['theme']);
-            if (!$theme) {
-                return $this->json(['message' => 'Thème non trouvé'], Response::HTTP_BAD_REQUEST);
-            }
-            $accommodation->setTheme($theme);
         }
 
         $errors = $this->validator->validate($accommodation);
