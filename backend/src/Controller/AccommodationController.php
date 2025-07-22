@@ -292,7 +292,7 @@ class AccommodationController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'update', methods: ['PUT', 'POST'])]
+    #[Route('/{id}', name: 'update', methods: ['POST'])]
     public function update(int $id, Request $request, SerializerInterface $serializer): JsonResponse
     {
         $accommodation = $this->accommodationRepository->find($id);
